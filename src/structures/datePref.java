@@ -1,15 +1,16 @@
+package structures;
 
 import java.util.*;
 
 /**
  * 
  */
-public class datePref {
+public class DatePref {
 
     /**
      * Default constructor
      */
-    public datePref() {
+    public DatePref() {
     }
 
     /**

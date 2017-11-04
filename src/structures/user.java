@@ -1,15 +1,15 @@
+package structures;
 
-import java.util.*;
 
 /**
  * 
  */
-public class user {
+public class User {
 
     /**
      * Default constructor
      */
-    public user() {
+    public User() {
     }
 
     /**

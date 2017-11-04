@@ -1,21 +1,17 @@
+package server;
 
 import java.util.*;
+import structures.*;
 
 /**
  * 
  */
-public interface findMeetingTimeStrategyInterface {
-
-    /**
-     * 
-     */
-    protected Server Server;
-
+public interface FindMeetingTimeStrategyInterface {
 
     /**
      * @param Meeting 
      * @return
      */
-    protected Date findMeetingTime(void Meeting);
+    public Date FindMeetingTime(Meeting meeting);
 
 }

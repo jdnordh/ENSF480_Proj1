@@ -1,24 +1,25 @@
+package server;
 
 import java.util.*;
+
+import structures.Meeting;
 
 /**
  * 
  */
-public class findMeetingTimeStrategy1 implements findMeetingTimeStrategyInterface {
+public class FindMeetingTimeStrategy1 implements FindMeetingTimeStrategyInterface {
 
     /**
      * Default constructor
      */
-    public findMeetingTimeStrategy1() {
+    public FindMeetingTimeStrategy1() {
     }
 
-    /**
-     * @param Meeting 
-     * @return
-     */
-    protected Date findMeetingTime(void Meeting) {
-        // TODO implement here
-        return null;
-    }
+
+	@Override
+	public Date FindMeetingTime(Meeting meeting) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }
