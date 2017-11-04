@@ -17,9 +17,10 @@ public class FindMeetingTimeStrategy1 implements FindMeetingTimeStrategyInterfac
 
 
 	@Override
-	public Date FindMeetingTime(Meeting meeting) {
+	public boolean FindMeetingTime(Meeting meeting) {
+		
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 }

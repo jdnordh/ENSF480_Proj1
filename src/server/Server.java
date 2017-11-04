@@ -1,56 +1,55 @@
 package server;
 
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.*;
+
+import structures.*;
 
 /**
  * 
  */
 public class Server extends Thread{
 
+	private ServerSocket server;
+
+	private Queue<Packet> queue;
+	
     /**
      * Default constructor
      */
     public Server() {
+    	try{
+    		server = new ServerSocket(65535);
+    	} catch (Exception e){}
     }
 
     /**
      * 
      */
-    private findMeetingTimeStrategyInterface meetingTImeFinder;
+    private FindMeetingTimeStrategyInterface scheduler;
 
     /**
      * 
      */
-    private ArrayList<Users> usercatalog;
+    private ArrayList<User> userCatalog;
 
     /**
      * 
      */
-    private ArrayList<Meeting> Meetingcatalog;
+    private ArrayList<Meeting> meetingCatalog;
 
 
-
-
-
-
-
-
-
-    /**
-     * @return
-     */
-    private void startUp() {
-        // TODO implement here
-        return null;
+    public void run(){
+    	
     }
 
     /**
      * @param Meeting 
      * @return
      */
-    protected void initateMeeting(void Meeting) {
+    protected void initateMeeting(Meeting m) {
         // TODO implement here
-        return null;
     }
 
     /**
@@ -60,7 +59,6 @@ public class Server extends Thread{
      */
     protected void addUser(String Username, String Password) {
         // TODO implement here
-        return null;
     }
 
     /**
@@ -68,7 +66,6 @@ public class Server extends Thread{
      */
     protected void notifyLoggedIn() {
         // TODO implement here
-        return null;
     }
 
     /**
@@ -76,7 +73,6 @@ public class Server extends Thread{
      */
     protected void deleteUser() {
         // TODO implement here
-        return null;
     }
 
     /**
@@ -84,9 +80,8 @@ public class Server extends Thread{
      * @param prefDates 
      * @return
      */
-    protected void participantAcceptMeeting(int meetingId, ArrayList<custDate> prefDates) {
+    protected void participantAcceptMeeting(int meetingId, ArrayList<DatePref> prefDates) {
         // TODO implement here
-        return null;
     }
 
     /**
@@ -101,25 +96,23 @@ public class Server extends Thread{
      * @param Participant 
      * @return
      */
-    protected void removeParticipant(void Participant) {
+    protected void removeParticipant(Participant p) {
         // TODO implement here
-        return null;
     }
 
     /**
      * @param importantParticipants 
      * @return
      */
-    protected void notifyImportantParticipantForLocationPref(ArrayList<participnt> importantParticipants) {
+    protected void notifyImportantParticipantForLocationPref(ArrayList<Participant> importantParticipants) {
         // TODO implement here
-        return null;
     }
 
     /**
      * @param asocket 
      * @return
      */
-    protected ArrayList<Participants> returnAllUsers(Socket asocket) {
+    protected ArrayList<Participant> returnAllUsers(Socket asocket) {
         // TODO implement here
         return null;
     }
@@ -128,9 +121,8 @@ public class Server extends Thread{
      * @param UserName 
      * @return
      */
-    protected void participantsDeclinesMeeting(void UserName) {
+    protected void participantsDeclinesMeeting(String s) {
         // TODO implement here
-        return null;
     }
     
     public static void main(String [] args){
