@@ -146,7 +146,7 @@ public class Packet{
 	
 	
 	public static void main(String [] args){
-		String password = "password";
+		String password = "s";
 		MessageDigest digest;
 		try {
 			digest = MessageDigest.getInstance("SHA-256");
