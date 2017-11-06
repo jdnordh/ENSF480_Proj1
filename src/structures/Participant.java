@@ -28,16 +28,19 @@ public class Participant extends user {
     private String UserName;
     
     /**
-     * 
+     * Getters and Setters
      */
     public void setName(String n){
     	Name = n;
     }
-    /**
-     * 
-     */
     public String getName(){
     	return Name;
     }
-    public void setImportant(Boolean)
+    public void setImportant(Boolean x){
+    	Important = x;
+    }
+    public Boolean getImportant(){
+    	return Important;
+    }
+   
 }
