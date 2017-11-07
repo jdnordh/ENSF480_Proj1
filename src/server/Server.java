@@ -15,6 +15,8 @@ public class Server extends Thread{
 
 	private Queue<Packet> queue;
 	
+	private ArrayList<InputOutputThread> threads;
+	
     /**
      * Default constructor
      */
