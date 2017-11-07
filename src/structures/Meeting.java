@@ -63,9 +63,11 @@ public class Meeting {
      * @param Important 
      * @return
      */
-    private Void addParticipant(void Id, void Important) {
-        // TODO implement here
-        return null;
+    private void addParticipant(String user, boolean i) {
+        //to sever username
+    	//check to see if exsits
+    	//Participant p = new Participant(temp user, i);
+    	//
     }
 
     /**
@@ -80,9 +82,9 @@ public class Meeting {
      * @param Participant 
      * @return
      */
-    private Void removeParticipant(void Participant) {
-        // TODO implement here
-        return null;
+    private void removeParticipant(Participant P) {
+        //to server removeParticipant
+    	//Participants.remove(P);
     }
 
 }

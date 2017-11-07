@@ -1,3 +1,4 @@
+package structures;
 
 import java.util.*;
 
@@ -5,14 +6,8 @@ import java.util.*;
  * 
  */
 public class Participant extends user {
-
-    /**
-     * Default constructor
-     */
-    public Participant() {
-    }
-
-    /**
+   
+	/**
      * Name of Participant
      */
     private String Name;
@@ -42,5 +37,8 @@ public class Participant extends user {
     public Boolean getImportant(){
     	return Important;
     }
-   
+    public Participant(String N, String U, String P, Boolean I) {
+		super(N, U, P);
+		Important = I;
+	}
 }
