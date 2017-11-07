@@ -4,7 +4,7 @@ package structures;
 /**
  * 
  */
-public class user {
+public class User {
 	
     /**
      * main identifier
@@ -42,7 +42,14 @@ public class user {
     public String getPassword(){
     	return Password;
     }
-    public user(String N , String U, String P){
+    
+    public User(){}
+    
+    public User(String U, String P){
+    	UserName = U;
+    	Password = P;
+    }
+    public User(String N , String U, String P){
     	Name = N;
     	UserName = U;
     	Password = P;

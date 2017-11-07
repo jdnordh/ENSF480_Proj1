@@ -143,8 +143,12 @@ public class Packet{
 	 */
 	public static final int RESPONSE_ALL_MEETINGS = 34;
 	
+	/**
+	 * This packet will be returned if the request was not formatted properly
+	 */
+	public static final int BAD_REQUEST = 90000;
 	
-	
+	// for testing, will be deleted
 	public static void main(String [] args){
 		String password = "s";
 		MessageDigest digest;
