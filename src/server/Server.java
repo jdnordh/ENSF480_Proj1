@@ -1,7 +1,9 @@
 package server;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.*;
 
 import structures.*;
@@ -11,39 +13,81 @@ import structures.*;
  */
 public class Server extends Thread{
 
+	private boolean running;
+	
 	private ServerSocket server;
-
-	private Queue<Packet> queue;
 	
-	private ArrayList<InputOutputThread> threads;
+	private ArrayList<Thread> threads;
 	
-    /**
-     * Default constructor
-     */
-    public Server() {
-    	try{
-    		server = new ServerSocket(65535);
-    	} catch (Exception e){}
-    }
-
-    /**
-     * 
-     */
-    private FindMeetingTimeStrategyInterface scheduler;
-
-    /**
-     * 
+	private FindMeetingTimeStrategyInterface scheduler;
+	
+	private Queue<Meeting> meetingsToBeScheduled;
+	
+	private int port;
+	
+	/**
+     * TODO change to singleton
      */
     private ArrayList<User> userCatalog;
 
     /**
-     * 
+     * TODO change to a singleton
      */
     private ArrayList<Meeting> meetingCatalog;
 
+	/**
+	 * Construct a server
+	 * @param port Port number
+	 * @param s Meeting scheduler strategy
+	 */
+    public Server(int sport, FindMeetingTimeStrategyInterface s) {
+    	scheduler = s;
+    	port = sport;
+    	meetingsToBeScheduled = new Queue<Meeting>();
+    	try{
+    		server = new ServerSocket(port);
+    		running = true;
+    	} catch (Exception e){
+    		System.out.println("Server could not be created.\nExiting...\n");
+    		System.exit(1);
+    	}
+    	System.out.println("Server constructed with port " + port);
+    }
+
+  
 
     public void run(){
-    	
+    	System.out.println("Server is running on port " + port);
+    	while (running){
+    		try {
+    			server.setSoTimeout(100);
+    			Socket temp = server.accept();
+    			
+    			//spawn a thread to handle the connection
+    			IOThread newthread = new IOThread(temp);
+    			newthread.start();
+    			threads.add(newthread);
+    			
+    		} catch (SocketException e){
+    			//TODO clean up
+    			for (int i = 0; i < threads.size(); i++){
+    				if (!threads.get(i).isAlive()) threads.remove(i);
+    			}
+    			
+    			// if any meetings need to be scheduled, do it
+    			if (!meetingsToBeScheduled.isEmpty()){
+    				//spawn new scheduler thread
+    				SchThread s = new SchThread(meetingsToBeScheduled.pop());
+    				s.start();
+    				threads.add(s);
+    			}
+    			
+    		} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	System.out.println("Server is closing...");
     }
 
     /**
@@ -127,8 +171,26 @@ public class Server extends Thread{
         // TODO implement here
     }
     
+    public void shutdown(){
+    	running = false;
+    }
+    
     public static void main(String [] args){
-    	System.out.println("grdg");
+    	int serverPort = 16386;
+		
+		FindMeetingTimeStrategyInterface strat = new FindMeetingTimeStrategy1();
+		
+		Server server = new Server(serverPort, strat);
+		
+		server.start();
+		System.out.println("Type \"quit\" to stop");
+
+		Scanner in = new Scanner(System.in);
+		while ( !in.next().equalsIgnoreCase("quit") );
+		in.close();
+		
+		System.out.println("\nShutting down the server...");
+		server.shutdown();
     }
     
 

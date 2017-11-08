@@ -1,3 +1,5 @@
+package structures;
+
 
 import java.util.*;
 
@@ -50,7 +52,7 @@ public class Meeting {
     /**
      * 
      */
-    private ArrayList<datePref> preferedDateParticipant;
+    private ArrayList<DatePref> preferedDateParticipant;
 
 
 
@@ -86,5 +88,23 @@ public class Meeting {
         //to server removeParticipant
     	//Participants.remove(P);
     }
+
+    /**
+     * Check if two meetings are equal via the id
+     * @param m Meeting
+     * @return True if id's are the same
+     */
+	public boolean isEqualTo(Meeting m) {
+		if (m.getID() == this.getID()) return true;
+		return false;
+	}
+
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
+	}
 
 }
