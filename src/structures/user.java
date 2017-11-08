@@ -1,11 +1,16 @@
 package structures;
 
+import java.io.Serializable;
 
 /**
  * 
  */
-public class User {
-	
+public class User implements Serializable{
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
     /**
      * main identifier
      */
@@ -21,6 +26,9 @@ public class User {
      */
     private String Password;
 
+    // TODO add appropriate getters and setters
+    private boolean isAdmin;
+    
     /**
      * Getters and Setters
      */
@@ -49,9 +57,22 @@ public class User {
     	UserName = U;
     	Password = P;
     }
+    /**
+     * 
+     * @param N Name
+     * @param U Username
+     * @param P Password (In SHA-256 hash)
+     *      */
     public User(String N , String U, String P){
     	Name = N;
     	UserName = U;
     	Password = P;
     }
+	public boolean isEqualTo(User u) {
+		if (UserName.equals(u.getUserName())) return true;
+		return false;
+	}
+	public boolean isAdmin() {
+		return isAdmin;
+	}
 }

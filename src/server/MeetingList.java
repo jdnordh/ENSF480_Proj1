@@ -1,6 +1,14 @@
 package server;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 import structures.*;
 /**
  * A singleton class
@@ -9,21 +17,39 @@ import structures.*;
  */
 public class MeetingList {
 	
+	/** the list of meetings */
 	private ArrayList<Meeting> meetings;
 	
-	private MeetingList onlyOne;
+	/** The only instance */
+	private static MeetingList onlyOne;
+	
+	
+	/** Used for storing WebObjects */
+	private ObjectOutputStream objectOut;
+	
+	/** Meeting catalog file name */
+	final String objectFileName = "meetings.j";
 	
 	private MeetingList(){
-		//TODO
-		
-		// read from file
+		meetings = this.readObjectFile();
 	}
+	
+	
+	// For testing purposes only
+	public static void main(String [] args){
+		MeetingList u = MeetingList.getMeetingList();
+		Meeting m = new Meeting();
+		m.setID(1234);
+		u.addMeeting(m);
+	}
+	
+	
 	
 	/** get the only instance
 	 * 
 	 * @return A MeetingList
 	 */
-	public MeetingList getMeetingList(){
+	public static MeetingList getMeetingList(){
 		if (onlyOne == null) 
 			onlyOne = new MeetingList();
 		return onlyOne;
@@ -33,10 +59,16 @@ public class MeetingList {
 		return meetings;
 	}
 	
+	/**
+	 * Delete a meeting from the list, only id is needed
+	 * @param m Meeting to be deleted
+	 * @return True if meeting is deleted, false if not found
+	 */
 	public boolean deleteMeeting(Meeting m){
 		for (int i = 0; i < meetings.size(); i++){
 			if (meetings.get(i).isEqualTo(m)){
-				
+				meetings.remove(i);
+				return true;
 			}
 		}
 		return false;
@@ -44,8 +76,79 @@ public class MeetingList {
 	
 	public void addMeeting(Meeting m){
 		meetings.add(m);
-		//TODO write new version to file
-		
-		
+		// write new version to file
+		this.writeToObjectOutputStream();
+	}
+	
+	/**
+	 * Opens and writes to an ObjectOutputStream
+	 * @param WebObject object to be added to schedule
+	 */
+	private void writeToObjectOutputStream() {
+		try
+		{
+			FileOutputStream fos = new FileOutputStream(new File(objectFileName));
+			objectOut = new ObjectOutputStream( fos );
+			if (objectOut == null) throw new Exception();
+			for (int i = 0; i < meetings.size(); i++){
+				objectOut.writeObject(meetings.get(i));
+			}
+			
+		} catch (IOException e){
+			System.err.println("Error opening output file: " + objectFileName);
+			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println( "Object output stream is null" );
+		} finally {
+			if (objectOut != null) {
+				try {
+					objectOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Reads catalog file and creates an ArrayList containing all stored web objects
+	 */
+	private ArrayList<Meeting> readObjectFile() {
+		ArrayList<Meeting> arr = new ArrayList<Meeting>();
+		try
+		{
+			FileInputStream fis = new FileInputStream(new File(objectFileName));
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			
+			// Read objects
+			Meeting temp = null;
+			
+			System.out.println("Files currently stored:");
+			while( (temp = (Meeting) ois.readObject()) != null){
+				arr.add(temp);
+				System.out.println(temp.toString());
+			}
+
+			ois.close();
+			fis.close();
+			
+			
+		} catch ( IOException ioException ) {
+			System.out.println( "Finished reading meeting file.\n" );
+			//ioException.printStackTrace();
+		} catch ( NoSuchElementException elementException ) {
+			System.err.println( "Invalid input. Please try again." );
+		} catch (Exception e) {
+			System.err.println( "Object output stream is null" );
+		} finally {
+			if (objectOut != null) {
+				try {
+					objectOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return arr;
 	}
 }

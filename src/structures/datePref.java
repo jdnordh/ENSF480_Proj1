@@ -1,13 +1,19 @@
 package structures;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 
  */
-public class DatePref {
+public class DatePref implements Serializable{
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      * Default constructor
      */
     public DatePref() {

@@ -1,13 +1,18 @@
 package structures;
 
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 
  */
-public class Meeting {
+public class Meeting implements Serializable{
 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
     /**
      * Default constructor
      */

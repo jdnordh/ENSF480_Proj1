@@ -1,12 +1,17 @@
 package structures;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * 
  */
-public class Participant extends user {
-   
+public class Participant extends User implements Serializable{
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/**
      * Name of Participant
      */

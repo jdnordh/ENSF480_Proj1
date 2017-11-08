@@ -1,4 +1,5 @@
 package structures;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -7,8 +8,14 @@ import java.util.ArrayList;
 /**
  * 
  */
-public class Packet{
+public class Packet implements Serializable{
 
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	
 	/** A request sent to the server, from the login GUI
 	 * The following fields need to be filled in to make this a valid request:
 	 * 
