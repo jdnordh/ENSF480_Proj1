@@ -28,17 +28,10 @@ public class ListenerThread extends Thread{
 	
 	private User user;
 	
-	/**
-	 * The scheduler algorithm to be used
-	 */
-	private FindMeetingTimeStrategyInterface scheduler;
-	
-	
-	public ListenerThread(Socket s, Queue<Packet> q, IOThread mas, FindMeetingTimeStrategyInterface sch) {
+	public ListenerThread(Socket s, Queue<Packet> q, IOThread mas) {
 		master = mas;
 		socket = s;
 		queue = q;
-		scheduler = sch;
 		try {
 			socket.setSoTimeout(100);
 			in = new ObjectInputStream(socket.getInputStream());
@@ -102,7 +95,8 @@ public class ListenerThread extends Thread{
 	private void initiateMeeting(Packet p) {
 		Packet response = new Packet(Packet.INITIATE_MEETING_CONFIRM);
 
-		scheduler.FindMeetingTime(p.getMeetings().get(0));		
+		MeetingList m = MeetingList.getMeetingList();
+		m.addMeeting(p.getMeetings().get(0));
 		
 		queue.push(response);
 	}

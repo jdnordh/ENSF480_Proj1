@@ -54,7 +54,7 @@ public class Server extends Thread{
     			Socket temp = server.accept();
     			
     			//spawn a thread to handle the connection
-    			IOThread newthread = new IOThread(temp, scheduler);
+    			IOThread newthread = new IOThread(temp);
     			newthread.start();
     			threads.add(newthread);
     			
