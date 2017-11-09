@@ -28,10 +28,17 @@ public class ListenerThread extends Thread{
 	
 	private User user;
 	
-	public ListenerThread(Socket s, Queue<Packet> q, IOThread mas) {
+	/**
+	 * The scheduler algorithm to be used
+	 */
+	private FindMeetingTimeStrategyInterface scheduler;
+	
+	
+	public ListenerThread(Socket s, Queue<Packet> q, IOThread mas, FindMeetingTimeStrategyInterface sch) {
 		master = mas;
 		socket = s;
 		queue = q;
+		scheduler = sch;
 		try {
 			socket.setSoTimeout(100);
 			in = new ObjectInputStream(socket.getInputStream());
@@ -94,8 +101,8 @@ public class ListenerThread extends Thread{
 	 */
 	private void initiateMeeting(Packet p) {
 		Packet response = new Packet(Packet.INITIATE_MEETING_CONFIRM);
-		
-		//TODO THIS studffff
+
+		scheduler.FindMeetingTime(p.getMeetings().get(0));		
 		
 		queue.push(response);
 	}
@@ -125,21 +132,21 @@ public class ListenerThread extends Thread{
 	private void login(Packet p) {
 		Packet response;
 		UserList ul = UserList.getUserList();
-		User user = new User(p.getStrings().get(0), p.getStrings().get(1));
-		int log = ul.login(user);
+		User log = ul.login(p.getUsers().get(0));
 		
-		if (log == UserList.INVALID){
+		if (log == null){
 			response = new Packet(Packet.LOGIN_DENY);
-			queue.push(response);
 		}
-		else if (log == UserList.USER){
-			response = new Packet(Packet.LOGIN_CONFIRM_USER);
-			queue.push(response);
+		else {
+			user = log;
+			if (log.isAdmin()){
+				response = new Packet(Packet.LOGIN_CONFIRM_ADMIN);
+			}
+			else {
+				response = new Packet(Packet.LOGIN_CONFIRM_USER);
+			}
 		}
-		else if (log == UserList.ADMIN){
-			response = new Packet(Packet.LOGIN_CONFIRM_ADMIN);
-			queue.push(response);
-		}
+		queue.push(response);
 	}
 
 

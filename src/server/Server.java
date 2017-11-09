@@ -24,16 +24,6 @@ public class Server extends Thread{
 	private Queue<Meeting> meetingsToBeScheduled;
 	
 	private int port;
-	
-	/**
-     * TODO change to singleton
-     */
-    private ArrayList<User> userCatalog;
-
-    /**
-     * TODO change to a singleton
-     */
-    private ArrayList<Meeting> meetingCatalog;
 
 	/**
 	 * Construct a server
@@ -41,7 +31,7 @@ public class Server extends Thread{
 	 * @param s Meeting scheduler strategy
 	 */
     public Server(int sport, FindMeetingTimeStrategyInterface s) {
-    	scheduler = s;
+    	setScheduler(s);
     	port = sport;
     	meetingsToBeScheduled = new Queue<Meeting>();
     	try{
@@ -64,7 +54,7 @@ public class Server extends Thread{
     			Socket temp = server.accept();
     			
     			//spawn a thread to handle the connection
-    			IOThread newthread = new IOThread(temp);
+    			IOThread newthread = new IOThread(temp, scheduler);
     			newthread.start();
     			threads.add(newthread);
     			
@@ -192,6 +182,18 @@ public class Server extends Thread{
 		System.out.println("\nShutting down the server...");
 		server.shutdown();
     }
+
+
+
+	public FindMeetingTimeStrategyInterface getScheduler() {
+		return scheduler;
+	}
+
+
+
+	public void setScheduler(FindMeetingTimeStrategyInterface scheduler) {
+		this.scheduler = scheduler;
+	}
     
 
 }

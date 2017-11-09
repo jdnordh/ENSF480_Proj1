@@ -47,7 +47,7 @@ public class Packet implements Serializable{
 	 * 
 	 * Else if returned Packet.LOGIN_CONFIRM_ADMIN, open admin GUI
 	 * 
-	 * In both the above cases, index 0 of fields will include the users name, if you want to display it in the window title
+	 * In both the above cases, a user will be returned in users index 0 and will include the users name, if you want to display it in the window title
 	 * 
 	 * Else if Packet.LOGIN_DENY, password and/or username were incorrect
 	 */
@@ -104,11 +104,10 @@ public class Packet implements Serializable{
 	 * The following fields should be filled out
 	 * 
 	 * For Packet.ADD_USER
-	 * strings index 0 with username
-	 * strings index 1 with SHA-256 hashed password (see above in Packet.LOGIN)
+	 * users index 0 with username, hashed password, and name
 	 * 
 	 * For Packet.DELETE_USER
-	 * strings index 0 with username
+	 * users index 0 with username
 	 */
 	public static final int ADD_USER = 15;
 	public static final int DELETE_USER = 16;
@@ -118,7 +117,7 @@ public class Packet implements Serializable{
 	 * The following type is for participants accepting a meeting
 	 * The following fields should be filled out:
 	 * 
-	 * strings index 0 with username
+	 * users index 0 with username
 	 * number1 with meetingId
 	 * dates with all date preferences
 	 * 
@@ -131,7 +130,7 @@ public class Packet implements Serializable{
 	 * The following is used to decline a meeting
 	 * Fill out the following:
 	 * 
-	 * fields index 0 with username
+	 * users index 0 with username
 	 * number1 with meetingId
 	 */
 	public static final int DELCINE_MEETING = 31;
@@ -141,7 +140,7 @@ public class Packet implements Serializable{
 	 * This is for getting all the users meetings, no matter the state
 	 * Fill out the following:
 	 * 
-	 * fields index 0 with username
+	 * users index 0 with username
 	 */
 	public static final int REQUEST_ALL_MEETINGS = 33;
 	
@@ -150,6 +149,7 @@ public class Packet implements Serializable{
 	 * This is a server response to Packet.REQUEST_ALL_MEETINGS
 	 * The following fields will be populated
 	 * 
+	 * Meetings will all meetings associated with that user
 	 */
 	public static final int RESPONSE_ALL_MEETINGS = 34;
 	

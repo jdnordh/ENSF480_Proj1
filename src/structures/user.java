@@ -79,6 +79,18 @@ public class User implements Serializable{
     	Password = P;
     }
 
+    /**
+     * Copy constructor
+     * @param user User to be copied
+     */
+	public User(User user) {
+		Name = new String(user.getName());
+    	UserName = new String(user.getUserName());
+    	Password = new String(user.getPassword());
+    	isAdmin = user.isAdmin();
+	}
+	
+	
 	public boolean isEqualTo(User u) {
 		if (UserName.equals(u.getUserName())) return true;
 		return false;

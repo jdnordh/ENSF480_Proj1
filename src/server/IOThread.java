@@ -44,7 +44,7 @@ public class IOThread extends Thread{
 	 */
 	private User user;
 	
-	public IOThread(Socket s){
+	public IOThread(Socket s, FindMeetingTimeStrategyInterface sch){
 		socket = s;
 		try {
 			out = new ObjectOutputStream(socket.getOutputStream());
@@ -52,7 +52,7 @@ public class IOThread extends Thread{
 			e.printStackTrace();
 		}
 		setQueue(new Queue<Packet>());
-		listener = new ListenerThread(socket, queue, this);
+		listener = new ListenerThread(socket, queue, this, sch);
 	}
 	
 	public void shutdown(){
@@ -83,6 +83,8 @@ public class IOThread extends Thread{
 		// shuter down boys
 		listener.shutdown();
 		try {
+			out.writeObject(new Packet(Packet.CLOSE_CONNECTION));
+			out.flush();
 			socket.close();
 		} catch (Exception e) {}
 	}

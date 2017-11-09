@@ -66,31 +66,22 @@ public class UserList {
 		return users;
 	}
 	
-	/** codes for returning from login */
-	public static final int INVALID = 0;
-	public static final int USER = 1;
-	public static final int ADMIN = 2;
 	/** 
-	 * 	INVALID = 0;
- 		USER = 1;
-		ADMIN = 2;
 		
 	 * Attempt to login a user
 	 * @param u User
 	 * @return A login code, see above
 	 */
-	public int login(User u){
+	public User login(User u){
+		User l = null;
 		for (int i = 0; i < users.size(); i++){
 			if(u.getUserName().equals(users.get(i).getUserName())) {
 				if (u.getPassword().equals(users.get(i).getPassword())){
-					if (users.get(i).isAdmin()){
-						return ADMIN;
-					}
-					else return USER;
+					l = new User(users.get(i));
 				}
 			}
 		}
-		return INVALID;
+		return l;
 	}
 	
 	/**
