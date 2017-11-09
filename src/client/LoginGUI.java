@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 
 import structures.Packet;
+import structures.User;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -102,32 +103,51 @@ public class LoginGUI extends JFrame {
 		JButton submitB = new JButton("submit");
 		submitB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String password = passwordTF.getText();
+				/*
+				 String password = passwordTF.getText();
 				MessageDigest digest;
 				try {
 					digest = MessageDigest.getInstance("SHA-256");
 					String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
-					System.out.print(hashed_password);
 				} catch (NoSuchAlgorithmException e) {}
-				/*
-				Packet temp = new Packet(usernameTF.getText(), digest);
-				output.writeObject(temp);
-				Packet returned = (Packet) input.readObject();
+				*/
+				User loginUser = new User(usernameTF.getText(),passwordTF.getText());
+				//create login packet type 2
+				Packet temp = new Packet(2);
+				//add user to packet
+				temp.addUser(loginUser);
+				//send packet to server
+				try {
+					output.writeObject(temp);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//read a packet from server
+				try {
+					temp = (Packet) input.readObject();
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
-				if(returned.LOGIN_CONFIRM_USER == 20){
+				if(temp.getType() == 20){
 					//open user gui
 					//ClientGUI
-				}else if(returned.LOGIN_CONFIRM_ADMIN == 21){
+				}else if(temp.getType() == 21){
 					//open admin gui
 					//AdminGUI
-				}else if(returned.LOGIN_DENY == 22){
+				}else if(temp.getType() == 22){
 					//open deny 
 					JOptionPane.showMessageDialog(panel, "That was not correct username and password");
 				}else{
 					//error message
 					JOptionPane.showMessageDialog(panel, "Something terrible happened");
 				}
-				*/
+				
 			}
 		});
 		submitB.setBounds(6, 85, 425, 25);
