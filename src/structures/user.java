@@ -26,7 +26,10 @@ public class User implements Serializable{
      */
     private String Password;
 
-    private boolean isAdmin;
+    /**
+     * True if the user is admin, default is false
+     */
+    private boolean isAdmin = false;
     
     public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
@@ -55,12 +58,17 @@ public class User implements Serializable{
     
     public User(){}
     
+    /**
+     * Construct a user with only username and password
+     * @param U Username
+     * @param P Password
+     */
     public User(String U, String P){
     	UserName = U;
     	Password = P;
     }
     /**
-     * 
+     * Make a user with all string fields
      * @param N Name
      * @param U Username
      * @param P Password (In SHA-256 hash)
@@ -69,8 +77,8 @@ public class User implements Serializable{
     	Name = N;
     	UserName = U;
     	Password = P;
-    	isAdmin = false;
     }
+
 	public boolean isEqualTo(User u) {
 		if (UserName.equals(u.getUserName())) return true;
 		return false;

@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 import structures.*;
 
@@ -32,6 +33,7 @@ public class ListenerThread extends Thread{
 		socket = s;
 		queue = q;
 		try {
+			socket.setSoTimeout(100);
 			in = new ObjectInputStream(socket.getInputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -51,21 +53,95 @@ public class ListenerThread extends Thread{
 				
 				//TODO classify the packet
 				
+// CLOSE
+				if (p.getType() == Packet.CLOSE_CONNECTION){
+					running = false;
+					master.shutdown();
+					master.interrupt();
+				}
+				
+// LOGIN
+				else if (p.getType() == Packet.LOGIN){
+					this.login(p);
+				}
+// REQUEST ALL USERS
+				else if (p.getType() == Packet.REQUEST_ALL_USERS){
+					this.sendAllUsers();
+				}
+// INITIATE MEETING
+				else if (p.getType() == Packet.INITIATE_MEETING){
+					this.initiateMeeting(p);
+				}
+				
+				
+			} catch (SocketTimeoutException e){
+				// times out to check if the thread should still be running
+				
 			} catch (ClassNotFoundException | IOException e) {
 				sendBadRequest();
 				e.printStackTrace();
 			}
-			/*
-			catch (InterruptedException e){
-				
-			} 
-			*/
 			catch (Exception e){
 				sendBadRequest();
 				e.printStackTrace();
 			}
 		}
 	}
+
+	/**
+	 * Make a meeting
+	 * @param p Packet from client
+	 */
+	private void initiateMeeting(Packet p) {
+		Packet response = new Packet(Packet.INITIATE_MEETING_CONFIRM);
+		
+		//TODO THIS studffff
+		
+		queue.push(response);
+	}
+
+
+	/**
+	 * Send all users to the client
+	 */
+	private void sendAllUsers() {
+		Packet response = new Packet(Packet.RESPONSE_ALL_USERS);
+		UserList ul = UserList.getUserList();
+		response.setUsers(ul.getUsers());
+		
+		queue.push(response);
+	}
+
+
+	/**
+	 * Send a login response
+	 * 
+	public static final int INVALID = 0;
+	public static final int USER = 1;
+	public static final int ADMIN = 2;
+	 * 
+	 * @param log Login type
+	 */
+	private void login(Packet p) {
+		Packet response;
+		UserList ul = UserList.getUserList();
+		User user = new User(p.getStrings().get(0), p.getStrings().get(1));
+		int log = ul.login(user);
+		
+		if (log == UserList.INVALID){
+			response = new Packet(Packet.LOGIN_DENY);
+			queue.push(response);
+		}
+		else if (log == UserList.USER){
+			response = new Packet(Packet.LOGIN_CONFIRM_USER);
+			queue.push(response);
+		}
+		else if (log == UserList.ADMIN){
+			response = new Packet(Packet.LOGIN_CONFIRM_ADMIN);
+			queue.push(response);
+		}
+	}
+
 
 	/**
 	 * Send a bad request packet back to the client

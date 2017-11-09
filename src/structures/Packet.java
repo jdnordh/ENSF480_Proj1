@@ -20,7 +20,7 @@ public class Packet implements Serializable{
 	 * The following fields need to be filled in to make this a valid request:
 	 * 
 	 * type = Packet.LOGIN
-	 * two entries in strings: index 0 is username, index 1 is the SHA-256 hashed password, using the following syntax:
+	 * user index 0 = User - including username, SHA-256 hashed password, using the following syntax:
 	 * 
 	 * 			String password = "password";
 				MessageDigest digest;
@@ -29,7 +29,6 @@ public class Packet implements Serializable{
 					String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
 				} catch (NoSuchAlgorithmException e) {}
 				
-		The variable hashed_password should be assigned to index 1 of the ArrayList fields
 		
 		
 		***** You must import the following files for the hash:
@@ -95,6 +94,10 @@ public class Packet implements Serializable{
 	 */
 	public static final int INITIATE_MEETING = 3;
 	
+	/**
+	 * The server will send this packet back to the client to confirm that the meeting was received
+	 */
+	public static final int INITIATE_MEETING_CONFIRM = 35;
 	
 	/**
 	 * The following types are to be used by admin GUI exclusively
@@ -154,6 +157,16 @@ public class Packet implements Serializable{
 	 * This packet will be returned if the request was not formatted properly
 	 */
 	public static final int BAD_REQUEST = 90000;
+	
+	
+	/**
+	 * This packet can be sent to either the client or the server, initiating a connection close
+	 * Fields to fill out:
+	 * 
+	 * type = Packet.CLOSE_CONNECTION
+	 */
+	public static final int CLOSE_CONNECTION = 3300;
+	
 	
 	// for testing, will be deleted
 	public static void main(String [] args){
