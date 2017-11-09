@@ -1,10 +1,11 @@
+package client;
 
 import java.util.*;
 
 /**
  * 
  */
-public class AdminGUI implements ClientGUIFunctionality, ClientGUIFunctionality {
+public class AdminGUI implements ClientGUIFunctionality {
 
     /**
      * Default constructor
@@ -12,116 +13,43 @@ public class AdminGUI implements ClientGUIFunctionality, ClientGUIFunctionality 
     public AdminGUI() {
     }
 
+	@Override
+	public void getAllMeetings() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void initateMeeting() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void acceptMeeting() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void declineMeeting() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addLocationPref() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void Update() {
+		// TODO Auto-generated method stub
+		
+	}
 
 
-    /**
-     * @return
-     */
-    private void addUser() {
-        // TODO implement here
-        return null;
-    }
 
-    /**
-     * @return
-     */
-    private void deleteUser() {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @return
-     */
-    private void getAllUsers() {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * 
-     */
-    protected void getAllMeetings():Void() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    protected void initateMeeting():Void() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    protected void acceptMeeting():Void() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    protected void declineMeeting():void() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    protected void addLocationPref():Void() {
-        // TODO implement here
-    }
-
-    /**
-     * @return
-     */
-    protected void Update() {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * 
-     */
-    protected void getAllMeetings():Void() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    protected void initateMeeting():Void() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    protected void acceptMeeting():Void() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    protected void declineMeeting():void() {
-        // TODO implement here
-    }
-
-    /**
-     * 
-     */
-    protected void addLocationPref():Void() {
-        // TODO implement here
-    }
-
-    /**
-     * @return
-     */
-    protected void Update() {
-        // TODO implement here
-        return null;
-    }
 
 }

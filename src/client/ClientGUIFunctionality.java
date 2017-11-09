@@ -1,48 +1,43 @@
+package client;
 
 import java.util.*;
+
+import structures.User;
 
 /**
  * 
  */
 public interface ClientGUIFunctionality {
 
-    /**
-     * 
-     */
-    protected void UserName;
-
-
-
-
 
     /**
      * 
      */
-    protected void getAllMeetings():Void();
+    void getAllMeetings();
 
     /**
      * 
      */
-    protected void initateMeeting():Void();
+    void initateMeeting();
 
     /**
      * 
      */
-    protected void acceptMeeting():Void();
+    void acceptMeeting();
 
     /**
      * 
      */
-    protected void declineMeeting():void();
+    void declineMeeting();
 
     /**
      * 
      */
-    protected void addLocationPref():Void();
+    void addLocationPref();
 
     /**
      * @return
      */
-    protected void Update();
+     void Update();
 
 }
