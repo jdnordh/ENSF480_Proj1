@@ -26,10 +26,12 @@ public class User implements Serializable{
      */
     private String Password;
 
-    // TODO add appropriate getters and setters
     private boolean isAdmin;
     
-    /**
+    public void setAdmin(boolean isAdmin) {
+		this.isAdmin = isAdmin;
+	}
+	/**
      * Getters and Setters
      */
     public void setName(String n){
@@ -67,6 +69,7 @@ public class User implements Serializable{
     	Name = N;
     	UserName = U;
     	Password = P;
+    	isAdmin = false;
     }
 	public boolean isEqualTo(User u) {
 		if (UserName.equals(u.getUserName())) return true;

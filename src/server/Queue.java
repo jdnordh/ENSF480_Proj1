@@ -17,7 +17,7 @@ public class Queue<D> {
 	}
 	
 	/** add another entry to the end */
-	public void push(D d){
+	synchronized public void push(D d){
 		if (head != null){
 			QNode<D> temp = tail;
 			tail = new QNode<D>(d);

@@ -74,10 +74,21 @@ public class MeetingList {
 		return false;
 	}
 	
-	public void addMeeting(Meeting m){
-		meetings.add(m);
-		// write new version to file
-		this.writeToObjectOutputStream();
+	public boolean addMeeting(Meeting m){
+		boolean added = true;
+		
+		//check for duplicate meeting id
+		for (int i = 0; i < meetings.size(); i++){
+			if (meetings.get(i).isEqualTo(m)) added = false;
+		}
+		
+		if (added){
+			meetings.add(m);
+			// write new version to file
+			this.writeToObjectOutputStream();
+		}
+		//else System.out.println("Duplicate meeting id");
+		return added;
 	}
 	
 	/**
@@ -123,10 +134,8 @@ public class MeetingList {
 			// Read objects
 			Meeting temp = null;
 			
-			System.out.println("Files currently stored:");
 			while( (temp = (Meeting) ois.readObject()) != null){
 				arr.add(temp);
-				System.out.println(temp.toString());
 			}
 
 			ois.close();

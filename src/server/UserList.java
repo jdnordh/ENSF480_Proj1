@@ -22,13 +22,22 @@ public class UserList {
 	
 	
 	/*
-	 * For testing purposes only
+	// For testing purposes only
 	public static void main(String [] args){
 		UserList u = UserList.getUserList();
-		u.addUser(new User("Test User", "tester", "123456"));
+		User m = new User("Test User", "tester", "123456");
+		m.setAdmin(true);
+		u.addUser(m);
+		
+		ArrayList<User> us = u.getUsers();
+		for (int i = 0; i < us.size(); i++){
+			System.out.println(us.get(i).getUserName());
+		}
+		
+		if (u.login(m) > 0) System.out.println("I'm in!");
 	}
-	
 	*/
+	
 	/** the list of meetings */
 	private ArrayList<User> users;
 	
@@ -53,7 +62,7 @@ public class UserList {
 		return onlyOne;
 	}
 
-	public ArrayList<User> getMeetings() {
+	public ArrayList<User> getUsers() {
 		return users;
 	}
 	
@@ -99,10 +108,24 @@ public class UserList {
 		return false;
 	}
 	
-	public void addUser(User u){
-		users.add(u);
-		// write new version to file
-		this.writeToObjectOutputStream();
+	/**
+	 * Add a user with a unique username
+	 * @param u User
+	 * @return True if added, false if duplicate username
+	 */
+	public boolean addUser(User u){
+		boolean added = true;
+		//check for duplicate username
+		for (int i = 0; i < users.size(); i++){
+			if (users.get(i).isEqualTo(u)) added = false;
+		}
+		if (added) {
+			users.add(u);
+			// write new version to file
+			this.writeToObjectOutputStream();
+		}
+		//else System.out.println("Duplicate Username");
+		return added;
 	}
 	
 	/**
