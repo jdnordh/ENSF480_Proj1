@@ -44,7 +44,7 @@ public class ListenerThread extends ShutdownThread{
 	public void run(){
 		running = true;
 		
-		System.out.println("ListenerThread starting");
+		System.out.println("ListenerThread " + this.getId() + " starting");
 		
 		while (running){
 			try {
@@ -52,6 +52,8 @@ public class ListenerThread extends ShutdownThread{
 				Packet p = (Packet) in.readObject();
 				
 				if ( !(p instanceof Packet)) throw new ClassNotFoundException("BAD REQUEST");
+				
+				System.out.println("ListenerThread " + this.getId() + " recieved packet type " + p.getType());
 				
 				//TODO classify the packet
 				

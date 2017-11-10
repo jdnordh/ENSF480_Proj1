@@ -23,14 +23,13 @@ public class SchThread extends ShutdownThread{
 			
 			try {
 			
-				Queue<Meeting> queue = ml.getMeetingsToBeScheduled();
-			
-				//wait while queue is empty
-				while (queue.isEmpty()){
+				//wait while no new meetings
+				while (!ml.isChanged()){
 					wait();
 				}
 			
-				
+				strategy.FindMeetingTimes();
+				ml.setChanged(false);
 				
 			} catch (InterruptedException e){
 				

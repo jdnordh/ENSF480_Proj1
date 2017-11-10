@@ -24,15 +24,7 @@ public class MeetingList {
 	private static MeetingList onlyOne;
 	
 	/** Used for meetings to be scheduled */
-	private Queue<Meeting> meetingsToBeScheduled;
-	
-	/** 
-	 * Get the queue of meetings
-	 * @return Queue<Meetings>
-	 */
-	public Queue<Meeting> getMeetingsToBeScheduled() {
-		return meetingsToBeScheduled;
-	}
+	private boolean changed = false;
 
 	/** Used for storing WebObjects */
 	private ObjectOutputStream objectOut;
@@ -42,9 +34,10 @@ public class MeetingList {
 	
 	private MeetingList(){
 		meetings = this.readObjectFile();
+		changed = true;
 	}
 	
-	
+	/*
 	// For testing purposes only
 	public static void main(String [] args){
 		MeetingList u = MeetingList.getMeetingList();
@@ -52,7 +45,7 @@ public class MeetingList {
 		m.setID(1234);
 		u.addMeeting(m);
 	}
-	
+	*/
 	
 	
 	/** get the only instance
@@ -65,14 +58,6 @@ public class MeetingList {
 			System.out.println("MeetingList initialized");
 		}
 		return onlyOne;
-	}
-
-	/**
-	 * Add a meeting to be scheduled
-	 * @param m Meeting
-	 */
-	public void addMeetingToBeScheduled(Meeting m){
-		meetingsToBeScheduled.push(m);
 	}
 	
 	/**
@@ -112,6 +97,7 @@ public class MeetingList {
 			this.writeToObjectOutputStream();
 		}
 		//else System.out.println("Duplicate meeting id");
+		if (added) this.setChanged(true);
 		return added;
 	}
 	
@@ -183,5 +169,16 @@ public class MeetingList {
 			}
 		}
 		return arr;
+	}
+
+
+	public boolean isChanged() {
+		return changed;
+	}
+
+
+	public void setChanged(boolean changed) {
+		this.changed = changed;
+		if (changed) notifyAll();
 	}
 }

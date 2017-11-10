@@ -62,7 +62,16 @@ public class Meeting implements Serializable{
 
 
 
-
+    /**
+     * Find if a user is part of a meeting
+     * @param username Username
+     * @return True if they are part of the meeting
+     */
+    public boolean containsParticipant(String username){
+    	//TODO
+    	
+    	return false;
+    }
 
 
     /**

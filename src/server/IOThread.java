@@ -62,7 +62,7 @@ public class IOThread extends ShutdownThread{
 	public void run(){
 		//TODO check if working??
 		
-		System.out.println("IOThread starting");
+		System.out.println("IOThread " + this.getId() + " starting");
 		
 		listener.start();
 		
@@ -75,7 +75,9 @@ public class IOThread extends ShutdownThread{
 			}
 			while (!queue.isEmpty()){
 				try {
-					out.writeObject(queue.pop());
+					Packet p = queue.pop();
+					System.out.println("IOThread " + this.getId() + " sending packet type " + p.getType());
+					out.writeObject(p);
 					out.flush();
 				} catch (IOException e) {
 					e.printStackTrace();
