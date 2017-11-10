@@ -34,7 +34,7 @@ public class UserList {
 			System.out.println(us.get(i).getUserName());
 		}
 		
-		if (u.login(m) > 0) System.out.println("I'm in!");
+		if (u.login(m) != null) System.out.println("I'm in!");
 	}
 	*/
 	

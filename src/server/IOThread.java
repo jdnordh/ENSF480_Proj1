@@ -1,6 +1,7 @@
 package server;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
@@ -20,9 +21,9 @@ public class IOThread extends ShutdownThread{
 	private boolean running;
 	
 	/**
-	 * Socket to output to
+	 * Object stream input
 	 */
-	private Socket socket;
+	private ObjectInputStream in;
 	
 	/**
 	 * Object stream to output to
@@ -44,15 +45,10 @@ public class IOThread extends ShutdownThread{
 	 */
 	private User user;
 	
-	public IOThread(Socket s){
-		socket = s;
-		try {
-			out = new ObjectOutputStream(socket.getOutputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public IOThread(ObjectOutputStream oos, ObjectInputStream ois){
+		out = oos;
 		setQueue(new Queue<Packet>());
-		listener = new ListenerThread(socket, queue, this);
+		listener = new ListenerThread(ois, queue, this);
 	}
 	
 	public void shutdown(){
@@ -68,8 +64,9 @@ public class IOThread extends ShutdownThread{
 		
 		while (running){
 			try {
-				while (queue.isEmpty())
-					wait();
+				synchronized(queue){
+					while (queue.isEmpty()) queue.wait();
+				}
 			} catch (InterruptedException e) {
 				// check for shutdown
 			}
@@ -90,8 +87,8 @@ public class IOThread extends ShutdownThread{
 		try {
 			out.writeObject(new Packet(Packet.CLOSE_CONNECTION));
 			out.flush();
-			socket.close();
 		} catch (Exception e) {}
+		System.out.println("IOThread " + this.getId() + " stopping");
 	}
 
 	public Queue<Packet> getQueue() {

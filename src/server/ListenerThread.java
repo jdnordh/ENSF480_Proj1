@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
 import structures.*;
@@ -18,8 +19,6 @@ public class ListenerThread extends ShutdownThread{
 
 	private boolean running;
 	
-	private Socket socket;
-	
 	private Queue<Packet> queue;
 	
 	private ObjectInputStream in;
@@ -28,16 +27,10 @@ public class ListenerThread extends ShutdownThread{
 	
 	private User user;
 	
-	public ListenerThread(Socket s, Queue<Packet> q, IOThread mas) {
+	public ListenerThread(ObjectInputStream s, Queue<Packet> q, IOThread mas) {
 		master = mas;
-		socket = s;
+		in = s;
 		queue = q;
-		try {
-			socket.setSoTimeout(100);
-			in = new ObjectInputStream(socket.getInputStream());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 
@@ -48,7 +41,7 @@ public class ListenerThread extends ShutdownThread{
 		
 		while (running){
 			try {
-				
+				System.out.println("ListenerThread " + this.getId() + " waiting for object");
 				Packet p = (Packet) in.readObject();
 				
 				if ( !(p instanceof Packet)) throw new ClassNotFoundException("BAD REQUEST");
@@ -116,7 +109,13 @@ public class ListenerThread extends ShutdownThread{
 			} catch (SocketTimeoutException e){
 				// times out to check if the thread should still be running
 				
-			} catch (ClassNotFoundException | IOException e) {
+			} catch (SocketException e){
+				// socket is ded
+				//e.printStackTrace();
+				this.shutdown();
+				master.shutdown();
+				
+			}catch (ClassNotFoundException | IOException e) {
 				sendBadRequest();
 				e.printStackTrace();
 			}
@@ -125,6 +124,7 @@ public class ListenerThread extends ShutdownThread{
 				e.printStackTrace();
 			}
 		}
+		System.out.println("ListenerThread " + this.getId() + " stopping");
 	}
 
 	private void deleteLocation(Packet p) {

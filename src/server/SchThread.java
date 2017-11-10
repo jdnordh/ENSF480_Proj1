@@ -2,9 +2,14 @@ package server;
 
 import structures.*;
 
+/**
+ * 
+ * @author Jordan
+ *
+ */
 public class SchThread extends ShutdownThread{
 	
-	boolean running;
+	private boolean running;
 	
 	private FindMeetingTimeStrategyInterface strategy;
 	
@@ -15,20 +20,15 @@ public class SchThread extends ShutdownThread{
 	public void run(){
 		//TODO test
 		running = true;
-		
 		System.out.println("Scheduler thread starting");
 		
 		MeetingList ml = MeetingList.getMeetingList();
 		while (running) {
-			
 			try {
-			
+				sleep(1000);
 				//wait while no new meetings
-				while (!ml.isChanged()){
-					wait();
-				}
 			
-				strategy.FindMeetingTimes();
+				if (ml.isChanged()) strategy.FindMeetingTimes();
 				ml.setChanged(false);
 				
 			} catch (InterruptedException e){
@@ -41,4 +41,5 @@ public class SchThread extends ShutdownThread{
 	public void shutdown(){
 		running = false;
 	}
+	
 }

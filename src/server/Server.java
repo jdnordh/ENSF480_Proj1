@@ -1,9 +1,12 @@
 package server;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.*;
 
 import structures.*;
@@ -31,6 +34,7 @@ public class Server extends Thread{
     public Server(int sport, FindMeetingTimeStrategyInterface s) {
     	setScheduler(s);
     	port = sport;
+    	threads = new ArrayList<ShutdownThread>();
     	try{
     		server = new ServerSocket(port);
     		running = true;
@@ -55,13 +59,22 @@ public class Server extends Thread{
     		try {
     			server.setSoTimeout(100);
     			Socket temp = server.accept();
+    			ObjectInputStream ois = new ObjectInputStream(temp.getInputStream());
+    			ObjectOutputStream oos = new ObjectOutputStream(temp.getOutputStream());
     			
+    			System.out.println("Incoming connection from: " + temp.toString());
     			//spawn a thread to handle the connection
-    			IOThread newthread = new IOThread(temp);
+    			IOThread newthread = new IOThread(oos, ois);
     			newthread.start();
     			threads.add(newthread);
     			
     		} catch (SocketException e){
+    			// clean up
+    			for (int i = 0; i < threads.size(); i++){
+    				if (!threads.get(i).isAlive()) threads.remove(i);
+    			}
+    			
+    		} catch (SocketTimeoutException e){
     			// clean up
     			for (int i = 0; i < threads.size(); i++){
     				if (!threads.get(i).isAlive()) threads.remove(i);
