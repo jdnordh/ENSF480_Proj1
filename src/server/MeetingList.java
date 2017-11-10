@@ -23,7 +23,17 @@ public class MeetingList {
 	/** The only instance */
 	private static MeetingList onlyOne;
 	
+	/** Used for meetings to be scheduled */
+	private Queue<Meeting> meetingsToBeScheduled;
 	
+	/** 
+	 * Get the queue of meetings
+	 * @return Queue<Meetings>
+	 */
+	public Queue<Meeting> getMeetingsToBeScheduled() {
+		return meetingsToBeScheduled;
+	}
+
 	/** Used for storing WebObjects */
 	private ObjectOutputStream objectOut;
 	
@@ -50,11 +60,25 @@ public class MeetingList {
 	 * @return A MeetingList
 	 */
 	public static MeetingList getMeetingList(){
-		if (onlyOne == null) 
+		if (onlyOne == null) {
 			onlyOne = new MeetingList();
+			System.out.println("MeetingList initialized");
+		}
 		return onlyOne;
 	}
 
+	/**
+	 * Add a meeting to be scheduled
+	 * @param m Meeting
+	 */
+	public void addMeetingToBeScheduled(Meeting m){
+		meetingsToBeScheduled.push(m);
+	}
+	
+	/**
+	 * Get the entire list of meetings
+	 * @return An ArrayList of Meetings
+	 */
 	public ArrayList<Meeting> getMeetings() {
 		return meetings;
 	}
@@ -143,7 +167,7 @@ public class MeetingList {
 			
 			
 		} catch ( IOException ioException ) {
-			System.out.println( "Finished reading meeting file.\n" );
+			//System.out.println( "Finished reading meeting file.\n" );
 			//ioException.printStackTrace();
 		} catch ( NoSuchElementException elementException ) {
 			System.err.println( "Invalid input. Please try again." );

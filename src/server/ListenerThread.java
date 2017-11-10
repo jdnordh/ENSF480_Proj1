@@ -14,7 +14,7 @@ import structures.*;
  * @author Jordan
  *
  */
-public class ListenerThread extends Thread{
+public class ListenerThread extends ShutdownThread{
 
 	private boolean running;
 	
@@ -43,6 +43,8 @@ public class ListenerThread extends Thread{
 
 	public void run(){
 		running = true;
+		
+		System.out.println("ListenerThread starting");
 		
 		while (running){
 			try {

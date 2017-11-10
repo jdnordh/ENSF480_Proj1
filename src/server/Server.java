@@ -17,11 +17,9 @@ public class Server extends Thread{
 	
 	private ServerSocket server;
 	
-	private ArrayList<Thread> threads;
+	private ArrayList<ShutdownThread> threads;
 	
 	private FindMeetingTimeStrategyInterface scheduler;
-	
-	private Queue<Meeting> meetingsToBeScheduled;
 	
 	private int port;
 
@@ -33,7 +31,6 @@ public class Server extends Thread{
     public Server(int sport, FindMeetingTimeStrategyInterface s) {
     	setScheduler(s);
     	port = sport;
-    	meetingsToBeScheduled = new Queue<Meeting>();
     	try{
     		server = new ServerSocket(port);
     		running = true;
@@ -48,6 +45,12 @@ public class Server extends Thread{
 
     public void run(){
     	System.out.println("Server is running on port " + port);
+    	
+    	//start the scheduler thread
+    	SchThread s = new SchThread(scheduler);
+		s.start();
+		threads.add(s);
+    	
     	while (running){
     		try {
     			server.setSoTimeout(100);
@@ -59,23 +62,19 @@ public class Server extends Thread{
     			threads.add(newthread);
     			
     		} catch (SocketException e){
-    			//TODO clean up
+    			// clean up
     			for (int i = 0; i < threads.size(); i++){
     				if (!threads.get(i).isAlive()) threads.remove(i);
-    			}
-    			
-    			// if any meetings need to be scheduled, do it
-    			if (!meetingsToBeScheduled.isEmpty()){
-    				//spawn new scheduler thread
-    				SchThread s = new SchThread(meetingsToBeScheduled.pop());
-    				s.start();
-    				threads.add(s);
     			}
     			
     		} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+    	}
+    	for (int i = 0; i < threads.size(); i++){
+    		threads.get(i).shutdown();
+    		threads.get(i).interrupt();
     	}
     	System.out.println("Server is closing...");
     }

@@ -57,8 +57,10 @@ public class UserList {
 	 * @return A MeetingList
 	 */
 	public static UserList getUserList(){
-		if (onlyOne == null) 
+		if (onlyOne == null) {
 			onlyOne = new UserList();
+			System.out.println("UserList initialized");
+		}
 		return onlyOne;
 	}
 

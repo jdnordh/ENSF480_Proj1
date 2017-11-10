@@ -12,7 +12,7 @@ import structures.User;
  * @author Jordan
  *
  */
-public class IOThread extends Thread{
+public class IOThread extends ShutdownThread{
 
 	/** 
 	 * A variable to tell the thread to run
@@ -61,6 +61,9 @@ public class IOThread extends Thread{
 	
 	public void run(){
 		//TODO check if working??
+		
+		System.out.println("IOThread starting");
+		
 		listener.start();
 		
 		while (running){
