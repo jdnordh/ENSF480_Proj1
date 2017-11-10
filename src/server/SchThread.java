@@ -13,7 +13,7 @@ public class SchThread extends ShutdownThread{
 	}
 	
 	public void run(){
-		//TODO
+		//TODO test
 		running = true;
 		
 		System.out.println("Scheduler thread starting");

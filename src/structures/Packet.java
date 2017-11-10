@@ -112,6 +112,13 @@ public class Packet implements Serializable{
 	public static final int ADD_USER = 15;
 	public static final int DELETE_USER = 16;
 	
+	/**
+	 * The following are response codes from the server after a request to add or delete a user
+	 */
+	public static final int ADD_USER_CONFIRM = 115;
+	public static final int DELETE_USER_CONFIRM = 116;
+	public static final int ADD_USER_DENY = 215;
+	public static final int DELETE_USER_DENY = 216;
 	
 	/**
 	 * The following type is for participants accepting a meeting
@@ -135,6 +142,12 @@ public class Packet implements Serializable{
 	 */
 	public static final int DELCINE_MEETING = 31;
 	
+	/**
+	 * The servers response to accept or decline of a meeting
+	 * 
+	 * This confirms that the action went through
+	 */
+	public static final int ACCEPT_OR_DECLINE_RESPONSE = 32;
 	
 	/**
 	 * This is for getting all the users meetings, no matter the state
@@ -158,16 +171,75 @@ public class Packet implements Serializable{
 	 */
 	public static final int BAD_REQUEST = 90000;
 	
+	/**
+	 * This request will get you all of the locations available to have meetings
+	 * Fill out these fields:
+	 * 
+	 * type = Packet.REQUEST_ALL_LOCATIONS
+	 */
+	public static final int REQUEST_ALL_LOCATIONS = 40;
+	
+	/**
+	 * The servers response to all locations request
+	 * These fields will be populated:
+	 * 
+	 * locations with all locations
+	 * 
+	 */
+	public static final int RESPONSE_ALL_LOCATIONS = 41;
+	
+	/**
+	 * This request is for admin only to add a location
+	 * 
+	 * Fill out these:
+	 * 
+	 * type = Packet.ADD_LOCATION
+	 * locations index 0 with the location to add
+	 * 
+	 */
+	public static final int ADD_LOCATION = 42;
+	
+	/**
+	 * This request is for admin only to delete a location
+	 * 
+	 * Fill out these:
+	 * 
+	 * type = Packet.DELETE_LOCATION
+	 * locations index 0 with the location to delete
+	 * 
+	 */
+	public static final int DELETE_LOCATION = 43;
+	
+	/**
+	 * This is the servers response to ADD_LOCATION
+	 * 
+	 * If the added location was a duplicate DENY is sent
+	 * else CONFIRM is sent
+	 */
+	public static final int ADD_LOCATION_CONFIRM = 44;
+	public static final int ADD_LOCATION_DENY = 45;
+	
+	/**
+	 * This is the servers response to DELETE_LOCATION
+	 * 
+	 * If the deleted location was not found DENY is sent
+	 * else CONFIRM is sent
+	 */
+	public static final int DELETE_LOCATION_CONFIRM = 46;
+	public static final int DELETE_LOCATION_DENY = 47;
 	
 	/**
 	 * This packet can be sent to either the client or the server, initiating a connection close
 	 * Fields to fill out:
 	 * 
 	 * type = Packet.CLOSE_CONNECTION
+	 * 
+	 * If sent to the server, the server will send an identical packet back
 	 */
 	public static final int CLOSE_CONNECTION = 3300;
 	
 	
+	/*
 	// for testing, will be deleted
 	public static void main(String [] args){
 		String password = "s";
@@ -179,7 +251,7 @@ public class Packet implements Serializable{
 		} catch (NoSuchAlgorithmException e) {}
 	}
 	
-	
+	*/
 	
 	
     /**
@@ -189,7 +261,7 @@ public class Packet implements Serializable{
     	type = t;
     	strings = new ArrayList<String>();
     	users = new ArrayList<User>();
-    	dates = new ArrayList<DatePref>();
+    	dates = new DatePref();
     	locations = new ArrayList<Location>();
     	meetings = new ArrayList<Meeting>();
     }
@@ -212,7 +284,7 @@ public class Packet implements Serializable{
     /**
      * An array of DatePrefs
      */
-    private ArrayList<DatePref> dates;
+    private DatePref dates;
 
     /**
      * An array of Locations
@@ -275,20 +347,12 @@ public class Packet implements Serializable{
 		users.add(user);
 	}
 
-	public ArrayList<DatePref> getDates() {
+	public DatePref getDates() {
 		return dates;
 	}
 
-	public void setDates(ArrayList<DatePref> dates) {
+	public void setDates(DatePref dates) {
 		this.dates = dates;
-	}
-
-	/**
-	 * Add a date to the end of the current DatePref array
-	 * @param date DatePref to be added
-	 */
-	public void addDate(DatePref date){
-		dates.add(date);
 	}
 	
 	public ArrayList<Location> getLocations() {

@@ -181,4 +181,32 @@ public class MeetingList {
 		this.changed = changed;
 		if (changed) notifyAll();
 	}
+
+	public boolean declineMeeting(Packet p) {
+		
+		for (int i = 0; i < meetings.size(); i++){
+			Meeting check = meetings.get(i);
+			if (check.getID() == p.getNumber1() && check.containsParticipant(p.getUsers().get(0).getUserName())){
+				check.declineMeeting(p.getUsers().get(0).getUserName());
+				this.setChanged(true);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public boolean acceptMeeting(Packet p) {
+		
+		for (int i = 0; i < meetings.size(); i++){
+			Meeting check = meetings.get(i);
+			if (check.getID() == p.getNumber1() && check.containsParticipant(p.getUsers().get(0).getUserName())){
+				check.acceptMeeting(p.getUsers().get(0).getUserName(), p.getDates());
+				this.setChanged(true);
+				return true;
+			}
+		}
+		
+		return false;
+	}
 }

@@ -31,5 +31,8 @@ public class DatePref implements Serializable{
 
     
     
+    public void addDate(Date date){
+    	prefDates.add(date);
+    }
     
 }

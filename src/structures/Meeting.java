@@ -42,7 +42,7 @@ public class Meeting implements Serializable{
     /**
      * 
      */
-    private ArrayList<Date> preferedDates;
+    private ArrayList<DatePref> preferedDates;
 
     /**
      * 
@@ -60,7 +60,22 @@ public class Meeting implements Serializable{
     private ArrayList<DatePref> preferedDateParticipant;
 
 
+    /**
+     * Accept a meeting while inputing date preferences
+     * @param username
+     * @param dates
+     */
+    public void acceptMeeting(String username, DatePref dates){
+    	//TODO
+    }
 
+    /**
+     * Decline a meeting
+     * @param username Username
+     */
+    public void declineMeeting(String username){
+    	//TODO
+    }
 
     /**
      * Find if a user is part of a meeting

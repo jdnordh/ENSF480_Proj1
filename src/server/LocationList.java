@@ -9,92 +9,81 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-import structures.User;
+import structures.Location;
 
 /**
  * A singleton class
  * @author Jordan
  *
  */
-public class UserList {
-	/** User catalog file name */
-	final String objectFileName = "users.j";
+public class LocationList {
+	/** Location catalog file name */
+	final String objectFileName = "locations.j";
 	
 	
 	/*
 	// For testing purposes only
 	public static void main(String [] args){
-		UserList u = UserList.getUserList();
-		User m = new User("Test User", "tester", "123456");
-		m.setAdmin(true);
-		u.addUser(m);
+		LocationList u = LocationList.getLocationList();
+		Location m = new Location("Test Location1", "Calgary", "123 1st Street");
+		u.addLocation(m);
+		m = new Location("Test Location2", "Edmonton", "420 69th Ave");
+		u.addLocation(m);
+		m = new Location("Test Location3", "Vancouver", "360 No Scope Boulevard");
+		u.addLocation(m);
 		
-		ArrayList<User> us = u.getUsers();
+		ArrayList<Location> us = u.getLocations();
 		for (int i = 0; i < us.size(); i++){
-			System.out.println(us.get(i).getUserName());
+			System.out.println(us.get(i).toString());
 		}
 		
-		if (u.login(m) > 0) System.out.println("I'm in!");
 	}
 	*/
 	
 	/** the list of meetings */
-	private ArrayList<User> users;
+	private ArrayList<Location> locations;
 	
 	/** The only instance */
-	private static UserList onlyOne;
+	private static LocationList onlyOne;
 	
 	
 	/** Used for storing WebObjects */
 	private ObjectOutputStream objectOut;
 	
-	private UserList(){
-		users = this.readObjectFile();
+	private LocationList(){
+		locations = this.readObjectFile();
 	}
 	
 	/** get the only instance
 	 * 
 	 * @return A MeetingList
 	 */
-	public static UserList getUserList(){
+	public static LocationList getLocationList(){
 		if (onlyOne == null) {
-			onlyOne = new UserList();
-			System.out.println("UserList initialized");
+			onlyOne = new LocationList();
+			System.out.println("LocationList initialized");
 		}
 		return onlyOne;
 	}
 
-	public ArrayList<User> getUsers() {
-		return users;
+	/**
+	 * Get all locations
+	 * @return ArrayList of locations
+	 */
+	public ArrayList<Location> getLocations() {
+		return locations;
 	}
 	
-	/** 
-		
-	 * Attempt to login a user
-	 * @param u User
-	 * @return A login code, see above
-	 */
-	public User login(User u){
-		User l = null;
-		for (int i = 0; i < users.size(); i++){
-			if(u.getUserName().equals(users.get(i).getUserName())) {
-				if (u.getPassword().equals(users.get(i).getPassword())){
-					l = new User(users.get(i));
-				}
-			}
-		}
-		return l;
-	}
 	
 	/**
-	 * Delete a user from the list, only id is needed
-	 * @param m User to be deleted
-	 * @return True if user is deleted, false if not found
+	 * Delete a location from the list
+	 * @param m Location to be deleted
+	 * @return True if location is deleted, false if not found
 	 */
-	public boolean deleteUser(User m){
-		for (int i = 0; i < users.size(); i++){
-			if (users.get(i).isEqualTo(m)){
-				users.remove(i);
+	public boolean deleteLocation(Location m){
+		for (int i = 0; i < locations.size(); i++){
+			if (locations.get(i).isEqualTo(m)){
+				locations.remove(i);
 				return true;
 			}
 		}
@@ -102,22 +91,22 @@ public class UserList {
 	}
 	
 	/**
-	 * Add a user with a unique username
-	 * @param u User
-	 * @return True if added, false if duplicate username
+	 * Add a location with a unique location
+	 * @param u Location
+	 * @return True if added, false if duplicate location
 	 */
-	public boolean addUser(User u){
+	public boolean addLocation(Location u){
 		boolean added = true;
 		//check for duplicate username
-		for (int i = 0; i < users.size(); i++){
-			if (users.get(i).isEqualTo(u)) added = false;
+		for (int i = 0; i < locations.size(); i++){
+			if (locations.get(i).isEqualTo(u)) added = false;
 		}
 		if (added) {
-			users.add(u);
+			locations.add(u);
 			// write new version to file
 			this.writeToObjectOutputStream();
 		}
-		//else System.out.println("Duplicate Username");
+		//else System.out.println("Duplicate Locationname");
 		return added;
 	}
 	
@@ -130,8 +119,8 @@ public class UserList {
 			FileOutputStream fos = new FileOutputStream(new File(objectFileName));
 			objectOut = new ObjectOutputStream( fos );
 			if (objectOut == null) throw new Exception();
-			for (int i = 0; i < users.size(); i++){
-				objectOut.writeObject(users.get(i));
+			for (int i = 0; i < locations.size(); i++){
+				objectOut.writeObject(locations.get(i));
 			}
 			
 		} catch (IOException e){
@@ -153,17 +142,17 @@ public class UserList {
 	/**
 	 * Reads catalog file and creates an ArrayList containing all stored objects
 	 */
-	private ArrayList<User> readObjectFile() {
-		ArrayList<User> arr = new ArrayList<User>();
+	private ArrayList<Location> readObjectFile() {
+		ArrayList<Location> arr = new ArrayList<Location>();
 		try
 		{
 			FileInputStream fis = new FileInputStream(new File(objectFileName));
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			
 			// Read objects
-			User temp = null;
+			Location temp = null;
 			
-			while( (temp = (User) ois.readObject()) != null){
+			while( (temp = (Location) ois.readObject()) != null){
 				arr.add(temp);
 			}
 
@@ -172,7 +161,7 @@ public class UserList {
 			
 			
 		} catch ( IOException ioException ) {
-			System.out.println( "Finished reading user file.\n" );
+			System.out.println( "Finished reading location file.\n" );
 			//ioException.printStackTrace();
 		} catch ( NoSuchElementException elementException ) {
 			System.err.println( "Invalid input. Please try again." );
