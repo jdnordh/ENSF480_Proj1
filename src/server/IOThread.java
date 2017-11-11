@@ -3,7 +3,6 @@ package server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 import structures.Packet;
 import structures.User;
@@ -19,11 +18,6 @@ public class IOThread extends ShutdownThread{
 	 * A variable to tell the thread to run
 	 */
 	private boolean running;
-	
-	/**
-	 * Object stream input
-	 */
-	private ObjectInputStream in;
 	
 	/**
 	 * Object stream to output to
@@ -56,15 +50,16 @@ public class IOThread extends ShutdownThread{
 	}
 	
 	public void run(){
-		//TODO check if working??
 		
 		System.out.println("IOThread " + this.getId() + " starting");
 		
 		listener.start();
-		
+		running = true;
 		while (running){
 			try {
+				// wait while queue is empty
 				synchronized(queue){
+					System.out.println("IOThread " + this.getId() + " waiting");
 					while (queue.isEmpty()) queue.wait();
 				}
 			} catch (InterruptedException e) {
@@ -85,6 +80,7 @@ public class IOThread extends ShutdownThread{
 		// shuter down boys
 		listener.shutdown();
 		try {
+			System.out.println("IOThread " + this.getId() + " sending packet type 3300");
 			out.writeObject(new Packet(Packet.CLOSE_CONNECTION));
 			out.flush();
 		} catch (Exception e) {}

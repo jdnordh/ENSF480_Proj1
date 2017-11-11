@@ -1,6 +1,5 @@
 package server;
 
-import structures.*;
 
 /**
  * 
@@ -25,10 +24,12 @@ public class SchThread extends ShutdownThread{
 		MeetingList ml = MeetingList.getMeetingList();
 		while (running) {
 			try {
-				sleep(1000);
-				//wait while no new meetings
-			
-				if (ml.isChanged()) strategy.FindMeetingTimes();
+				System.out.println("SchedulerThread " + this.getId() + " is waiting ");
+				synchronized(ml){
+					while (!ml.isChanged()) ml.wait();
+				}
+				System.out.println("SchedulerThread " + this.getId() + " is in action ");
+				strategy.FindMeetingTimes();
 				ml.setChanged(false);
 				
 			} catch (InterruptedException e){

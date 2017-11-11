@@ -2,9 +2,9 @@ package server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.io.EOFException;
 
 import structures.*;
 
@@ -31,6 +31,7 @@ public class ListenerThread extends ShutdownThread{
 		master = mas;
 		in = s;
 		queue = q;
+		user = null;
 	}
 
 
@@ -41,14 +42,18 @@ public class ListenerThread extends ShutdownThread{
 		
 		while (running){
 			try {
-				System.out.println("ListenerThread " + this.getId() + " waiting for object");
+				//System.out.println("ListenerThread " + this.getId() + " waiting for object");
+				if (in == null) {
+					running = false;
+					throw new CloseSocketException();
+				}
 				Packet p = (Packet) in.readObject();
 				
 				if ( !(p instanceof Packet)) throw new ClassNotFoundException("BAD REQUEST");
 				
 				System.out.println("ListenerThread " + this.getId() + " recieved packet type " + p.getType());
 				
-				//TODO classify the packet
+				// classify the packet
 				
 // CLOSE
 				if (p.getType() == Packet.CLOSE_CONNECTION){
@@ -61,71 +66,87 @@ public class ListenerThread extends ShutdownThread{
 				else if (p.getType() == Packet.LOGIN){
 					this.login(p);
 				}
+				// all remaining requests require user to be logged in
+				else if (user != null){
 // REQUEST ALL USERS
-				else if (p.getType() == Packet.REQUEST_ALL_USERS){
-					this.sendAllUsers();
-				}
+					if (p.getType() == Packet.REQUEST_ALL_USERS){
+						this.sendAllUsers();
+					}
 // INITIATE_MEETING
-				else if (p.getType() == Packet.INITIATE_MEETING){
-					this.initiateMeeting(p);
-				}
+					else if (p.getType() == Packet.INITIATE_MEETING){
+						this.initiateMeeting(p);
+					}
 // ADD_USER
-				else if (p.getType() == Packet.ADD_USER && user.isAdmin()){
-					this.addUser(p);
-				}
+					else if (p.getType() == Packet.ADD_USER && user.isAdmin()){
+						this.addUser(p);
+					}
 // DELETE_USER
-				else if (p.getType() == Packet.DELETE_USER && user.isAdmin()){
-					this.deleteUser(p);
-				}
+					else if (p.getType() == Packet.DELETE_USER && user.isAdmin()){
+						this.deleteUser(p);
+					}
 // ACCEPT_MEETING
-				else if (p.getType() == Packet.ACCEPT_MEETING){
-					this.acceptMeeting(p);
-				}
+					else if (p.getType() == Packet.ACCEPT_MEETING){
+						this.acceptMeeting(p);
+					}
 // DELCINE_MEETING
-				else if (p.getType() == Packet.DELCINE_MEETING){
-					this.declineMeeting(p);
-				}
+					else if (p.getType() == Packet.DELCINE_MEETING){
+						this.declineMeeting(p);
+					}
 // REQUEST_ALL_MEETINGS
-				else if (p.getType() == Packet.REQUEST_ALL_MEETINGS){
-					this.initiateMeeting(p);
-				}
-// CLOSE_CONNECTION
-				else if (p.getType() == Packet.CLOSE_CONNECTION){
-					this.initiateMeeting(p);
-				}
+					else if (p.getType() == Packet.REQUEST_ALL_MEETINGS){
+						this.requestAllMeetings(p);
+					}
 // REQUEST_ALL_LOCATIONS
-				else if (p.getType() == Packet.REQUEST_ALL_LOCATIONS){
-					this.getAllLocations(p);
-				}
+					else if (p.getType() == Packet.REQUEST_ALL_LOCATIONS){
+						this.getAllLocations(p);
+					}
 // ADD_LOCATION
-				else if (p.getType() == Packet.ADD_LOCATION && user.isAdmin()){
-					this.addLocation(p);;
-				}
+					else if (p.getType() == Packet.ADD_LOCATION && user.isAdmin()){
+						this.addLocation(p);;
+					}
 // DELETE_LOCATION
-				else if (p.getType() == Packet.DELETE_LOCATION && user.isAdmin()){
-					this.deleteLocation(p);;
+					else if (p.getType() == Packet.DELETE_LOCATION && user.isAdmin()){
+						this.deleteLocation(p);;
+					}
+					else {
+						this.sendBadRequest("User not null, but unknown request");
+					}
 				}
-				
+				else {
+					this.sendBadRequest("Final else");
+				}
+				//System.out.println("ListenerThread " + this.getId() + " finished dealing with packet " + p.getType());
 			} catch (SocketTimeoutException e){
 				// times out to check if the thread should still be running
-				
+				//System.out.println("ListenerThread " + this.getId() + " timeout");
 			} catch (SocketException e){
 				// socket is ded
 				//e.printStackTrace();
 				this.shutdown();
 				master.shutdown();
 				
+			}catch (CloseSocketException | EOFException e){
+				//close down
+				running = false;
 			}catch (ClassNotFoundException | IOException e) {
-				sendBadRequest();
-				e.printStackTrace();
-			}
-			catch (Exception e){
-				sendBadRequest();
+				sendBadRequest("Class or IO exception");
+				//e.printStackTrace();
+			}catch (Exception e){
+				sendBadRequest("General Exception");
 				e.printStackTrace();
 			}
 		}
 		System.out.println("ListenerThread " + this.getId() + " stopping");
 	}
+
+	private void requestAllMeetings(Packet p) {
+		Packet r = new Packet(Packet.RESPONSE_ALL_MEETINGS);
+		MeetingList ml = MeetingList.getMeetingList();
+		
+		r.setMeetings(ml.getMeetings());
+		queue.push(r);
+	}
+
 
 	private void deleteLocation(Packet p) {
 		LocationList ll = LocationList.getLocationList();
@@ -148,10 +169,10 @@ public class ListenerThread extends ShutdownThread{
 		
 		Packet r = null;
 		if (added){
-			r = new Packet(Packet.ADD_USER_CONFIRM);
+			r = new Packet(Packet.ADD_LOCATION_CONFIRM);
 		}
 		else {
-			r = new Packet(Packet.ADD_USER_DENY);
+			r = new Packet(Packet.ADD_LOCATION_DENY);
 		}
 		queue.push(r);
 	}
@@ -248,9 +269,6 @@ public class ListenerThread extends ShutdownThread{
 	/**
 	 * Send a login response
 	 * 
-	public static final int INVALID = 0;
-	public static final int USER = 1;
-	public static final int ADMIN = 2;
 	 * 
 	 * @param log Login type
 	 */
@@ -270,6 +288,7 @@ public class ListenerThread extends ShutdownThread{
 			else {
 				response = new Packet(Packet.LOGIN_CONFIRM_USER);
 			}
+			response.addUser(log);
 		}
 		queue.push(response);
 	}
@@ -278,8 +297,9 @@ public class ListenerThread extends ShutdownThread{
 	/**
 	 * Send a bad request packet back to the client
 	 */
-	private void sendBadRequest(){
+	private void sendBadRequest(String debug){
 		Packet p = new Packet(Packet.BAD_REQUEST);
+		System.out.println("ListenerThread " + this.getId() + " sending bad request\nDebug: " + debug);
 		queue.push(p);
 	}
 	

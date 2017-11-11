@@ -3,6 +3,7 @@ package server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -15,6 +16,8 @@ import structures.*;
  * 
  */
 public class Server extends Thread{
+
+	public final static String NAME = "localhost";
 
 	private boolean running;
 	
@@ -31,12 +34,13 @@ public class Server extends Thread{
 	 * @param port Port number
 	 * @param s Meeting scheduler strategy
 	 */
-    public Server(int sport, FindMeetingTimeStrategyInterface s) {
+    public Server(String name, int sport, FindMeetingTimeStrategyInterface s) {
     	setScheduler(s);
     	port = sport;
     	threads = new ArrayList<ShutdownThread>();
     	try{
-    		server = new ServerSocket(port);
+    		InetAddress a = InetAddress.getByName(name);
+			server = new ServerSocket(port, 50, a);
     		running = true;
     	} catch (Exception e){
     		System.out.println("Server could not be created.\nExiting...\n");
@@ -59,8 +63,10 @@ public class Server extends Thread{
     		try {
     			server.setSoTimeout(100);
     			Socket temp = server.accept();
-    			ObjectInputStream ois = new ObjectInputStream(temp.getInputStream());
+    			temp.setSoTimeout(100);
     			ObjectOutputStream oos = new ObjectOutputStream(temp.getOutputStream());
+    			ObjectInputStream ois = new ObjectInputStream(temp.getInputStream());
+    			
     			
     			System.out.println("Incoming connection from: " + temp.toString());
     			//spawn a thread to handle the connection
@@ -69,16 +75,18 @@ public class Server extends Thread{
     			threads.add(newthread);
     			
     		} catch (SocketException e){
+    			// problem with socket
     			// clean up
     			for (int i = 0; i < threads.size(); i++){
     				if (!threads.get(i).isAlive()) threads.remove(i);
     			}
-    			
+    			e.printStackTrace();
     		} catch (SocketTimeoutException e){
     			// clean up
     			for (int i = 0; i < threads.size(); i++){
     				if (!threads.get(i).isAlive()) threads.remove(i);
     			}
+    			//System.out.println("Timeout");
     			
     		} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -182,7 +190,7 @@ public class Server extends Thread{
 		
 		FindMeetingTimeStrategyInterface strat = new FindMeetingTimeStrategy1();
 		
-		Server server = new Server(serverPort, strat);
+		Server server = new Server(Server.NAME, serverPort, strat);
 		
 		server.start();
 		System.out.println("Type \"quit\" to stop");
