@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 
+import server.Server;
 import structures.Packet;
 import structures.User;
 
@@ -20,6 +21,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
@@ -44,7 +46,7 @@ public class LoginGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginGUI frame = new LoginGUI("localhost", 65535);
+					LoginGUI frame = new LoginGUI(Server.NAME, Server.PORT);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -58,7 +60,8 @@ public class LoginGUI extends JFrame {
 	 */
 	public LoginGUI(String serverName , int portNum) {
 		try {
-			aSocket = new Socket(serverName , portNum);
+			InetAddress a = InetAddress.getByName(serverName);
+			aSocket = new Socket(a , portNum);
 			output = new ObjectOutputStream(aSocket.getOutputStream());
 			input = new ObjectInputStream(aSocket.getInputStream());
 		} catch (UnknownHostException e) {
@@ -103,22 +106,28 @@ public class LoginGUI extends JFrame {
 		JButton submitB = new JButton("submit");
 		submitB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				/*
+				
 				 String password = passwordTF.getText();
 				MessageDigest digest;
+				
+				User loginUser = new User(usernameTF.getText(), password /* This will get changed*/);
+				
 				try {
 					digest = MessageDigest.getInstance("SHA-256");
 					String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
+					loginUser.setPassword(hashed_password);
 				} catch (NoSuchAlgorithmException e) {}
-				*/
-				User loginUser = new User(usernameTF.getText(),passwordTF.getText());
-				//create login packet type 2
-				Packet temp = new Packet(2);
+				
+				
+				System.out.println("Username: " + loginUser.getUserName() + "\nPassword: " + loginUser.getPassword());
+				//create login packet
+				Packet temp = new Packet(Packet.LOGIN);
 				//add user to packet
 				temp.addUser(loginUser);
 				//send packet to server
 				try {
 					output.writeObject(temp);
+					output.flush();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -133,17 +142,22 @@ public class LoginGUI extends JFrame {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-				if(temp.getType() == 20){
+				System.out.println("Type: "+ temp.getType());
+				if(temp.getType() == Packet.LOGIN_CONFIRM_USER){
+					//TODO
 					//open user gui
 					//ClientGUI
-				}else if(temp.getType() == 21){
+				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
+					//TODO
 					//open admin gui
 					//AdminGUI
-				}else if(temp.getType() == 22){
+				}else if(temp.getType() == Packet.LOGIN_DENY){
+					//TODO
 					//open deny 
 					JOptionPane.showMessageDialog(panel, "That was not correct username and password");
-				}else{
+				}else if (temp.getType() == Packet.CLOSE_CONNECTION){
+					//TODO close window, server was shut down
+				} else {
 					//error message
 					JOptionPane.showMessageDialog(panel, "Something terrible happened");
 				}

@@ -17,6 +17,8 @@ public class Server extends Thread{
 
 	public final static String NAME = "localhost";
 
+	public final static int PORT = 16386;
+	
 	private boolean running;
 	
 	private ServerSocket server;
@@ -174,11 +176,10 @@ public class Server extends Thread{
     }
     
     public static void main(String [] args){
-    	int serverPort = 16386;
 		
 		FindMeetingTimeStrategyInterface strat = new FindMeetingTimeStrategy1();
 		
-		Server server = new Server(Server.NAME, serverPort, strat);
+		Server server = new Server(Server.NAME, Server.PORT, strat);
 		
 		server.start();
 		System.out.println("Type \"quit\" to stop");
