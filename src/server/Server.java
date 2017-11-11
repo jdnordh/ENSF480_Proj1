@@ -10,8 +10,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.*;
 
-import structures.*;
-
 /**
  * 
  */
@@ -35,7 +33,7 @@ public class Server extends Thread{
 	 * @param s Meeting scheduler strategy
 	 */
     public Server(String name, int sport, FindMeetingTimeStrategyInterface s) {
-    	setScheduler(s);
+    	scheduler = s;
     	port = sport;
     	threads = new ArrayList<ShutdownThread>();
     	try{
@@ -89,7 +87,6 @@ public class Server extends Thread{
     			//System.out.println("Timeout");
     			
     		} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
     	}
@@ -100,86 +97,77 @@ public class Server extends Thread{
     	System.out.println("Server is closing...");
     }
 
-    /**
-     * @param Meeting 
-     * @return
-     */
-    protected void initateMeeting(Meeting m) {
-        // TODO implement here
-    }
+    
+    
+    
+    
 
-    /**
-     * @param Username 
-     * @param Password 
-     * @return
-     */
-    protected void addUser(String Username, String Password) {
-        // TODO implement here
-    }
-
-    /**
-     * @return
-     */
-    protected void notifyLoggedIn() {
-        // TODO implement here
-    }
-
-    /**
-     * @return
-     */
-    protected void deleteUser() {
-        // TODO implement here
-    }
-
-    /**
-     * @param meetingId 
-     * @param prefDates 
-     * @return
-     */
-    protected void participantAcceptMeeting(int meetingId, ArrayList<DatePref> prefDates) {
-        // TODO implement here
-    }
-
-    /**
-     * @return
-     */
-    protected ArrayList<Meeting> returnAllMeetings() {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param Participant 
-     * @return
-     */
-    protected void removeParticipant(Participant p) {
-        // TODO implement here
-    }
-
-    /**
-     * @param importantParticipants 
-     * @return
-     */
-    protected void notifyImportantParticipantForLocationPref(ArrayList<Participant> importantParticipants) {
-        // TODO implement here
-    }
-
-    /**
-     * @param asocket 
-     * @return
-     */
-    protected ArrayList<Participant> returnAllUsers(Socket asocket) {
-        // TODO implement here
-        return null;
-    }
-
-    /**
-     * @param UserName 
-     * @return
-     */
-    protected void participantsDeclinesMeeting(String s) {
-        // TODO implement here
-    }
+//
+//    /**
+//     * @param Username 
+//     * @param Password 
+//     * @return
+//     */
+//    protected void addUser(String Username, String Password) {
+//    }
+//
+//    /**
+//     * @return
+//     */
+//    protected void notifyLoggedIn() {
+//    }
+//
+//    /**
+//     * @return
+//     */
+//    protected void deleteUser() {
+//    }
+//
+//    /**
+//     * @param meetingId 
+//     * @param prefDates 
+//     * @return
+//     */
+//    protected void participantAcceptMeeting(int meetingId, ArrayList<DatePref> prefDates) {
+//    }
+//
+//    /**
+//     * @return
+//     */
+//    protected ArrayList<Meeting> returnAllMeetings() {
+//        return null;
+//    }
+//
+//    /**
+//     * @param Participant 
+//     * @return
+//     */
+//    protected void removeParticipant(Participant p) {
+//    }
+//
+//    /**
+//     * @param importantParticipants 
+//     * @return
+//     */
+//    protected void notifyImportantParticipantForLocationPref(ArrayList<Participant> importantParticipants) {
+//    }
+//
+//    /**
+//     * @param asocket 
+//     * @return
+//     */
+//    protected ArrayList<Participant> returnAllUsers(Socket asocket) {
+//        return null;
+//    }
+//
+//    /**
+//     * @param UserName 
+//     * @return
+//     */
+//    protected void participantsDeclinesMeeting(String s) {
+//    }
+    
+    
     
     public void shutdown(){
     	running = false;
@@ -202,18 +190,4 @@ public class Server extends Thread{
 		System.out.println("\nShutting down the server...");
 		server.shutdown();
     }
-
-
-
-	public FindMeetingTimeStrategyInterface getScheduler() {
-		return scheduler;
-	}
-
-
-
-	public void setScheduler(FindMeetingTimeStrategyInterface scheduler) {
-		this.scheduler = scheduler;
-	}
-    
-
 }
