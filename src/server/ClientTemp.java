@@ -39,8 +39,8 @@ public class ClientTemp {
 			 String password = "root";
 				MessageDigest digest;
 				
-				User loginUser = new User("Test Admin", "admin", "");
-				
+				User loginUser = new User("Test User", "User", "");
+				loginUser.setAdmin(true);
 				try {
 					digest = MessageDigest.getInstance("SHA-256");
 					String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
