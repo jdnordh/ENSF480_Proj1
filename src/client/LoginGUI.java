@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 import java.awt.GridLayout;
 import javax.swing.JTextField;
@@ -30,11 +31,11 @@ import java.security.NoSuchAlgorithmException;
 import java.awt.event.ActionEvent;
 
 public class LoginGUI extends JFrame {
-
-	private JPanel contentPane;
+	
+	private static LoginGUI loginFrame;
+	private JPanel loginPanel;
 	private JTextField usernameTF;
 	private JTextField passwordTF;
-	private static LoginGUI onlyInstance;
 	private Socket aSocket;
 	private ObjectOutputStream output;
 	private ObjectInputStream input;
@@ -46,8 +47,8 @@ public class LoginGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginGUI frame = new LoginGUI(Server.NAME, Server.PORT);
-					frame.setVisible(true);
+					loginFrame = new LoginGUI(Server.NAME, Server.PORT);
+					loginFrame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -65,24 +66,21 @@ public class LoginGUI extends JFrame {
 			output = new ObjectOutputStream(aSocket.getOutputStream());
 			input = new ObjectInputStream(aSocket.getInputStream());
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//if(onlyInstance == null){
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 900, 500);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		setBounds(100, 100, 508, 210);
+		loginPanel = new JPanel();
+		loginPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(loginPanel);
+		loginPanel.setLayout(null);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "LoginPanel", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel.setBounds(199, 143, 443, 118);
-		contentPane.add(panel);
+		panel.setBounds(25, 25, 443, 118);
+		loginPanel.add(panel);
 		panel.setLayout(null);
 		
 		usernameTF = new JTextField();
@@ -90,24 +88,24 @@ public class LoginGUI extends JFrame {
 		panel.add(usernameTF);
 		usernameTF.setColumns(10);
 		
-		JLabel usernameL = new JLabel("username");
+		JLabel usernameL = new JLabel("Username");
 		usernameL.setBounds(6, 21, 84, 16);
 		panel.add(usernameL);
 		
-		JLabel passwordL = new JLabel("password");
+		JLabel passwordL = new JLabel("Password");
 		passwordL.setBounds(6, 56, 84, 16);
 		panel.add(passwordL);
 		
-		passwordTF = new JTextField();
+		passwordTF = new JPasswordField();
 		passwordTF.setBounds(102, 53, 329, 22);
 		panel.add(passwordTF);
 		passwordTF.setColumns(10);
 		
-		JButton submitB = new JButton("submit");
+		JButton submitB = new JButton("Login");
 		submitB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				 String password = passwordTF.getText();
+				String password = passwordTF.getText();
 				MessageDigest digest;
 				
 				User loginUser = new User(usernameTF.getText(), password /* This will get changed*/);
@@ -129,7 +127,6 @@ public class LoginGUI extends JFrame {
 					output.writeObject(temp);
 					output.flush();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				//read a packet from server
@@ -145,6 +142,7 @@ public class LoginGUI extends JFrame {
 				System.out.println("Type: "+ temp.getType());
 				if(temp.getType() == Packet.LOGIN_CONFIRM_USER){
 					//TODO
+					loginFrame.dispose();
 					//open user gui
 					//ClientGUI
 				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
@@ -154,12 +152,14 @@ public class LoginGUI extends JFrame {
 				}else if(temp.getType() == Packet.LOGIN_DENY){
 					//TODO
 					//open deny 
-					JOptionPane.showMessageDialog(panel, "That was not correct username and password");
+					JOptionPane.showMessageDialog(panel, "That was not correct username and password. Please try again.");
 				}else if (temp.getType() == Packet.CLOSE_CONNECTION){
 					//TODO close window, server was shut down
+					JOptionPane.showMessageDialog(panel, "Server shut down.");
+					loginFrame.dispose();
 				} else {
 					//error message
-					JOptionPane.showMessageDialog(panel, "Something terrible happened");
+					JOptionPane.showMessageDialog(panel, "Something terrible happened.");
 				}
 				
 			}
