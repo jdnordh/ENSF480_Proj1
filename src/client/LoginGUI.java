@@ -35,7 +35,7 @@ public class LoginGUI extends JFrame {
 	private static LoginGUI loginFrame;
 	private JPanel loginPanel;
 	private JTextField usernameTF;
-	private JTextField passwordTF;
+	private JPasswordField passwordTF;
 	private Socket aSocket;
 	private ObjectOutputStream output;
 	private ObjectInputStream input;
@@ -105,10 +105,12 @@ public class LoginGUI extends JFrame {
 		submitB.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				String password = passwordTF.getText();
 				MessageDigest digest;
+				//TODO try and avoid using getText(), use getPassword() instead which returns a 
+				//char[] instead
+				String password = passwordTF.getText();
 				
-				User loginUser = new User(usernameTF.getText(), password /* This will get changed*/);
+				User loginUser = new User(usernameTF.getText(), passwordTF.getText());
 				
 				try {
 					digest = MessageDigest.getInstance("SHA-256");
@@ -118,10 +120,13 @@ public class LoginGUI extends JFrame {
 				
 				
 				System.out.println("Username: " + loginUser.getUserName() + "\nPassword: " + loginUser.getPassword());
+				
 				//create login packet
 				Packet temp = new Packet(Packet.LOGIN);
+				
 				//add user to packet
 				temp.addUser(loginUser);
+				
 				//send packet to server
 				try {
 					output.writeObject(temp);
@@ -141,20 +146,24 @@ public class LoginGUI extends JFrame {
 				}
 				System.out.println("Type: "+ temp.getType());
 				if(temp.getType() == Packet.LOGIN_CONFIRM_USER){
-					//TODO
+					//TODO client gui
 					loginFrame.dispose();
-					//open user gui
+					ClientGUI gui = new ClientGUI(loginUser.getUserName());
+					gui.setVisible(true);
 					//ClientGUI
 				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
 					//TODO
+					loginFrame.dispose();
+					//AdminGUI();
 					//open admin gui
 					//AdminGUI
 				}else if(temp.getType() == Packet.LOGIN_DENY){
 					//TODO
 					//open deny 
-					JOptionPane.showMessageDialog(panel, "That was not correct username and password. Please try again.");
+					JOptionPane.showMessageDialog(panel, "Incorrect username or password. Please try again.");
 				}else if (temp.getType() == Packet.CLOSE_CONNECTION){
 					//TODO close window, server was shut down
+					//TODO this is not functioning properly
 					JOptionPane.showMessageDialog(panel, "Server shut down.");
 					loginFrame.dispose();
 				} else {

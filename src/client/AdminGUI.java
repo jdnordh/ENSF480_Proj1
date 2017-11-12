@@ -11,6 +11,7 @@ public class AdminGUI implements ClientGUIFunctionality {
      * Default constructor
      */
     public AdminGUI() {
+    	
     }
 
 	@Override
