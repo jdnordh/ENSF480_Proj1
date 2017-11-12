@@ -1,5 +1,7 @@
 package server;
 
+import structures.Meeting;
+
 /**
  * 
  */
@@ -10,6 +12,8 @@ public interface FindMeetingTimeStrategyInterface {
      * It should search through all meetings in MeetingList, and find those with status unscheduled
      *
      */
-    public void FindMeetingTimes();
+  
+
+	public void FindMeetingTimes(Meeting m);
 
 }

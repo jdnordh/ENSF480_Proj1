@@ -3,6 +3,8 @@ package structures;
 import java.io.Serializable;
 import java.util.*;
 
+
+
 /**
  * 
  */
@@ -29,7 +31,8 @@ public class DatePref implements Serializable{
      */
     private ArrayList<Date> prefDates;
 
-    
+    public ArrayList<Date> getprefDates(){ return prefDates;}
+    public Participant getparticipant(){ return Partic;}
     
     public void addDate(Date date){
     	prefDates.add(date);
