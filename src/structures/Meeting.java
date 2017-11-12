@@ -4,6 +4,7 @@ package structures;
 import java.io.Serializable;
 import java.util.*;
 
+
 /**
  * 
  */
@@ -134,6 +135,14 @@ public class Meeting implements Serializable{
 
 	public void setID(int iD) {
 		ID = iD;
+	}
+	public ArrayList<DatePref> getpreferedDateParticipant() {
+		// TODO Auto-generated method stub
+		return preferedDateParticipant;
+	}
+
+	public void setfinalizedDate(Date date) {
+		finalizedDate = date;
 	}
 
 }
