@@ -42,8 +42,9 @@ public class Participant extends User implements Serializable{
     public Boolean getImportant(){
     	return Important;
     }
-    public Participant(String N, String U, String P, Boolean I) {
-		super(N, U, P);
+    
+    public Participant(String N, String U, Boolean I) {
+		super(N, U);
 		Important = I;
 	}
 }
