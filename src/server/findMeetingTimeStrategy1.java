@@ -2,7 +2,7 @@ package server;
 
 import java.util.*;
 
-import structures.Meeting;
+import structures.*;
 
 /**
  * 
@@ -13,8 +13,8 @@ public class FindMeetingTimeStrategy1 implements FindMeetingTimeStrategyInterfac
      * Default constructor
      */
     public FindMeetingTimeStrategy1() {
+    	
     }
-
 
 	@Override
 	public void FindMeetingTimes() {

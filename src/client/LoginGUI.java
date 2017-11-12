@@ -15,8 +15,7 @@ import javax.swing.JButton;
 import javax.swing.border.TitledBorder;
 
 import server.Server;
-import structures.Packet;
-import structures.User;
+import structures.*;
 
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -32,6 +31,10 @@ import java.awt.event.ActionEvent;
 
 public class LoginGUI extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static LoginGUI loginFrame;
 	private JPanel loginPanel;
 	private JTextField usernameTF;
@@ -108,20 +111,22 @@ public class LoginGUI extends JFrame {
 				String password = passwordTF.getText();
 				MessageDigest digest;
 				
-				User loginUser = new User(usernameTF.getText(), password /* This will get changed*/);
+				//User loginUser = new User(usernameTF.getText(), password /* This will get changed*/);
+				User user = new User();
+				user.setUserName(usernameTF.getText());
 				
 				try {
 					digest = MessageDigest.getInstance("SHA-256");
 					String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
-					loginUser.setPassword(hashed_password);
+					user.setPassword(hashed_password);
 				} catch (NoSuchAlgorithmException e) {}
 				
 				
-				System.out.println("Username: " + loginUser.getUserName() + "\nPassword: " + loginUser.getPassword());
+				//System.out.println("Username: " + user.getUserName() + "\nPassword: " + user.getPassword());
 				//create login packet
 				Packet temp = new Packet(Packet.LOGIN);
 				//add user to packet
-				temp.addUser(loginUser);
+				temp.addUser(user);
 				//send packet to server
 				try {
 					output.writeObject(temp);
