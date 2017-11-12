@@ -100,7 +100,7 @@ public class Meeting implements Serializable{
      * @param Important 
      * @return
      */
-    private void addParticipant(String user,String name , boolean i) {
+    public void addParticipant(String user,String name , boolean i) {
     	Participant p = new Participant(user,name, i);
     	Participants.add(p);
     }
@@ -109,8 +109,8 @@ public class Meeting implements Serializable{
      * @param Participant 
      * @return
      */
-    private void removeParticipant(Participant P) {
-    	Participants.remove(P);
+    public void removeParticipant(User user) {
+    	Participants.remove(user);
     }
 
     /**
@@ -133,13 +133,26 @@ public class Meeting implements Serializable{
 	public ArrayList<DatePref> getpreferedDateParticipant() {
 		return preferedDateParticipant;
 	}
-
+	public ArrayList<Participant> getParticipants() {
+		return Participants;
+	}
 	public void setfinalizedDate(Date date) {
 		finalizedDate = date;
 	}
+	public int getmeetingState(){return meetingState;}
+	
 	public static final int waitingForDates = 2;
 	public static final int empty = 0;
 	public static final int waitingForLocationPref = 1;
 	public static final int waitingForFinalized = 3;
 	public static final int Finalized = 4;
+	public boolean containsParticipant(String userName) {
+		for(int i = 0 ; i < Participants.size(); i++){
+			if(Participants.get(i).getUserName() == userName)
+				return true;
+		}
+		return false;
+	}
+	
+	
 }

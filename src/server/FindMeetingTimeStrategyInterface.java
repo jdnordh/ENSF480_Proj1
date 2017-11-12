@@ -12,8 +12,8 @@ public interface FindMeetingTimeStrategyInterface {
      * It should search through all meetings in MeetingList, and find those with status unscheduled
      *
      */
-  
+   
 
-	public void FindMeetingTimes(Meeting m);
+	public void FindMeetingTimes();
 
 }
