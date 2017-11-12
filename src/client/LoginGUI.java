@@ -155,14 +155,11 @@ public class LoginGUI extends JFrame {
 				if(temp.getType() == Packet.LOGIN_CONFIRM_USER){
 					//TODO client gui
 					loginFrame.dispose();
-					ClientGUI gui = new ClientGUI(loginUser.getUserName());
-					//ClientGUI
+					ClientGUI.clientFrame = new ClientGUI(loginUser.getUserName());
 				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
 					//TODO
 					loginFrame.dispose();
-					//AdminGUI();
-					//open admin gui
-					//AdminGUI
+					AdminGUI.adminFrame = new AdminGUI(loginUser.getUserName());
 				}else if(temp.getType() == Packet.LOGIN_DENY){
 					//TODO
 					//open deny 

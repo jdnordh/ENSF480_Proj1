@@ -55,8 +55,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	private String username;
 	
 	//Windows
-	private static ClientGUI clientFrame;
-	private static ClientGUI viewMeetingsFrame;
+	protected static ClientGUI clientFrame;
 	
 	//Buttons
 	private JButton viewMeetings = new JButton("View Meetings");
@@ -65,10 +64,12 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	private JButton editLocationPrefs = new JButton("Edit Location Preferences");
 	private JButton removeMeeting = new JButton("Remove meeting");
 	private JButton returnToMain = new JButton("Return to main menu");
+	private JButton acceptMeeting = new JButton("Accept");
+	private JButton declineMeeting = new JButton("Decline");
 	private JButton addLocation = new JButton("Add");
 	private JButton removeLocation = new JButton("Remove");
 	
-	//Lits
+	//Lists
 	protected JList<Meeting> meetingList;
 	private DefaultListModel<Meeting> meetingModel;
 	
@@ -78,9 +79,6 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	//Text fields
 	private JTextField location;
 	
-    /**
-     * Default constructor
-     */
     public ClientGUI(String un) {
     	clientFrame = this;
     	username = un;
@@ -112,9 +110,8 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		this.setVisible(true);
 	}
     
-    public ClientGUI() {
-		// TODO Auto-generated constructor stub
-	}
+    //default ctor
+    public ClientGUI() {}
 
 	public ClientGUI viewMeetingsFrame() {
     	ClientGUI tmp = new ClientGUI();
@@ -214,9 +211,12 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		panel2.setLayout(new BoxLayout(panel2, BoxLayout.LINE_AXIS));
 		panel2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		panel2.add(Box.createHorizontalGlue());
-		removeMeeting.addActionListener(new ClientListener());
+		acceptMeeting.addActionListener(new ClientListener());
+		declineMeeting.addActionListener(new ClientListener());
 		returnToMain.addActionListener(new ClientListener());		
-		panel2.add(removeMeeting);
+		panel2.add(acceptMeeting);
+		panel2.add(Box.createRigidArea(new Dimension(10, 0)));
+		panel2.add(declineMeeting);
 		panel2.add(Box.createRigidArea(new Dimension(10, 0)));
 		panel2.add(returnToMain);
 		
@@ -334,6 +334,43 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
 				}
 			}
+			else if (e.getSource() == acceptMeeting) {
+				try {
+					System.out.println("acceptMeeting press");
+					//TODO accept selected meeting
+				} catch (Exception e1){
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
+				}
+			}
+			else if (e.getSource() == declineMeeting) {
+				try {
+					System.out.println("declineMeeting pressed");
+					//TODO decline selected meeting
+				} catch (Exception e1){
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
+				}
+			}
+			else if (e.getSource() == addLocation) {
+				try {
+					System.out.println("addLocation pressed");
+					//TODO add location by name
+				} catch (Exception e1){
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
+				}
+			}
+			else if (e.getSource() == removeLocation) {
+				try {
+					System.out.println("removeLocation pressed");
+					//TODO remove location by name
+				} catch (Exception e1){
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
+				}
+			}
+			
 		}
 	}
 	
@@ -350,40 +387,34 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	}
 		
     
-
+	//TODO GUI functionality
 	@Override
 	public void getAllMeetings() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void initateMeeting() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void acceptMeeting() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void declineMeeting() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void addLocationPref() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void Update() {
-		// TODO Auto-generated method stub
 		
 	}
 	
