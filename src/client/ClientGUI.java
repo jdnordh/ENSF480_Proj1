@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.BorderLayout;
 import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -21,6 +22,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -59,7 +63,10 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	private JButton initiateMeeting= new JButton("Initiate meeting");
 	private JButton viewPending = new JButton("View Pending Meetings");
 	private JButton editLocationPrefs = new JButton("Edit Location Preferences");
-	private JButton loadMeetings = new JButton("Load Meetings");
+	private JButton removeMeeting = new JButton("Remove meeting");
+	private JButton returnToMain = new JButton("Return to main menu");
+	private JButton addLocation = new JButton("Add");
+	private JButton removeLocation = new JButton("Remove");
 	
 	//Lits
 	protected JList<Meeting> meetingList;
@@ -67,6 +74,9 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	
 	//Text area
 	protected JTextArea textArea;
+	
+	//Text fields
+	private JTextField location;
 	
     /**
      * Default constructor
@@ -110,14 +120,8 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
     	ClientGUI tmp = new ClientGUI();
 		tmp.setTitle("Welcome " + username + "!");
 		tmp.setBounds(100, 100, 400, 400);
-		tmp.setLayout(new GridLayout(4, 1));
 		
-		JPanel panel1 = new JPanel();
-		loadMeetings.addActionListener(new ClientListener());
-		panel1.add(loadMeetings);
-		tmp.add(panel1);
-		
-		JPanel panel2 = new JPanel();
+		//create the list area
 		meetingModel = new DefaultListModel<Meeting>();
 		meetingList = new JList<Meeting>(meetingModel);
 		meetingList.addListSelectionListener(new ListAction());
@@ -129,15 +133,140 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		textArea = new JTextArea();
 		textAreaScrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		textArea.setFont(new Font("Courier New", Font.BOLD, 12));
-		textArea.setEditable(true);
+		textArea.setEditable(false);
 		textAreaScrollPane = new JScrollPane(meetingList);
 		textAreaScrollPane.setPreferredSize(new Dimension(190, 400));
-		panel2.add(textAreaScrollPane);
-		GridBagConstraints gbc = new GridBagConstraints(0, 1,
-                1, 1, 1D, 2D, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0),
-                0, 0);
-		tmp.add(panel2, gbc);
 		
+		//TODO fill the text area
+		
+		//create the label
+		JLabel label = new JLabel("Scheduled meetings:");
+
+		//create the panel
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
+		panel1.add(label);
+		panel1.add(Box.createRigidArea(new Dimension(0,5)));
+		panel1.add(textAreaScrollPane);
+		panel1.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		
+		//add to the container
+		tmp.add(panel1, BorderLayout.CENTER);
+		
+		//create button panel
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new BoxLayout(panel2, BoxLayout.LINE_AXIS));
+		panel2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		panel2.add(Box.createHorizontalGlue());
+		removeMeeting.addActionListener(new ClientListener());
+		returnToMain.addActionListener(new ClientListener());		
+		panel2.add(removeMeeting);
+		panel2.add(Box.createRigidArea(new Dimension(10, 0)));
+		panel2.add(returnToMain);
+		
+		//add to the container
+		tmp.add(panel2, BorderLayout.PAGE_END);
+		
+		tmp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		tmp.setVisible(true);
+		return tmp;
+	}
+	
+	public ClientGUI viewPendingMeetingsFrame() {
+    	ClientGUI tmp = new ClientGUI();
+		tmp.setTitle("Welcome " + username + "!");
+		tmp.setBounds(100, 100, 400, 400);
+		
+		//create the list area
+		meetingModel = new DefaultListModel<Meeting>();
+		meetingList = new JList<Meeting>(meetingModel);
+		meetingList.addListSelectionListener(new ListAction());
+		meetingList.setFont(new Font("Courier New", Font.BOLD, 12));
+		meetingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		meetingList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		meetingList.setVisibleRowCount(-1);
+		JScrollPane textAreaScrollPane = new JScrollPane();
+		textArea = new JTextArea();
+		textAreaScrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		textArea.setFont(new Font("Courier New", Font.BOLD, 12));
+		textArea.setEditable(false);
+		textAreaScrollPane = new JScrollPane(meetingList);
+		textAreaScrollPane.setPreferredSize(new Dimension(190, 400));
+		
+		//TODO fill the text area
+		
+		//create the label
+		JLabel label = new JLabel("Pending meetings:");
+
+		//create the panel
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BoxLayout(panel1, BoxLayout.PAGE_AXIS));
+		panel1.add(label);
+		panel1.add(Box.createRigidArea(new Dimension(0,5)));
+		panel1.add(textAreaScrollPane);
+		panel1.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		
+		//add to the container
+		tmp.add(panel1, BorderLayout.CENTER);
+		
+		//create button panel
+		JPanel panel2 = new JPanel();
+		panel2.setLayout(new BoxLayout(panel2, BoxLayout.LINE_AXIS));
+		panel2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		panel2.add(Box.createHorizontalGlue());
+		removeMeeting.addActionListener(new ClientListener());
+		returnToMain.addActionListener(new ClientListener());		
+		panel2.add(removeMeeting);
+		panel2.add(Box.createRigidArea(new Dimension(10, 0)));
+		panel2.add(returnToMain);
+		
+		//add to the container
+		tmp.add(panel2, BorderLayout.PAGE_END);
+		
+		tmp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		tmp.setVisible(true);
+		return tmp;
+	}
+	
+	public ClientGUI editLocationPrefsFrame() {
+    	ClientGUI tmp = new ClientGUI();
+		tmp.setTitle("Welcome " + username + "!");
+		tmp.setBounds(100, 100, 400, 150);
+		
+		//create the text field
+		location = new JTextField(50);
+		location.setMaximumSize(new Dimension(100, 25));
+		
+		//create the label
+		JLabel label = new JLabel("Location:");
+
+		//create the panel
+		JPanel panel1 = new JPanel();
+		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
+		addLocation.addActionListener(new ClientListener());
+		removeLocation.addActionListener(new ClientListener());
+		panel1.add(label);
+		panel1.add(Box.createRigidArea(new Dimension(10, 0)));
+		panel1.add(location);
+		panel1.add(Box.createRigidArea(new Dimension(10, 0)));
+		panel1.add(addLocation);
+		panel1.add(Box.createRigidArea(new Dimension(5, 0)));
+		panel1.add(removeLocation);
+		panel1.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+		
+		//add to the container
+		tmp.add(panel1, BorderLayout.CENTER);
+		
+		//create button panel
+		JPanel panel2 = new JPanel();
+		//panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
+		panel2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		//panel2.add(Box.createHorizontalGlue());
+		returnToMain.addActionListener(new ClientListener());		
+		panel2.add(returnToMain, BorderLayout.CENTER);
+		
+		//add to the container
+		tmp.add(panel2, BorderLayout.PAGE_END);
 		
 		tmp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		tmp.setVisible(true);
@@ -150,8 +279,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 				try {
 					System.out.println("viewMeetings pressed");
 					clientFrame.dispose();
-					viewMeetingsFrame = viewMeetingsFrame();
-					//TODO display meetings
+					clientFrame = viewMeetingsFrame();
 				} catch (Exception e1){
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
@@ -169,7 +297,8 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 			else if (e.getSource() == viewPending) {
 				try {
 					System.out.println("viewPending pressed");
-					//TODO view pending meetings
+					clientFrame.dispose();
+					clientFrame = viewPendingMeetingsFrame();
 				} catch (Exception e1){
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
@@ -178,7 +307,28 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 			else if (e.getSource() == editLocationPrefs) {
 				try {
 					System.out.println("editLocationPrefs pressed");
+					clientFrame.dispose();
+					clientFrame = editLocationPrefsFrame();
 					//TODO editLocationPrefs 
+				} catch (Exception e1){
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
+				}
+			}
+			else if (e.getSource() == removeMeeting) {
+				try {
+					System.out.println("removeMeeting pressed");
+					//TODO remove selected meeting from the list 
+				} catch (Exception e1){
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
+				}
+			}
+			else if (e.getSource() == returnToMain) {
+				try {
+					System.out.println("return to main menu pressed");
+					clientFrame.dispose();
+					clientFrame = new ClientGUI(username);
 				} catch (Exception e1){
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
