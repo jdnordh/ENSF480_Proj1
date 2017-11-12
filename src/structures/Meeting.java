@@ -18,6 +18,32 @@ public class Meeting implements Serializable{
      * Default constructor
      */
     public Meeting() {
+    	Participants = new ArrayList<Participant>();
+    	preferedDates = new ArrayList<Date>();
+    	preferedDateParticipant = new ArrayList<DatePref>();
+    	ID = IDcounter++;
+    	meetingState = 0;
+    }
+    //Meeting intiated with Location
+    public Meeting(ArrayList<Participant> p ,Location L, String D , ArrayList<Date> meetingIniatorPref) {
+    	ID = IDcounter++;
+    	preferedDates = meetingIniatorPref;
+    	Location = L;
+    	description = D;
+    	meetingState = 0;
+    	Participants = p;
+    	meetingState =2;
+    	preferedDateParticipant = new ArrayList<DatePref>();
+    }
+    //without location
+    public Meeting(ArrayList<Participant> p ,String D , ArrayList<Date> meetingIniatorPref) {
+    	ID = IDcounter++;
+    	preferedDates = meetingIniatorPref;
+    	description = D;
+    	meetingState = 0;
+    	Participants = p;
+    	meetingState = 1;
+    	preferedDateParticipant = new ArrayList<DatePref>();
     }
 
     /**
@@ -38,12 +64,13 @@ public class Meeting implements Serializable{
     /**
      * 
      */
-    private int ID;
+    private static int IDcounter = 0;
+    private static int ID;
 
     /**
      * 
      */
-    private ArrayList<DatePref> preferedDates;
+    private ArrayList<Date> preferedDates;
 
     /**
      * 
@@ -63,60 +90,27 @@ public class Meeting implements Serializable{
 
     /**
      * Accept a meeting while inputing date preferences
-     * @param username
      * @param dates
      */
-    public void acceptMeeting(String username, DatePref dates){
-    	//TODO
+    public void acceptMeeting(DatePref dates){
+    	preferedDateParticipant.add(dates);
     }
-
     /**
-     * Decline a meeting
-     * @param username Username
-     */
-    public void declineMeeting(String username){
-    	//TODO
-    }
-
-    /**
-     * Find if a user is part of a meeting
-     * @param username Username
-     * @return True if they are part of the meeting
-     */
-    public boolean containsParticipant(String username){
-    	//TODO
-    	
-    	return false;
-    }
-
-
-    /**
-     * @param Id 
+     * 
      * @param Important 
      * @return
      */
-    private void addParticipant(String user, boolean i) {
-        //to sever username
-    	//check to see if exsits
-    	//Participant p = new Participant(temp user, i);
-    	//
+    private void addParticipant(String user,String name , boolean i) {
+    	Participant p = new Participant(user,name, i);
+    	Participants.add(p);
     }
-
-    /**
-     * @return
-     */
-    private Void askLocationPref() {
-        // TODO implement here
-        return null;
-    }
-
+ 
     /**
      * @param Participant 
      * @return
      */
     private void removeParticipant(Participant P) {
-        //to server removeParticipant
-    	//Participants.remove(P);
+    	Participants.remove(P);
     }
 
     /**
@@ -137,12 +131,15 @@ public class Meeting implements Serializable{
 		ID = iD;
 	}
 	public ArrayList<DatePref> getpreferedDateParticipant() {
-		// TODO Auto-generated method stub
 		return preferedDateParticipant;
 	}
 
 	public void setfinalizedDate(Date date) {
 		finalizedDate = date;
 	}
-
+	public static final int waitingForDates = 2;
+	public static final int empty = 0;
+	public static final int waitingForLocationPref = 1;
+	public static final int waitingForFinalized = 3;
+	public static final int Finalized = 4;
 }
