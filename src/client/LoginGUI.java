@@ -38,7 +38,7 @@ public class LoginGUI extends JFrame {
 	private static LoginGUI loginFrame;
 	private JPanel loginPanel;
 	private JTextField usernameTF;
-	private JPasswordField passwordTF;
+	private JTextField passwordTF;
 	private Socket aSocket;
 	private ObjectOutputStream output;
 	private ObjectInputStream input;
@@ -113,13 +113,9 @@ public class LoginGUI extends JFrame {
 				//char[] instead
 				String password = passwordTF.getText();
 				
-<<<<<<< HEAD
 				User loginUser = new User(usernameTF.getText(), passwordTF.getText());
-=======
-				//User loginUser = new User(usernameTF.getText(), password /* This will get changed*/);
 				User user = new User();
 				user.setUserName(usernameTF.getText());
->>>>>>> de5e8a172ec2c2c2988dcfdb632fa583846b9dfc
 				
 				try {
 					digest = MessageDigest.getInstance("SHA-256");
@@ -128,22 +124,16 @@ public class LoginGUI extends JFrame {
 				} catch (NoSuchAlgorithmException e) {}
 				
 				
-<<<<<<< HEAD
 				System.out.println("Username: " + loginUser.getUserName() + "\nPassword: " + loginUser.getPassword());
 				
-=======
-				//System.out.println("Username: " + user.getUserName() + "\nPassword: " + user.getPassword());
->>>>>>> de5e8a172ec2c2c2988dcfdb632fa583846b9dfc
 				//create login packet
 				Packet temp = new Packet(Packet.LOGIN);
 				
 				//add user to packet
-<<<<<<< HEAD
 				temp.addUser(loginUser);
 				
-=======
 				temp.addUser(user);
->>>>>>> de5e8a172ec2c2c2988dcfdb632fa583846b9dfc
+
 				//send packet to server
 				try {
 					output.writeObject(temp);
@@ -166,7 +156,6 @@ public class LoginGUI extends JFrame {
 					//TODO client gui
 					loginFrame.dispose();
 					ClientGUI gui = new ClientGUI(loginUser.getUserName());
-					gui.setVisible(true);
 					//ClientGUI
 				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
 					//TODO
@@ -192,11 +181,6 @@ public class LoginGUI extends JFrame {
 		});
 		submitB.setBounds(6, 85, 425, 25);
 		panel.add(submitB);
-	/*
-	}else{
-		onlyInstance.setVisible(true);
-	}
-	*/
 	}
 	
 }
