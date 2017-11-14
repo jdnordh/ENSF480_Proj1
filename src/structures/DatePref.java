@@ -18,9 +18,14 @@ public class DatePref implements Serializable{
 	/**
      * Default constructor
      */
-    public DatePref() {
+    public DatePref(Participant p) {
+    	Partic = p;
+    	prefDates = new ArrayList<Date>();
     }
-
+    
+    public DatePref() {
+    	prefDates = new ArrayList<Date>();
+    }
     /**
      *  The Participant that is selecting the prefered dates
      */

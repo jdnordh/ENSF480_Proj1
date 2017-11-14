@@ -60,7 +60,8 @@ public class Meeting implements Serializable{
      * 
      */
     private Location Location;
-
+    
+    private ArrayList<Location> LocationPref;
     /**
      * 
      */
@@ -146,6 +147,10 @@ public class Meeting implements Serializable{
 	public static final int waitingForLocationPref = 1;
 	public static final int waitingForFinalized = 3;
 	public static final int Finalized = 4;
+	public static final int serverPickLocationPref = 5;
+	public static final int NODATEFOUND = 6;
+	public static final int DATEOUTSIDERANGE = 7;
+	
 	public boolean containsParticipant(String userName) {
 		for(int i = 0 ; i < Participants.size(); i++){
 			if(Participants.get(i).getUserName() == userName)
@@ -153,6 +158,7 @@ public class Meeting implements Serializable{
 		}
 		return false;
 	}
+	public void setmeetingState(int x) {meetingState = x;}
 	
 	
 }
