@@ -1,7 +1,5 @@
 package server;
 
-import structures.Meeting;
-
 /**
  * 
  */

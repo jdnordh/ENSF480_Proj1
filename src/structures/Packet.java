@@ -235,6 +235,12 @@ public class Packet implements Serializable{
 	 */
 	public static final int CLOSE_CONNECTION = 3300;
 	
+	/**
+	 * This packet is sent from the server to the client when a new meeting appears that they are a part of
+	 * 
+	 * The client can either be told to refresh the meetings list, or do it automatically
+	 */
+	public static final int NEW_MEETING = 500;
 	
 	/*
 	// for testing, will be deleted

@@ -77,7 +77,7 @@ public class IOThread extends ShutdownThread{
 			}
 		}
 		
-		// shuter down boys
+		// shutter down boys
 		listener.shutdown();
 		try {
 			System.out.println("IOThread " + this.getId() + " sending packet type 3300");

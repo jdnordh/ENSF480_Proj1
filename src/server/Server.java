@@ -73,20 +73,27 @@ public class Server extends Thread{
     			IOThread newthread = new IOThread(oos, ois);
     			newthread.start();
     			threads.add(newthread);
-    			
+    			System.err.println("Server threads: " + threads.size());
     		} catch (SocketException e){
     			// problem with socket
     			// clean up
     			for (int i = 0; i < threads.size(); i++){
-    				if (!threads.get(i).isAlive()) threads.remove(i);
+    				if (threads.get(i).getState() == Thread.State.TERMINATED){
+    					System.err.println("Server removed Thread: " + threads.get(i).getId());
+    					threads.remove(i);
+    					System.err.println("Server threads: " + threads.size());
+    				}
     			}
     			e.printStackTrace();
     		} catch (SocketTimeoutException e){
     			// clean up
     			for (int i = 0; i < threads.size(); i++){
-    				if (!threads.get(i).isAlive()) threads.remove(i);
+    				if (threads.get(i).getState() == Thread.State.TERMINATED){
+    					System.err.println("Server removed Thread: " + threads.get(i).getId());
+    					threads.remove(i);
+    					System.err.println("Server threads: " + threads.size());
+    				}
     			}
-    			//System.out.println("Timeout");
     			
     		} catch (IOException e) {
 				e.printStackTrace();
@@ -98,76 +105,6 @@ public class Server extends Thread{
     	}
     	System.out.println("Server is closing...");
     }
-
-    
-    
-    
-    
-
-//
-//    /**
-//     * @param Username 
-//     * @param Password 
-//     * @return
-//     */
-//    protected void addUser(String Username, String Password) {
-//    }
-//
-//    /**
-//     * @return
-//     */
-//    protected void notifyLoggedIn() {
-//    }
-//
-//    /**
-//     * @return
-//     */
-//    protected void deleteUser() {
-//    }
-//
-//    /**
-//     * @param meetingId 
-//     * @param prefDates 
-//     * @return
-//     */
-//    protected void participantAcceptMeeting(int meetingId, ArrayList<DatePref> prefDates) {
-//    }
-//
-//    /**
-//     * @return
-//     */
-//    protected ArrayList<Meeting> returnAllMeetings() {
-//        return null;
-//    }
-//
-//    /**
-//     * @param Participant 
-//     * @return
-//     */
-//    protected void removeParticipant(Participant p) {
-//    }
-//
-//    /**
-//     * @param importantParticipants 
-//     * @return
-//     */
-//    protected void notifyImportantParticipantForLocationPref(ArrayList<Participant> importantParticipants) {
-//    }
-//
-//    /**
-//     * @param asocket 
-//     * @return
-//     */
-//    protected ArrayList<Participant> returnAllUsers(Socket asocket) {
-//        return null;
-//    }
-//
-//    /**
-//     * @param UserName 
-//     * @return
-//     */
-//    protected void participantsDeclinesMeeting(String s) {
-//    }
     
     
     
@@ -182,13 +119,28 @@ public class Server extends Thread{
 		Server server = new Server(Server.NAME, Server.PORT, strat);
 		
 		server.start();
-		System.out.println("Type \"quit\" to stop");
-
+		System.out.println("Type \"quit\" or \"stop\" to stop");
+		System.out.println("Type \"info\" to get current server info");
+		
 		Scanner in = new Scanner(System.in);
-		while ( !in.next().equalsIgnoreCase("quit") );
+		String read = "";
+		while ( !read.equalsIgnoreCase("quit") && !read.equalsIgnoreCase("stop")){
+			read = in.next();
+			if (read.equalsIgnoreCase("info")) server.info();
+		}
 		in.close();
 		
 		System.out.println("\nShutting down the server...");
 		server.shutdown();
     }
+
+
+
+	private void info() {
+		try {
+			System.err.println(server.toString());
+			System.err.println("Server timeout: " + server.getSoTimeout() + " ms");
+			System.err.println("Server threads: " + threads.size());
+		} catch (Exception e){}
+	}
 }

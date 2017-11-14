@@ -172,7 +172,7 @@ public class UserList {
 			
 			
 		} catch ( IOException ioException ) {
-			System.out.println( "Finished reading user file.\n" );
+			//System.out.println( "Finished reading user file" );
 			//ioException.printStackTrace();
 		} catch ( NoSuchElementException elementException ) {
 			System.err.println( "Invalid input. Please try again." );

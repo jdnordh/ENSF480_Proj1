@@ -19,7 +19,7 @@ public class SchThread extends ShutdownThread{
 	public void run(){
 		//TODO test
 		running = true;
-		System.out.println("Scheduler thread starting");
+		System.out.println("SchedulerThread " + this.getId() + " is starting ");
 		
 		MeetingList ml = MeetingList.getMeetingList();
 		while (running) {
@@ -27,16 +27,22 @@ public class SchThread extends ShutdownThread{
 				System.out.println("SchedulerThread " + this.getId() + " is waiting ");
 				synchronized(ml){
 					while (!ml.isChanged()) ml.wait();
+					
+					System.out.println("SchedulerThread " + this.getId() + " is in action ");
+					
+					//TODO fix the call
+					
+					ml.setChanged(false);
+					//strategy.FindMeetingTimes();
+					
 				}
-				System.out.println("SchedulerThread " + this.getId() + " is in action ");
-				strategy.FindMeetingTimes();
-				ml.setChanged(false);
-				
 			} catch (InterruptedException e){
 				
+			} catch (Exception e){
+				e.printStackTrace();
 			}
 		}
-		
+		System.out.println("SchedulerThread " + this.getId() + " is stopped ");
 	}
 	
 	public void shutdown(){

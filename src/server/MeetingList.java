@@ -24,7 +24,7 @@ public class MeetingList {
 	private static MeetingList onlyOne;
 	
 	/** Used for meetings to be scheduled */
-	private boolean changed = false;
+	private boolean schedulerGo = false;
 
 	/** Used for storing WebObjects */
 	private ObjectOutputStream objectOut;
@@ -34,7 +34,7 @@ public class MeetingList {
 	
 	private MeetingList(){
 		meetings = this.readObjectFile();
-		changed = true;
+		schedulerGo = true;
 	}
 	
 	/*
@@ -61,7 +61,7 @@ public class MeetingList {
 	}
 	
 	/**
-	 * Get the entire list of meetings
+	 * Get the entire list of meetings, don't use to add meetings, only for scheduling
 	 * @return An ArrayList of Meetings
 	 */
 	public ArrayList<Meeting> getMeetings() {
@@ -83,6 +83,11 @@ public class MeetingList {
 		return false;
 	}
 	
+	/**
+	 * Add a meeting to the list 
+	 * @param m Meeting
+	 * @return True if added, false if duplicate ID
+	 */
 	public boolean addMeeting(Meeting m){
 		boolean added = true;
 		
@@ -173,15 +178,21 @@ public class MeetingList {
 
 
 	public boolean isChanged() {
-		return changed;
+		return schedulerGo;
 	}
 
 
 	public void setChanged(boolean changed) {
-		this.changed = changed;
+		System.out.println("schedulerGO is " + changed);
+		this.schedulerGo = changed;
 		if (changed) notifyAll();
 	}
 
+	/**
+	 * Decline a meeting
+	 * @param p Packet that contains the correct info, see Packet constants
+	 * @return True if accomplished
+	 */
 	public boolean declineMeeting(Packet p) {
 		
 		for (int i = 0; i < meetings.size(); i++){
@@ -196,6 +207,11 @@ public class MeetingList {
 		return false;
 	}
 
+	/**
+	 * Accept a meeting
+	 * @param p Packet with correct info
+	 * @return True if accepted
+	 */
 	public boolean acceptMeeting(Packet p) {
 		
 		for (int i = 0; i < meetings.size(); i++){
