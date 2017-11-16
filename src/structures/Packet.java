@@ -2,6 +2,8 @@ package structures;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 /**
  * 
  */
@@ -242,20 +244,12 @@ public class Packet implements Serializable{
 	 */
 	public static final int NEW_MEETING = 500;
 	
-	/*
-	// for testing, will be deleted
-	public static void main(String [] args){
-		String password = "s";
-		MessageDigest digest;
-		try {
-			digest = MessageDigest.getInstance("SHA-256");
-			String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
-			System.out.print(hashed_password);
-		} catch (NoSuchAlgorithmException e) {}
-	}
-	
-	*/
-	
+	/**
+	 * This packet is sent from the server to the client when a user should drop a meeting
+	 * 
+	 * The client can either be told to refresh the meetings list, or do it automatically
+	 */
+	public static final int NEW_MEETING_DROP_REQUEST = 501;
 	
     /**
      * Default constructor

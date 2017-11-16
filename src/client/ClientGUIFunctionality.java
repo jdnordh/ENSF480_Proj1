@@ -41,9 +41,7 @@ public interface ClientGUIFunctionality {
      * @return
      */
      void Update();
-     public static void getThreadPacket(Packet P){
-    	 
-     }
+     public void getThreadPacket(Packet P);
      
      
 

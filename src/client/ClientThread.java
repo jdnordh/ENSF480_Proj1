@@ -6,6 +6,8 @@ import java.io.ObjectInputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 
+import javax.swing.JOptionPane;
+
 import server.CloseSocketException;
 import server.ShutdownThread;
 import structures.Packet;
@@ -39,16 +41,24 @@ public class ClientThread extends ShutdownThread{
 				
 				System.out.println("ClientThread " + this.getId() + " recieved packet type " + p.getType());
 				
+				master.getThreadPacket(p);
 				
+				if (p.getType() == Packet.CLOSE_CONNECTION) {
+					in.close();
+					throw new CloseSocketException();
+				}
+				else if (p.getType() == Packet.BAD_REQUEST){
+					JOptionPane.showMessageDialog(null, "Something terrible happened.\nInternal Error");
+				}
 				
 			} catch (SocketTimeoutException e){
 				// timeout, check if still running
 			} catch (SocketException e){
+				//close down
 				this.shutdown();
-				
 			}catch (CloseSocketException | EOFException e){
 				//close down
-				running = false;
+				this.shutdown();
 			}catch (ClassNotFoundException | IOException e) {
 				e.printStackTrace();
 			}catch (Exception e){
