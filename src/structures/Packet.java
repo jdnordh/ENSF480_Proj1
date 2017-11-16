@@ -244,6 +244,13 @@ public class Packet implements Serializable{
 	 */
 	public static final int NEW_MEETING = 500;
 	
+	/**
+	 * This packet is sent from the server to the client when a user should drop a meeting
+	 * 
+	 * The client can either be told to refresh the meetings list, or do it automatically
+	 */
+	public static final int NEW_MEETING_DROP_REQUEST = 501;
+	
     /**
      * Default constructor
      */

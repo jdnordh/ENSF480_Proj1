@@ -53,8 +53,20 @@ public class NotifyThread extends ShutdownThread{
 					if (user != null){
 						for (int i = 0; i < m.size(); i++){
 							if (m.get(i).containsParticipant(user.getUserName())) {
+								if (m.get(i).getmeetingState() == Meeting.Finalized || 
+									m.get(i).getmeetingState() == Meeting.waitingForDates ||
+									m.get(i).getmeetingState() == Meeting.waitingForLocationPref || 
+									m.get(i).getmeetingState() == Meeting.waitingForFinalized) {
 								p = new Packet(Packet.NEW_MEETING);
 								break;
+								}
+								else if (m.get(i).getmeetingState() == Meeting.DATEOUTSIDERANGE){
+									//TODO send notification to non important people
+								}
+								else if (m.get(i).getmeetingState() == Meeting.NODATEFOUND){
+									//TODO send notification to meeting initiator 
+									
+								}
 							}
 						}
 					}
