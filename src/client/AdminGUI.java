@@ -30,8 +30,8 @@ import java.awt.event.ActionEvent;
 public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 
 	private JPanel contentPane;
-	private  ObjectInputStream input;
-	private  ObjectOutputStream output;
+	private ObjectInputStream input;
+	private ObjectOutputStream output;
 	private Socket aSocket;
 	private static AdminGUI onlyInstance;
 	private Packet info;

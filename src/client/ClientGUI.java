@@ -154,6 +154,13 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		textAreaScrollPane.setPreferredSize(new Dimension(190, 400));
 		
 		//TODO fill the text area
+		Packet p = new Packet(Packet.REQUEST_ALL_MEETINGS);
+		p.addUser(new User(username));
+		try {
+			output.writeObject(p);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 		//create the label
 		JLabel label = new JLabel("Scheduled meetings:");

@@ -27,8 +27,8 @@ import java.awt.event.ActionEvent;
 public class DeleteUserFrame extends JFrame {
 
 	private JPanel contentPane;
-	private  ObjectInputStream input;
-	private  ObjectOutputStream output;
+	private ObjectInputStream input;
+	private ObjectOutputStream output;
 	private Socket aSocket;
 	private ArrayList<User> users;
 	private AdminGUI owner;

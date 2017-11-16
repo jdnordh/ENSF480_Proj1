@@ -58,6 +58,10 @@ public class User implements Serializable{
     
     public User(){}
     
+    public User(String U){
+    	UserName = U;
+    }
+    
     /**
      * Construct a user with only username and password
      * @param U Username
