@@ -2,13 +2,15 @@ package client;
 
 import java.util.*;
 
+import structures.Packet;
 import structures.User;
+
+
 
 /**
  * 
  */
 public interface ClientGUIFunctionality {
-
 
     /**
      * 
@@ -39,5 +41,10 @@ public interface ClientGUIFunctionality {
      * @return
      */
      void Update();
+     public static void getThreadPacket(Packet P){
+    	 
+     }
+     
+     
 
 }
