@@ -162,6 +162,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 			e.printStackTrace();
 		}
 		
+		
 		//create the label
 		JLabel label = new JLabel("Scheduled meetings:");
 
