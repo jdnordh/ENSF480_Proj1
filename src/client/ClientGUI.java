@@ -139,12 +139,31 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		
 		//create the list area
 		meetingModel = new DefaultListModel<Meeting>();
+		
+		//TODO fill the text area
+		Packet p = new Packet(Packet.REQUEST_ALL_MEETINGS);
+		p.addUser(new User(username));
+		try{
+			output.writeObject(p);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try{
+			p = (Packet)input.readObject();
+		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		for(int i = 0; i < p.getMeetings().size(); i++)
+			meetingModel.addElement(p.getMeetings().get(i));
+				
 		meetingList = new JList<Meeting>(meetingModel);
 		meetingList.addListSelectionListener(new ListAction());
 		meetingList.setFont(new Font("Courier New", Font.BOLD, 12));
 		meetingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		meetingList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		meetingList.setVisibleRowCount(-1);
+		
 		JScrollPane textAreaScrollPane = new JScrollPane();
 		textArea = new JTextArea();
 		textAreaScrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -153,15 +172,15 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		textAreaScrollPane = new JScrollPane(meetingList);
 		textAreaScrollPane.setPreferredSize(new Dimension(190, 400));
 		
-		//TODO fill the text area
-		Packet p = new Packet(Packet.REQUEST_ALL_MEETINGS);
-		p.addUser(new User(username));
-		try {
-			output.writeObject(p);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 		
+		if(p.getType() == Packet.RESPONSE_ALL_MEETINGS){
+			//TODO load meetings into the list
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "Server error. Expected Packet Type: " + Packet.RESPONSE_ALL_MEETINGS + ".  Actual Packet Type: " + p.getType());
+		}
+	
 		
 		//create the label
 		JLabel label = new JLabel("Scheduled meetings:");
