@@ -94,7 +94,11 @@ public class User implements Serializable{
     	isAdmin = user.isAdmin();
 	}
 	
-	
+	/**
+	 * Comparison of the two user's usernames
+	 * @param u User
+	 * @return True if usernames are equal
+	 */
 	public boolean isEqualTo(User u) {
 		if (UserName.equals(u.getUserName())) return true;
 		return false;

@@ -202,9 +202,6 @@ public class ListenerThread extends ShutdownThread{
 		// Double value function:
 		// Initial decline
 		// Or remove after already accepting
-		
-		
-		//TODO
 		MeetingList ml = MeetingList.getMeetingList();
 		ml.declineMeeting(p);
 		
