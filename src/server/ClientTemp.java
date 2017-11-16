@@ -80,8 +80,8 @@ public class ClientTemp {
 			
 			p = new Packet(Packet.CLOSE_CONNECTION);
 			
-			out.writeObject(p);
-			out.flush();
+			//out.writeObject(p);
+			//out.flush();
 			
 			in.close();
 			out.close();
