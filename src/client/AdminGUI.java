@@ -1,19 +1,33 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.ComponentOrientation;
+import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
+
 import server.Server;
+import structures.Meeting;
 import structures.Packet;
 
 import java.awt.GridBagLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import java.awt.Insets;
@@ -30,11 +44,12 @@ import java.awt.event.ActionEvent;
 public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 
 	private JPanel contentPane;
-	private ObjectInputStream input;
-	private ObjectOutputStream output;
+	private  ObjectInputStream input;
+	private  ObjectOutputStream output;
 	private Socket aSocket;
 	private static AdminGUI onlyInstance;
 	private Packet info;
+	private String username;
 	/**
 	 * Launch the application.
 	 */
@@ -42,7 +57,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AdminGUI frame = new AdminGUI(Server.NAME, Server.PORT);
+					AdminGUI frame = new AdminGUI("un",Server.NAME, Server.PORT);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,19 +69,25 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 	/**
 	 * Create the frame.
 	 */
-	public AdminGUI(String serverName , int portNum) {
+	public AdminGUI(String Un,String serverName , int portNum) {
 		//will add if empty right now it does not act as singleton
+		username = Un;
 		onlyInstance = this;
 		try {
 			InetAddress a = InetAddress.getByName(serverName);
 			aSocket = new Socket(a , portNum);
 			output = new ObjectOutputStream(aSocket.getOutputStream());
 			input = new ObjectInputStream(aSocket.getInputStream());
+			aSocket.setSoTimeout(100);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		//set timeout
+		
+		
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -121,19 +142,25 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 
 	@Override
 	public void getAllMeetings() {
-		// TODO Auto-generated method stub
-		
+		info = new Packet(Packet.REQUEST_ALL_MEETINGS);
+		try {
+			this.sendPacket();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		this.recievePacket();
 	}
 
 	@Override
 	public void initateMeeting() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void acceptMeeting() {
-		// TODO Auto-generated method stub
+		
+		
 		
 	}
 
@@ -161,6 +188,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 	public void sendPacket() throws IOException{
 		output.writeObject(info);
 	}
+	
 	public Packet getPacket(){
 		return info;
 	}
@@ -175,4 +203,5 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 			e.printStackTrace();
 		}
 	}
+	
 }
