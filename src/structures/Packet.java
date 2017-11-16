@@ -2,6 +2,8 @@ package structures;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 /**
  * 
  */
@@ -241,21 +243,6 @@ public class Packet implements Serializable{
 	 * The client can either be told to refresh the meetings list, or do it automatically
 	 */
 	public static final int NEW_MEETING = 500;
-	
-	/*
-	// for testing, will be deleted
-	public static void main(String [] args){
-		String password = "s";
-		MessageDigest digest;
-		try {
-			digest = MessageDigest.getInstance("SHA-256");
-			String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
-			System.out.print(hashed_password);
-		} catch (NoSuchAlgorithmException e) {}
-	}
-	
-	*/
-	
 	
     /**
      * Default constructor
