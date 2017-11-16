@@ -65,9 +65,11 @@ public class NotifyThread extends ShutdownThread{
 									//TODO send notification to non important people
 									ArrayList<Participant> parts = m.get(i).getParticipants();
 									
+									//Check if the user is important
 									for (int j = 0; j < parts.size(); j++){
-										if (parts.get(j).isEqualTo(user)){
+										if (parts.get(j).isEqualTo(user) && parts.get(i).isImportant()){
 											//TODO
+											
 										}
 									}
 									
