@@ -19,6 +19,7 @@ import structures.User;
 
 import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
@@ -27,11 +28,9 @@ import java.awt.event.ActionEvent;
 public class DeleteUserFrame extends JFrame {
 
 	private JPanel contentPane;
-	private ObjectInputStream input;
-	private ObjectOutputStream output;
-	private Socket aSocket;
 	private ArrayList<User> users;
 	private AdminGUI owner;
+	private DefaultListModel listModel;
 	/**
 	 * Launch the application.
 	 */
@@ -55,6 +54,7 @@ public class DeleteUserFrame extends JFrame {
 	 */
 	public DeleteUserFrame(AdminGUI o){
 		owner = o;
+		users = new ArrayList<User>();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		 this.addWindowListener(new java.awt.event.WindowAdapter() {
 		        @Override
@@ -72,6 +72,8 @@ public class DeleteUserFrame extends JFrame {
 		JList list = new JList();
 		list.setBounds(58, 46, 241, 271);
 		contentPane.add(list);
+		listModel = new DefaultListModel<String>();
+		list.setModel(listModel);
 		
 		JButton deleteuserbtn = new JButton("Delete");
 		deleteuserbtn.addActionListener(new ActionListener() {
@@ -123,8 +125,6 @@ public class DeleteUserFrame extends JFrame {
 		
 		owner.recievePacket();
 		p = owner.getPacket();
-		
-		users  = new ArrayList();
 		users = p.getUsers();
 		for(int i = 0; i < users.size(); i++)
 			list.add(users.get(i).getUserName()+users.get(i).getName(), null);

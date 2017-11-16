@@ -161,7 +161,7 @@ public class LoginGUI extends JFrame {
 					//TODO
 					loginFrame.dispose();
 					//AdminGUI();
-					AdminGUI gui = new AdminGUI(loginUser.getUserName(),Server.NAME, Server.PORT);
+					AdminGUI gui = new AdminGUI(loginUser,Server.NAME, Server.PORT);
 					//open admin gui
 					//AdminGUI
 				}else if(temp.getType() == Packet.LOGIN_DENY){
