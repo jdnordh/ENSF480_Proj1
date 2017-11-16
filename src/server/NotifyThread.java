@@ -53,6 +53,8 @@ public class NotifyThread extends ShutdownThread{
 					
 					if (user != null){
 						for (int i = 0; i < m.size(); i++){
+							
+							//TODO check if needed
 							if (m.get(i).containsParticipant(user.getUserName())) {
 								if (m.get(i).getmeetingState() == Meeting.Finalized || 
 									m.get(i).getmeetingState() == Meeting.waitingForDates ||
