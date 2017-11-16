@@ -139,7 +139,7 @@ public class Packet implements Serializable{
 	 * users index 0 with username
 	 * number1 with meetingId
 	 */
-	public static final int DELCINE_MEETING = 31;
+	public static final int DECLINE_MEETING = 31;
 	
 	/**
 	 * The servers response to accept or decline of a meeting

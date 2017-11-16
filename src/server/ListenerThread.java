@@ -97,7 +97,7 @@ public class ListenerThread extends ShutdownThread{
 						this.acceptMeeting(p);
 					}
 // DELCINE_MEETING
-					else if (p.getType() == Packet.DELCINE_MEETING){
+					else if (p.getType() == Packet.DECLINE_MEETING){
 						this.declineMeeting(p);
 					}
 // REQUEST_ALL_MEETINGS
@@ -199,6 +199,12 @@ public class ListenerThread extends ShutdownThread{
 
 
 	private void declineMeeting(Packet p) {
+		// Double value function:
+		// Initial decline
+		// Or remove after already accepting
+		
+		
+		//TODO
 		MeetingList ml = MeetingList.getMeetingList();
 		ml.declineMeeting(p);
 		
