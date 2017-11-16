@@ -55,7 +55,8 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	private String username;
 	
 	//Windows
-	protected static ClientGUI clientFrame;
+	private static ClientGUI clientFrame;
+	private static ClientGUI viewMeetingsFrame;
 	
 	//Buttons
 	private JButton viewMeetings = new JButton("View Meetings");
@@ -64,12 +65,10 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	private JButton editLocationPrefs = new JButton("Edit Location Preferences");
 	private JButton removeMeeting = new JButton("Remove meeting");
 	private JButton returnToMain = new JButton("Return to main menu");
-	private JButton acceptMeeting = new JButton("Accept");
-	private JButton declineMeeting = new JButton("Decline");
 	private JButton addLocation = new JButton("Add");
 	private JButton removeLocation = new JButton("Remove");
 	
-	//Lists
+	//Lits
 	protected JList<Meeting> meetingList;
 	private DefaultListModel<Meeting> meetingModel;
 	
@@ -79,9 +78,29 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	//Text fields
 	private JTextField location;
 	
-    public ClientGUI(String un) {
+	//server
+	private  ObjectInputStream input;
+	private  ObjectOutputStream output;
+	private Socket aSocket;
+	
+	//Packet
+	private Packet info;
+    /**
+     * Default constructor
+     */
+    public ClientGUI(String un, String serverName , int portNum) {
     	clientFrame = this;
     	username = un;
+    	try {
+			InetAddress a = InetAddress.getByName(serverName);
+			aSocket = new Socket(a , portNum);
+			output = new ObjectOutputStream(aSocket.getOutputStream());
+			input = new ObjectInputStream(aSocket.getInputStream());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		this.setTitle("Welcome " + username + "!");
 		this.setBounds(100, 100, 300, 200);
 		this.setLayout(new GridLayout(4, 1));
@@ -90,7 +109,6 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		viewMeetings.addActionListener(new ClientListener());
 		panel1.add(viewMeetings);
 		this.add(panel1);
-		
 		JPanel panel2 = new JPanel();
 		initiateMeeting.addActionListener(new ClientListener());
 		panel2.add(initiateMeeting);
@@ -110,8 +128,9 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		this.setVisible(true);
 	}
     
-    //default ctor
-    public ClientGUI() {}
+    public ClientGUI() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public ClientGUI viewMeetingsFrame() {
     	ClientGUI tmp = new ClientGUI();
@@ -211,12 +230,9 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		panel2.setLayout(new BoxLayout(panel2, BoxLayout.LINE_AXIS));
 		panel2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		panel2.add(Box.createHorizontalGlue());
-		acceptMeeting.addActionListener(new ClientListener());
-		declineMeeting.addActionListener(new ClientListener());
+		removeMeeting.addActionListener(new ClientListener());
 		returnToMain.addActionListener(new ClientListener());		
-		panel2.add(acceptMeeting);
-		panel2.add(Box.createRigidArea(new Dimension(10, 0)));
-		panel2.add(declineMeeting);
+		panel2.add(removeMeeting);
 		panel2.add(Box.createRigidArea(new Dimension(10, 0)));
 		panel2.add(returnToMain);
 		
@@ -328,49 +344,12 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 				try {
 					System.out.println("return to main menu pressed");
 					clientFrame.dispose();
-					clientFrame = new ClientGUI(username);
+					clientFrame = new ClientGUI(username,Server.NAME, Server.PORT);
 				} catch (Exception e1){
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
 				}
 			}
-			else if (e.getSource() == acceptMeeting) {
-				try {
-					System.out.println("acceptMeeting press");
-					//TODO accept selected meeting
-				} catch (Exception e1){
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
-				}
-			}
-			else if (e.getSource() == declineMeeting) {
-				try {
-					System.out.println("declineMeeting pressed");
-					//TODO decline selected meeting
-				} catch (Exception e1){
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
-				}
-			}
-			else if (e.getSource() == addLocation) {
-				try {
-					System.out.println("addLocation pressed");
-					//TODO add location by name
-				} catch (Exception e1){
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
-				}
-			}
-			else if (e.getSource() == removeLocation) {
-				try {
-					System.out.println("removeLocation pressed");
-					//TODO remove location by name
-				} catch (Exception e1){
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
-				}
-			}
-			
 		}
 	}
 	
@@ -387,39 +366,65 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	}
 		
     
-	//TODO GUI functionality
+
 	@Override
 	public void getAllMeetings() {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void initateMeeting() {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void acceptMeeting() {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void declineMeeting() {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void addLocationPref() {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void Update() {
+		// TODO Auto-generated method stub
 		
+	}
+	public void setInfo(Packet x) {
+		info = x;
+	}
+	public void sendPacket() throws IOException{
+		output.writeObject(info);
+	}
+	public Packet getPacket(){
+		return info;
+	}
+	public void recievePacket(){
+		try {
+			info = (Packet) input.readObject();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void main(String[] args) {
-		new ClientGUI("User");
+		new ClientGUI("User",Server.NAME, Server.PORT);
 	}
 
    
