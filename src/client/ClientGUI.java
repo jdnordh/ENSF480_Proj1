@@ -138,21 +138,20 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		
 		//TODO fill the text area 
 		getAllMeetings();
+		Meeting m = new Meeting();
+		m.setDescription("Fake description");
+		m.setMeetingInitiator(new User("BOB SMITH", "123", "123"));
+		m.setmeetingState(4);
+		info.getMeetings().add(m);
 		
+		System.out.println(info.getType());
 		//check packet validity
 		if(info.getType() == Packet.RESPONSE_ALL_MEETINGS) {
 			System.out.println(info.getMeetings().size());
 			for(int i = 0; i < info.getMeetings().size(); i++){
-				//TODO REMOVE HARD CODING
-				
-				info.getMeetings().get(i).setmeetingState(4);
-				info.getMeetings().get(i).setID(69);
-				info.getMeetings().get(i).setDescription("Testing desciption");
-				info.getMeetings().get(i).setfinalizedDate(new Date(2017, 11, 16));
-				info.getMeetings().get(i).setLocation(new Location("UofC", "Calgary", "131 Edgeview Dr"));
-				info.getMeetings().get(i).setMeetingInitiator(new User("BOB SMITH", "123", "123"));
-				
-				meetingModel.addElement(info.getMeetings().get(i));
+				System.out.println(info.getMeetings().get(i).getmeetingState());
+				if(info.getMeetings().get(i).getmeetingState() == Meeting.Finalized)
+					meetingModel.addElement(info.getMeetings().get(i));
 			}	
 		}
 		else {

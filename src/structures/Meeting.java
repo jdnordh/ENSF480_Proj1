@@ -198,7 +198,7 @@ public class Meeting implements Serializable{
 		description = d;
 	}
 	public String toString(){
-		String s = ID+meetingInitiator.getUserName();
+		String s = "Meeting #" + ID + ":     " + "Initiator: " + meetingInitiator.getName() + "     " + "Description: " + description;
 		return s;
 	}
 	
