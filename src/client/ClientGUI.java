@@ -61,11 +61,8 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	private JButton viewMeetings = new JButton("View Meetings");
 	private JButton initiateMeeting= new JButton("Initiate meeting");
 	private JButton viewPending = new JButton("View Pending Meetings");
-	private JButton editLocationPrefs = new JButton("Edit Location Preferences");
 	private JButton removeMeeting = new JButton("Remove meeting");
 	private JButton returnToMain = new JButton("Return to main menu");
-	private JButton addLocation = new JButton("Add");
-	private JButton removeLocation = new JButton("Remove");
 	
 	//Lists
 	protected JList<String> meetingList;
@@ -101,7 +98,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 
 		this.setTitle("Welcome " + user.getUserName() + "!");
 		this.setBounds(100, 100, 300, 200);
-		this.setLayout(new GridLayout(4, 1));
+		this.setLayout(new GridLayout(3, 1));
 		
 		JPanel panel1 = new JPanel();
 		viewMeetings.addActionListener(new ClientListener());
@@ -116,11 +113,6 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		viewPending.addActionListener(new ClientListener());
 		panel3.add(viewPending);
 		this.add(panel3);
-
-		JPanel panel4 = new JPanel();
-		editLocationPrefs.addActionListener(new ClientListener());
-		panel4.add(editLocationPrefs);
-		this.add(panel4);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
@@ -290,51 +282,6 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		tmp.setVisible(true);
 		return tmp;
 	}
-	
-	public ClientGUI editLocationPrefsFrame() {
-    	ClientGUI tmp = new ClientGUI();
-		tmp.setTitle("Welcome " + user.getUserName() + "!");
-		tmp.setBounds(100, 100, 400, 150);
-		
-		//create the text field
-		location = new JTextField(50);
-		location.setMaximumSize(new Dimension(100, 25));
-		
-		//create the label
-		JLabel label = new JLabel("Location:");
-
-		//create the panel
-		JPanel panel1 = new JPanel();
-		panel1.setLayout(new BoxLayout(panel1, BoxLayout.X_AXIS));
-		addLocation.addActionListener(new ClientListener());
-		removeLocation.addActionListener(new ClientListener());
-		panel1.add(label);
-		panel1.add(Box.createRigidArea(new Dimension(10, 0)));
-		panel1.add(location);
-		panel1.add(Box.createRigidArea(new Dimension(10, 0)));
-		panel1.add(addLocation);
-		panel1.add(Box.createRigidArea(new Dimension(5, 0)));
-		panel1.add(removeLocation);
-		panel1.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-		
-		//add to the container
-		tmp.add(panel1, BorderLayout.CENTER);
-		
-		//create button panel
-		JPanel panel2 = new JPanel();
-		//panel2.setLayout(new BoxLayout(panel2, BoxLayout.PAGE_AXIS));
-		panel2.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-		//panel2.add(Box.createHorizontalGlue());
-		returnToMain.addActionListener(new ClientListener());		
-		panel2.add(returnToMain, BorderLayout.CENTER);
-		
-		//add to the container
-		tmp.add(panel2, BorderLayout.PAGE_END);
-		
-		tmp.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		tmp.setVisible(true);
-		return tmp;
-	}
     
 	private class ClientListener implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
@@ -362,17 +309,6 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 					System.out.println("viewPending pressed");
 					clientFrame.dispose();
 					clientFrame = viewPendingMeetingsFrame();
-				} catch (Exception e1){
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
-				}
-			}
-			else if (e.getSource() == editLocationPrefs) {
-				try {
-					System.out.println("editLocationPrefs pressed");
-					clientFrame.dispose();
-					clientFrame = editLocationPrefsFrame();
-					//TODO editLocationPrefs 
 				} catch (Exception e1){
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
@@ -417,6 +353,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	@Override
 	public void getAllMeetings() {
 		info = new Packet(Packet.REQUEST_ALL_MEETINGS);
+		info.addUser(user);
 		try {
 			this.sendPacket();
 		} catch (IOException e) {
