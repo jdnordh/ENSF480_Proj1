@@ -2,8 +2,6 @@ package structures;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
-
 /**
  * 
  */
@@ -139,7 +137,7 @@ public class Packet implements Serializable{
 	 * users index 0 with username
 	 * number1 with meetingId
 	 */
-	public static final int DELCINE_MEETING = 31;
+	public static final int DECLINE_MEETING = 31;
 	
 	/**
 	 * The servers response to accept or decline of a meeting
@@ -164,6 +162,26 @@ public class Packet implements Serializable{
 	 * Meetings will all meetings associated with that user
 	 */
 	public static final int RESPONSE_ALL_MEETINGS = 34;
+	
+	/**
+	 * This is a client request to delete a meeting that they initiated
+	 * Fill out these:
+	 * 
+	 * Users index 0 with initiating user, need username
+	 * number1 with meeting id
+	 * 
+	 * 
+	 */
+	public static final int DELETE_MEETING = 36;
+	
+	/**
+	 * The following 2 codes are the response from the server after sending a DELETE_MEETING request
+	 * 
+	 * 
+	 */
+	public static final int DELETE_MEETING_CONFIRM = 37;
+	public static final int DELETE_MEETING_DENY = 38;
+	
 	
 	/**
 	 * This packet will be returned if the request was not formatted properly

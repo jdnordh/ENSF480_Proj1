@@ -62,7 +62,7 @@ public class ListenerThread extends ShutdownThread{
 				System.out.println("ListenerThread " + this.getId() + " recieved packet type " + p.getType());
 				
 				// classify the packet
-				
+				user = p.getUsers().get(0);
 // CLOSE
 				if (p.getType() == Packet.CLOSE_CONNECTION){
 					running = false;
@@ -97,7 +97,7 @@ public class ListenerThread extends ShutdownThread{
 						this.acceptMeeting(p);
 					}
 // DELCINE_MEETING
-					else if (p.getType() == Packet.DELCINE_MEETING){
+					else if (p.getType() == Packet.DECLINE_MEETING){
 						this.declineMeeting(p);
 					}
 // REQUEST_ALL_MEETINGS
@@ -112,15 +112,17 @@ public class ListenerThread extends ShutdownThread{
 					else if (p.getType() == Packet.ADD_LOCATION && user.isAdmin()){
 						this.addLocation(p);;
 					}
+// DELETE_MEETING
+					else if (p.getType() == Packet.DELETE_MEETING){
+						this.deleteMeeting(p);;
+					}
 // DELETE_LOCATION
 					else if (p.getType() == Packet.DELETE_LOCATION && user.isAdmin()){
 						this.deleteLocation(p);;
-					}
-					else {
+					}else {
 						this.sendBadRequest("User not null, but unknown request");
 					}
-				}
-				else {
+				}else {
 					this.sendBadRequest("Final else");
 				}
 				//System.out.println("ListenerThread " + this.getId() + " finished dealing with packet " + p.getType());
@@ -148,6 +150,26 @@ public class ListenerThread extends ShutdownThread{
 		notifier.interrupt();
 		System.out.println("ListenerThread " + this.getId() + " stopping");
 	}
+
+	private void deleteMeeting(Packet p) {
+		Packet r = null;
+		MeetingList ml = MeetingList.getMeetingList();
+		
+		// Meeting to delete
+		Meeting toDelete = new Meeting();
+		toDelete.setID(p.getNumber1());
+		
+		boolean deleted = ml.deleteMeeting(toDelete, this.user);
+		
+		if (deleted){
+			r = new Packet(Packet.DELETE_MEETING_CONFIRM);
+		}
+		else {
+			r = new Packet(Packet.DELETE_MEETING_DENY);
+		}
+		queue.push(r);
+	}
+
 
 	private void requestAllMeetings(Packet p) {
 		Packet r = new Packet(Packet.RESPONSE_ALL_MEETINGS);
@@ -199,6 +221,9 @@ public class ListenerThread extends ShutdownThread{
 
 
 	private void declineMeeting(Packet p) {
+		// Double value function:
+		// Initial decline
+		// Or remove after already accepting
 		MeetingList ml = MeetingList.getMeetingList();
 		ml.declineMeeting(p);
 		

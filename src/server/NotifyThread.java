@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import structures.Meeting;
 import structures.Packet;
+import structures.Participant;
 import structures.User;
 
 /**
@@ -52,16 +53,30 @@ public class NotifyThread extends ShutdownThread{
 					
 					if (user != null){
 						for (int i = 0; i < m.size(); i++){
+							
+							//TODO check if needed
 							if (m.get(i).containsParticipant(user.getUserName())) {
 								if (m.get(i).getmeetingState() == Meeting.Finalized || 
 									m.get(i).getmeetingState() == Meeting.waitingForDates ||
 									m.get(i).getmeetingState() == Meeting.waitingForLocationPref || 
 									m.get(i).getmeetingState() == Meeting.waitingForFinalized) {
-								p = new Packet(Packet.NEW_MEETING);
-								break;
+									p = new Packet(Packet.NEW_MEETING);
+									break;
 								}
 								else if (m.get(i).getmeetingState() == Meeting.DATEOUTSIDERANGE){
 									//TODO send notification to non important people
+									ArrayList<Participant> parts = m.get(i).getParticipants();
+									
+									//Check if the user is important
+									for (int j = 0; j < parts.size(); j++){
+										if (parts.get(j).isEqualTo(user) && parts.get(i).isImportant()){
+											//TODO
+											
+										}
+									}
+									
+									p = new Packet(Packet.NEW_MEETING_DROP_REQUEST);
+									break;
 								}
 								else if (m.get(i).getmeetingState() == Meeting.NODATEFOUND){
 									//TODO send notification to meeting initiator 

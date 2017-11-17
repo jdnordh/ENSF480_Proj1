@@ -37,7 +37,7 @@ public class ClientThread extends ShutdownThread{
 				}
 				Packet p = (Packet) in.readObject();
 				
-				if ( !(p instanceof Packet)) throw new ClassNotFoundException("BAD REQUEST");
+				//if ( !(p instanceof Packet)) throw new ClassNotFoundException("BAD REQUEST");
 				
 				System.out.println("ClientThread " + this.getId() + " recieved packet type " + p.getType());
 				

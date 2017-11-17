@@ -25,7 +25,9 @@ public class Meeting implements Serializable{
     	meetingState = 0;
     }
     //Meeting intiated with Location
-    public Meeting(ArrayList<Participant> p ,Location L, String D , ArrayList<Date> meetingIniatorPref) {
+    
+    //participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
+    public Meeting(ArrayList<Participant> p ,Location L, String D , ArrayList<Date> meetingIniatorPref, User U) {
     	ID = IDcounter++;
     	preferedDates = meetingIniatorPref;
     	Location = L;
@@ -34,23 +36,26 @@ public class Meeting implements Serializable{
     	Participants = p;
     	meetingState =2;
     	preferedDateParticipant = new ArrayList<DatePref>();
+    	setMeetingInitiator(U);
     }
     //without location
-    public Meeting(ArrayList<Participant> p ,String D , ArrayList<Date> meetingIniatorPref) {
+    public Meeting(ArrayList<Participant> p,ArrayList<Location> Ls ,String D , ArrayList<Date> meetingIniatorPref, User U) {
     	ID = IDcounter++;
     	preferedDates = meetingIniatorPref;
     	description = D;
     	meetingState = 0;
+    	LocationPref = Ls;
     	Participants = p;
     	meetingState = 1;
     	preferedDateParticipant = new ArrayList<DatePref>();
+    	setMeetingInitiator(U);
     }
-
+   
     /**
      * 
      */
     private Date finalizedDate;
-
+    private User meetingInitiator;
     /**
      * 
      */
@@ -137,10 +142,14 @@ public class Meeting implements Serializable{
 	public ArrayList<Participant> getParticipants() {
 		return Participants;
 	}
-	public void setfinalizedDate(Date date) {
-		finalizedDate = date;
+	public void setfinalizedDate(Date c) {
+		finalizedDate = c;
 	}
 	public int getmeetingState(){return meetingState;}
+	
+	public ArrayList<Location> getLocations(){
+		return LocationPref;
+	}
 	
 	public static final int waitingForDates = 2;
 	public static final int empty = 0;
@@ -150,6 +159,7 @@ public class Meeting implements Serializable{
 	public static final int serverPickLocationPref = 5;
 	public static final int NODATEFOUND = 6;
 	public static final int DATEOUTSIDERANGE = 7;
+	public static final int MEETINGCANCELED  = 10;
 	
 	public boolean containsParticipant(String userName) {
 		for(int i = 0 ; i < Participants.size(); i++){
@@ -159,6 +169,15 @@ public class Meeting implements Serializable{
 		return false;
 	}
 	public void setmeetingState(int x) {meetingState = x;}
+	public void setLocation(Location l) {Location = l;	}
+
+	public User getMeetingInitiator() {
+		return meetingInitiator;
+	}
+
+	public void setMeetingInitiator(User meetingInitiator) {
+		this.meetingInitiator = meetingInitiator;
+	}
 	
 	
 }

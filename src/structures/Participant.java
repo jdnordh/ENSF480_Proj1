@@ -39,7 +39,7 @@ public class Participant extends User implements Serializable{
     public void setImportant(Boolean x){
     	Important = x;
     }
-    public Boolean getImportant(){
+    public Boolean isImportant(){
     	return Important;
     }
     

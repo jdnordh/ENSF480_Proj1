@@ -27,6 +27,32 @@ public class FindMeetingTimeStrategy1 implements FindMeetingTimeStrategyInterfac
 				FinalizeTime(m);
 			}
 		}
+		for(int i = 0;  i < MeetingL.getMeetings().size(); i++){
+			if (MeetingL.getMeetings().get(i).getmeetingState() == Meeting.serverPickLocationPref ){
+				m = MeetingL.getMeetings().get(i);
+				FinalizedLocation(m);
+		}
+		}
+	}
+
+	private void FinalizedLocation(Meeting m) {
+		ArrayList<Location> Locations = m.getLocations();
+		//int x to see which location is selected the most
+		int x[] = new int[Locations.size()];
+		for( int i = 0; i< Locations.size() ; i ++){
+			for(int j = 0 ; j < Locations.size() ; i++){
+				if(Locations.get(i) == Locations.get(j)){
+					//increase x to see the location was chosen again
+					x[i]++; 
+				}
+			}
+		}
+		int max = 0;
+		for( int i = 0; i< Locations.size() ; i ++){
+			if(x[i]>max)
+				max = x[i];
+		}
+		m.setLocation(Locations.get(max));
 	}
 
 	private void FinalizeTime(Meeting m) {
@@ -63,7 +89,7 @@ public class FindMeetingTimeStrategy1 implements FindMeetingTimeStrategyInterfac
 		//find all important participants
 		for(int i = 0; i< strategyMeeting.size(); i ++){
 			//for every 
-			if(strategyMeeting.get(i).getparticipant().getImportant()  == true){
+			if(strategyMeeting.get(i).getparticipant().isImportant()  == true){
 				importantPeopleTimes.add(strategyMeeting.get(i));
 			}
 		}

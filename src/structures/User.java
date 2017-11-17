@@ -82,6 +82,12 @@ public class User implements Serializable{
     	UserName = U;
     	Password = P;
     }
+    public User(String N , String U, String P, boolean i){
+    	Name = N;
+    	UserName = U;
+    	Password = P;
+    	isAdmin = i;
+    }
 
     /**
      * Copy constructor
@@ -94,7 +100,11 @@ public class User implements Serializable{
     	isAdmin = user.isAdmin();
 	}
 	
-	
+	/**
+	 * Comparison of the two user's usernames
+	 * @param u User
+	 * @return True if usernames are equal
+	 */
 	public boolean isEqualTo(User u) {
 		if (UserName.equals(u.getUserName())) return true;
 		return false;

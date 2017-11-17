@@ -73,9 +73,9 @@ public class MeetingList {
 	 * @param m Meeting to be deleted
 	 * @return True if meeting is deleted, false if not found
 	 */
-	public boolean deleteMeeting(Meeting m){
+	public boolean deleteMeeting(Meeting m, User u){
 		for (int i = 0; i < meetings.size(); i++){
-			if (meetings.get(i).isEqualTo(m)){
+			if (meetings.get(i).isEqualTo(m) && meetings.get(i).getMeetingInitiator().isEqualTo(u)){
 				meetings.remove(i);
 				return true;
 			}
@@ -197,7 +197,8 @@ public class MeetingList {
 		
 		for (int i = 0; i < meetings.size(); i++){
 			Meeting check = meetings.get(i);
-			if (check.getID() == p.getNumber1() && check.containsParticipant(p.getUsers().get(0).getUserName())){
+			if (check.getID() == p.getNumber1() && 
+					check.containsParticipant(p.getUsers().get(0).getUserName())){
 				check.removeParticipant(p.getUsers().get(0));
 				this.setChanged(true);
 				return true;

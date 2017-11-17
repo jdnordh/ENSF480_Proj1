@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class addUserFrame extends JFrame {
@@ -25,6 +26,7 @@ public class addUserFrame extends JFrame {
 	private JTextField nametf;
 	private JRadioButton isAdminrdbtn;
 	private AdminGUI owner;
+	private JButton backbtn;
 
 	/**
 	 * Launch the application.
@@ -47,6 +49,7 @@ public class addUserFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public addUserFrame(AdminGUI o) {
+		System.out.println("Creating add UserFrame");
 		owner = o;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 569, 382);
@@ -95,20 +98,41 @@ public class addUserFrame extends JFrame {
 					return;
 				//else create a user add it info packet and send it to server
 				owner.setInfo(getinfo());
-				System.out.println("make it here");
-				
+				try {
+					owner.sendPacket();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				System.out.println("sent Packet to server");
+				owner.getThreadPacket(owner.getPacket());
+				System.out.println("closeing add user");
+				closeFrame();
 			}
 		});
 		submitbtn.setBounds(229, 250, 97, 25);
 		contentPane.add(submitbtn);
-	}
+		
+		backbtn = new JButton("Back");
+		backbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				closeFrame();
+				owner.setVisible(true);
+			}
 
-	public Packet getinfo() {
-		Packet p = new Packet(Packet.ADD_USER);
-		User u = new User(usernametf.getText(),nametf.getText(),nametf.getText(),isAdminrdbtn.isSelected());
-		p.addUser(u);
+			
+		});
+		backbtn.setBounds(229, 297, 97, 25);
+		contentPane.add(backbtn);
+	}
+	private void closeFrame() {
 		owner.setVisible(true);
 		this.dispose();
+	}
+	public Packet getinfo() {
+		Packet p = new Packet(Packet.ADD_USER);
+		User u = new User(usernametf.getText(),nametf.getText(),passwordtf.getText(),isAdminrdbtn.isSelected());
+		p.addUser(u);
 		return p;
 	}
 }
