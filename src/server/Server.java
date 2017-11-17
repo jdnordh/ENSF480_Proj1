@@ -124,6 +124,7 @@ public class Server extends Thread{
 		System.err.println("Type \"quit\" or \"stop\" to stop");
 		System.err.println("Type \"info\" to get current server info");
 		System.err.println("Type \"users\" to get current users info");
+		System.err.println("Type \"locations\" to get current locations info");
 		System.err.println("Type \"meetings\" to get current meetings info");
 		Scanner in = new Scanner(System.in);
 		String read = "";
@@ -132,12 +133,29 @@ public class Server extends Thread{
 			if (read.equalsIgnoreCase("info")) server.info();
 			else if (read.equalsIgnoreCase("users")) server.printUsers();
 			else if (read.equalsIgnoreCase("meetings")) server.printMeetings();
+			else if (read.equalsIgnoreCase("locations")) server.printLocations();
 		}
 		in.close();
 		
 		System.out.println("\nShutting down the server...");
 		server.shutdown();
     }
+
+	/**
+	 * print all locations
+	 */
+	private void printLocations() {
+		LocationList ll = LocationList.getLocationList();
+		ArrayList<Location> u = ll.getLocations();
+		System.err.println("\nLocations:");
+		System.err.println("Name			Address			City		");
+		for (int i = 0; i < u.size(); i++){
+			System.err.println(u.get(i).getName() + "\t\t" + u.get(i).getAddress() + 
+					"\t\t" + u.get(i).getCity());
+		}
+	}
+
+
 	
 	/**
 	 * Print the users out

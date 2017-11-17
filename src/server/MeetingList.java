@@ -37,27 +37,15 @@ public class MeetingList {
 		schedulerGo = true;
 	}
 	
-	
+	/*
 	// For testing purposes only
 	public static void main(String [] args){
-		MeetingList ml = MeetingList.getMeetingList();
+		MeetingList u = MeetingList.getMeetingList();
 		Meeting m = new Meeting();
-		
-		UserList ul = UserList.getUserList();
-		ArrayList<User> u = ul.getUsers();
-		
-		m.setMeetingInitiator(u.get(u.size() - 1));
-		
-		for (int i = 0; i < u.size(); i++){
-			m.addParticipant(u.get(i).getUserName(), u.get(i).getName(), true);
-		}
-		
-		m.setmeetingState(Meeting.Finalized);
-		m.setID(9);
-		
-		ml.addMeeting(m);
+		m.setID(1234);
+		u.addMeeting(m);
 	}
-	
+	*/
 	
 	
 	/** get the only instance

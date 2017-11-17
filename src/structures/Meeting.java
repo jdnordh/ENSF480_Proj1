@@ -102,12 +102,10 @@ public class Meeting implements Serializable{
     public void acceptMeeting(DatePref dates){
     	preferedDateParticipant.add(dates);
     }
-    
     /**
      * 
-     * @param user username
-     * @param name Name
-     * @param i important
+     * @param Important 
+     * @return
      */
     public void addParticipant(String user,String name , boolean i) {
     	Participant p = new Participant(user,name, i);
