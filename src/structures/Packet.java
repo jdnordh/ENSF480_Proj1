@@ -97,6 +97,11 @@ public class Packet implements Serializable{
 	public static final int INITIATE_MEETING_CONFIRM = 35;
 	
 	/**
+	 * The server will send this packet back to the client to NOT confirm that the meeting was received
+	 */
+	public static final int INITIATE_MEETING_DENY = 3500;
+	
+	/**
 	 * The following types are to be used by admin GUI exclusively
 	 * The following fields should be filled out
 	 * 

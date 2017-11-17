@@ -295,7 +295,9 @@ public class ListenerThread extends ShutdownThread{
 		Packet response = new Packet(Packet.INITIATE_MEETING_CONFIRM);
 		System.out.println("Meeting ID before ml: "+ p.getMeetings().get(0).getID());
 		MeetingList m = MeetingList.getMeetingList();
-		m.addMeeting(p.getMeetings().get(0));
+		boolean added = m.addMeeting(p.getMeetings().get(0));
+		
+		if (!added) response = new Packet(Packet.INITIATE_MEETING_DENY);
 		
 		queue.push(response);
 	}
