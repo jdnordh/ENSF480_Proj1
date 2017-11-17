@@ -60,6 +60,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 	/**
 	 * Launch the application.
 	 */
+	/*
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -73,28 +74,18 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 			}
 		});
 	}
-
+	*/
 	/**
 	 * Create the frame.
 	 */
-	public AdminGUI(User Un,String serverName , int portNum) {
+	public AdminGUI(User Un,ObjectInputStream ip ,ObjectOutputStream op) {
 		//will add if empty right now it does not act as singleton
 		Us = Un;
 		onlyInstance = this;
 		System.out.println("Creating Opening Page");
-		try {
-			InetAddress a = InetAddress.getByName(serverName);
-			aSocket = new Socket(a , portNum);
-			output = new ObjectOutputStream(aSocket.getOutputStream());
-			input = new ObjectInputStream(aSocket.getInputStream());
-			//set timeout
-			aSocket.setSoTimeout(100);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		//
+		output = op;
+		input = ip;
+		
 		MyThread = new ClientThread(input,onlyInstance);
 		MyThread.start();
 		
@@ -113,27 +104,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 				addUserFrame open = new addUserFrame(onlyInstance);
 				open.setVisible(true);
 				onlyInstance.setVisible(false);
-				//the addUserFrame will create a packet set info in this class then send the pakcet 
-				//from this class and admin will wait for response.
-				/*
-				 * try {
-					info = (Packet) input.readObject();
-				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				if(info.getType() == Packet.ADD_USER_CONFIRM){
-					//let admin know success
-					JOptionPane.showMessageDialog(null,"User has been added");
-				}
-				if (info.getType() == Packet.ADD_USER_DENY){
-					//let admin know of denial
-					JOptionPane.showMessageDialog(null,"User has been not been added something went wrong try again");
-				}
-				*/
+				
 			}
 		
 		});
@@ -154,7 +125,9 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 		JButton editlocationbtn = new JButton("editLocation");
 		editlocationbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				LocationFrame LF = new LocationFrame(onlyInstance);
+				LF.setVisible(true);
+				onlyInstance.setVisible(false);
 				
 			}
 		});

@@ -15,7 +15,11 @@ import javax.swing.JTextField;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.EOFException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.awt.event.ActionEvent;
 
 public class addUserFrame extends JFrame {
@@ -68,7 +72,7 @@ public class addUserFrame extends JFrame {
 		usernametf.setColumns(10);
 		
 		JLabel passwordlb = new JLabel("password");
-		passwordlb.setBounds(85, 114, 56, 16);
+		passwordlb.setBounds(85, 114, 78, 16);
 		contentPane.add(passwordlb);
 		
 		passwordtf = new JTextField();
@@ -131,8 +135,19 @@ public class addUserFrame extends JFrame {
 	}
 	public Packet getinfo() {
 		Packet p = new Packet(Packet.ADD_USER);
-		User u = new User(usernametf.getText(),nametf.getText(),passwordtf.getText(),isAdminrdbtn.isSelected());
-		p.addUser(u);
+		String password = passwordtf.getText();
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance("SHA-256");
+			String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
+			System.out.println("hashed password: "+ hashed_password);
+			User u = new User(nametf.getText(),usernametf.getText(),hashed_password,isAdminrdbtn.isSelected());
+			p.addUser(u);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(nametf.getText()+usernametf.getText());
 		return p;
 	}
 }

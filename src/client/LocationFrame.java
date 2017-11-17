@@ -20,6 +20,7 @@ import structures.Packet;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ActionEvent;
 
 public class LocationFrame extends JFrame {
@@ -97,6 +98,8 @@ public class LocationFrame extends JFrame {
 				//Location (name, city , address)
 				Location L = new Location(nametf.getText(), citytf.getText() , addresstf.getText());
 				Packet P = new Packet(Packet.ADD_LOCATION);
+				P.addUser(owner.getUser());
+				P.addLocation(L);
 				owner.setInfo(P);
 				try {
 					owner.sendPacket();
@@ -105,6 +108,15 @@ public class LocationFrame extends JFrame {
 					e1.printStackTrace();
 				}
 				//wait for input back
+				while(owner.getPacket().getType() != Packet.ADD_LOCATION_CONFIRM){
+					try {
+						TimeUnit.SECONDS.sleep(1);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				//owner.recievePacket();
 				P = owner.getPacket();
 			}
 		});
@@ -139,6 +151,7 @@ public class LocationFrame extends JFrame {
 				Packet P = new Packet(Packet.DELETE_LOCATION);
 				int index = list.getSelectedIndex();
 				P.addLocation(Locations.get(index));
+				P.addUser(owner.getUser());
 				owner.setInfo(P);
 				try {
 					owner.sendPacket();
@@ -147,7 +160,15 @@ public class LocationFrame extends JFrame {
 					e1.printStackTrace();
 				}
 				//wait for response
-				
+				while(owner.getPacket().getType() != Packet.DELETE_LOCATION_CONFIRM||owner.getPacket().getType() != Packet.DELETE_LOCATION_DENY){
+					try {
+						TimeUnit.SECONDS.sleep(1);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				//owner.recievePacket();
 				P = owner.getPacket();
 				if(P.getType() == Packet.DELETE_LOCATION_CONFIRM){
 					listModel.remove(index);
@@ -163,7 +184,9 @@ public class LocationFrame extends JFrame {
 		contentPane.add(removebtn);
 		
 		Packet P = new Packet(Packet.REQUEST_ALL_LOCATIONS);
+		P.addUser(owner.getUser());
 		owner.setInfo(P);
+		
 		try {
 			owner.sendPacket();
 		} catch (IOException e1) {
@@ -171,7 +194,15 @@ public class LocationFrame extends JFrame {
 			e1.printStackTrace();
 		}
 		//wait for info back
-		
+		while(owner.getPacket().getType() != Packet.RESPONSE_ALL_LOCATIONS){
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		//owner.recievePacket();
 		P = owner.getPacket();
 		if(Packet.RESPONSE_ALL_LOCATIONS == P.getType()){
 			Locations = P.getLocations();

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -16,6 +17,7 @@ import structures.Location;
 import structures.Meeting;
 import structures.Packet;
 import structures.Participant;
+import structures.User;
 
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -36,7 +38,7 @@ public class MeetingInitiatorFrame extends JFrame {
 	//lists
 	private DefaultListModel<String> allParticipantsListModel; 
 	private static JList allParticpantsList;
-	private DefaultListModel<String> allLocatyionsListModel; 
+	private DefaultListModel<String> allLocationsListModel; 
 	private static JList allLocatyionsList;
 	private DefaultListModel<String> meetingParticipantsListModel; 
 	private static JList meetingParticipantsList;
@@ -51,7 +53,7 @@ public class MeetingInitiatorFrame extends JFrame {
 	private ArrayList<Location> meetingLocations;
 	private ArrayList<Location> allLocations;
 	private ArrayList<Participant> meetingParticipants;
-	private ArrayList<Participant> allParticipants;
+	private ArrayList<User> allUsers;
 	private ArrayList<Date> allDates;
 	private ArrayList<Date> meetingDates;
 	
@@ -59,6 +61,7 @@ public class MeetingInitiatorFrame extends JFrame {
 	
 	private JButton datebtn;
 	private JLabel lblDates;
+	private JButton importantbtn;
 	/**
 	 * Launch the application.
 	 */
@@ -84,7 +87,7 @@ public class MeetingInitiatorFrame extends JFrame {
 		meetingDates =new ArrayList<Date>();
 		allLocations = new ArrayList<Location>();
 		meetingLocations = new ArrayList<Location>();
-		allParticipants = new ArrayList<Participant>();
+		allUsers = new ArrayList<User>();
 		meetingParticipants= new ArrayList<Participant>();
 		owner = o;
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -120,8 +123,8 @@ public class MeetingInitiatorFrame extends JFrame {
 		allLocatyionsList = new JList();
 		allLocatyionsList.setBounds(12, 344, 338, 236);
 		contentPane.add(allLocatyionsList);
-		allLocatyionsListModel = new DefaultListModel<String>();
-		allLocatyionsList.setModel(allLocatyionsListModel);
+		allLocationsListModel = new DefaultListModel<String>();
+		allLocatyionsList.setModel(allLocationsListModel);
 		
 		meetingLocationsList = new JList();
 		meetingLocationsList.setBounds(424, 327, 338, 253);
@@ -180,6 +183,7 @@ public class MeetingInitiatorFrame extends JFrame {
 					//participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
 					Meeting m = new Meeting(meetingParticipants, meetingLocations.get(0), descriptiontf.getText(),meetingDates ,owner.getUser() );
 					P.addMeeting(m);
+					P.addUser(owner.getUser());
 					owner.setInfo(P);
 					try {
 						owner.sendPacket();
@@ -188,7 +192,15 @@ public class MeetingInitiatorFrame extends JFrame {
 						e.printStackTrace();
 					}
 					//wait for input
-					owner.recievePacket();
+					while(owner.getPacket().getType() != Packet.INITIATE_MEETING_CONFIRM){
+						try {
+							TimeUnit.SECONDS.sleep(1);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					//owner.recievePacket();
 					P = owner.getPacket();
 					if(Packet.INITIATE_MEETING_CONFIRM  == P.getType()){
 						JOptionPane.showMessageDialog(null, "Meeting made successfully");
@@ -224,6 +236,10 @@ public class MeetingInitiatorFrame extends JFrame {
 		lblDates.setBounds(150, 584, 56, 16);
 		contentPane.add(lblDates);
 		
+		importantbtn = new JButton("important");
+		importantbtn.setBounds(355, 159, 66, 47);
+		contentPane.add(importantbtn);
+		
 		Date D = new Date();
 		
 		allDates.add(D);
@@ -233,6 +249,56 @@ public class MeetingInitiatorFrame extends JFrame {
 			D = addDays(D,1);
 		}
 		
+		Packet P = new Packet(Packet.REQUEST_ALL_LOCATIONS);
+		P.addUser(owner.getUser());
+		owner.setInfo(P);
+		try {
+			owner.sendPacket();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		while(owner.getPacket().getType() != Packet.RESPONSE_ALL_LOCATIONS){
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		//owner.recievePacket();
+		P = owner.getPacket();
+		if(P.getType() == Packet.RESPONSE_ALL_LOCATIONS){
+			System.out.println("Locations got: " +P.getLocations().size());
+			allLocations = P.getLocations();
+			for(int i = 0; i < allLocations.size(); i++)
+			allLocationsListModel.addElement(allLocations.get(i).getAddress()+" "+allLocations.get(i).getName());
+		}
+		P = new Packet(Packet.REQUEST_ALL_USERS);
+		P.addUser(owner.getUser());
+		owner.setInfo(P);
+		try {
+			owner.sendPacket();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		while(owner.getPacket().getType() != Packet.RESPONSE_ALL_USERS){
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		if(P.getType() == Packet.RESPONSE_ALL_USERS){
+			System.out.println("Locations got: " +P.getLocations().size());
+			allUsers = P.getUsers();
+			for(int i = 0; i < allLocations.size(); i++)
+			allParticipantsListModel.addElement(allUsers.get(i).getUserName()+" "+allUsers.get(i).getName());
+		}
 	}
 	public static Date addDays(Date date, int days)
     {

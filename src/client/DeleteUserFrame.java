@@ -9,6 +9,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -89,13 +90,14 @@ public class DeleteUserFrame extends JFrame {
 					e1.printStackTrace();
 				}
 				
-				owner.getThreadPacket(owner.getPacket());
+				//owner.getThreadPacket(owner.getPacket());
+				owner.recievePacket();
 				p = owner.getPacket();
 				
 				if(p.getType() == Packet.DELETE_USER_CONFIRM){
 					JOptionPane.showMessageDialog(null,"The User has been Deleted");
 					users.remove(index);
-					list.remove(index);
+					listModel.remove(index);
 				}
 				if(p.getType() == Packet.DELETE_LOCATION_DENY){
 					JOptionPane.showMessageDialog(null,"The User was not Deleted something went wrong");
@@ -115,6 +117,7 @@ public class DeleteUserFrame extends JFrame {
 		contentPane.add(lblUsers);
 		
 		Packet p = new Packet(Packet.REQUEST_ALL_USERS);
+		p.addUser(owner.getUser());
 		owner.setInfo(p);
 		try {
 			owner.sendPacket();
@@ -122,12 +125,20 @@ public class DeleteUserFrame extends JFrame {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
-		owner.getThreadPacket(owner.getPacket());
+		while(owner.getPacket().getType() != Packet.RESPONSE_ALL_USERS){
+			try {
+				TimeUnit.SECONDS.sleep(1);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		//owner.recievePacket();
 		p = owner.getPacket();
 		users = p.getUsers();
+		System.out.println("DeleteUserFrame Recieved:"+ users.size()+ "Users");
 		for(int i = 0; i < users.size(); i++){
-			listModel.addElement(users.get(i).getUserName()+users.get(i).getName());
+			listModel.addElement(users.get(i).getUserName());
 	}
 	}
 }
