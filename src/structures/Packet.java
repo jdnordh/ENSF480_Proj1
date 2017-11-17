@@ -103,7 +103,7 @@ public class Packet implements Serializable{
 	 * The following fields should be filled out
 	 * 
 	 * For Packet.ADD_USER
-	 * users index 0 with username, hashed password, and name
+	 * users index 0 with username, hashed password, and name, and isAdmin
 	 * 
 	 * For Packet.DELETE_USER
 	 * users index 0 with username
