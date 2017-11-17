@@ -60,7 +60,7 @@ public class NotifyThread extends ShutdownThread{
 									m.get(i).getmeetingState() == Meeting.waitingForDates ||
 									m.get(i).getmeetingState() == Meeting.waitingForLocationPref || 
 									m.get(i).getmeetingState() == Meeting.waitingForFinalized) {
-									p = new Packet(Packet.NEW_MEETING);
+									p = new Packet(Packet.NOTIFY_NEW_MEETING);
 									break;
 								}
 								else if (m.get(i).getmeetingState() == Meeting.DATEOUTSIDERANGE){
@@ -69,18 +69,16 @@ public class NotifyThread extends ShutdownThread{
 									
 									//Check if the user is important
 									for (int j = 0; j < parts.size(); j++){
-										if (parts.get(j).isEqualTo(user) && parts.get(i).isImportant()){
-											//TODO
-											
+										if (parts.get(j).isEqualTo(user) && !parts.get(i).isImportant()){
+											p = new Packet(Packet.NOTIFY_MEETING_DROP_REQUEST);
+											break;
 										}
 									}
-									
-									p = new Packet(Packet.NEW_MEETING_DROP_REQUEST);
-									break;
 								}
 								else if (m.get(i).getmeetingState() == Meeting.NODATEFOUND){
-									//TODO send notification to meeting initiator 
-									
+									if (m.get(i).getMeetingInitiator().isEqualTo(user)){
+										p = new Packet(Packet.NOTIFY_NO_MEETING_TIME);
+									}
 								}
 							}
 						}

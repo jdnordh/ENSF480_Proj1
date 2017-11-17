@@ -260,19 +260,27 @@ public class Packet implements Serializable{
 	 * 
 	 * The client can either be told to refresh the meetings list, or do it automatically
 	 */
-	public static final int NEW_MEETING = 500;
+	public static final int NOTIFY_NEW_MEETING = 500;
 	
 	/**
 	 * This packet is sent from the server to the client when a user should drop a meeting
 	 * 
 	 * The client can either be told to refresh the meetings list, or do it automatically
 	 */
-	public static final int NEW_MEETING_DROP_REQUEST = 501;
+	public static final int NOTIFY_MEETING_DROP_REQUEST = 501;
 
-
+	/**
+	 * This packet is sent from the server to the client when a user should drop a meeting
+	 * 
+	 * The client can either be told to refresh the meetings list, or do it automatically
+	 */
+	public static final int NOTIFY_NO_MEETING_TIME = 502;
+	
+	
+	//TODO what are these?
 	public static final int USERMEETINGS = 222;
 
-
+//TODO
 	public static final int USERMEETINGS_RESPONSE = 223;
 	
     /**

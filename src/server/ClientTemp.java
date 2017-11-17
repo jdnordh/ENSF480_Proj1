@@ -65,22 +65,14 @@ public class ClientTemp {
 			UserList ul = UserList.getUserList();
 			ArrayList<User> u = ul.getUsers();
 			
-			u.remove(u.size() - 1);
-			u.remove(u.size() - 1);
-			u.remove(u.size() - 1);
-			
-			LocationList ll = LocationList.getLocationList();
-			ArrayList<Location> l = ll.getLocations();
-			
 			m.setMeetingInitiator(user);
 			
 			for (int i = 0; i < u.size(); i++){
 				m.addParticipant(u.get(i).getUserName(), u.get(i).getName(), true);
 			}
-			m.setLocation(l.get(0));
 			
 			m.setmeetingState(Meeting.Finalized);
-			
+			m.setID(9);
 			p = new Packet(Packet.INITIATE_MEETING);
 			p.addMeeting(m);
 			
