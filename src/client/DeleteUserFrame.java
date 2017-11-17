@@ -32,6 +32,7 @@ public class DeleteUserFrame extends JFrame {
 	private ArrayList<User> users;
 	private AdminGUI owner;
 	private DefaultListModel listModel;
+	private JButton backbtn;
 	/**
 	 * Launch the application.
 	 */
@@ -112,6 +113,20 @@ public class DeleteUserFrame extends JFrame {
 		lblNewLabel.setBounds(327, 123, 181, 102);
 		contentPane.add(lblNewLabel);
 		
+		
+		backbtn =new JButton("Back");
+		backbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				closeFrame();
+			}
+
+			
+
+			
+		});
+		backbtn.setBounds(368, 290, 97, 25);
+		contentPane.add(backbtn);
+		
 		JLabel lblUsers = new JLabel("users");
 		lblUsers.setBounds(152, 13, 56, 16);
 		contentPane.add(lblUsers);
@@ -141,4 +156,8 @@ public class DeleteUserFrame extends JFrame {
 			listModel.addElement(users.get(i).getUserName());
 	}
 	}
+	private void closeFrame() {
+		owner.setVisible(true);
+		this.dispose();
+		}
 }

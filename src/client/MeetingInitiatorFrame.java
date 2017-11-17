@@ -34,12 +34,13 @@ public class MeetingInitiatorFrame extends JFrame {
 	private JPanel contentPane;
 	private JTextField descriptiontf;
 	private AdminGUI owner;
+	private JButton backbtn;
 	
 	//lists
 	private DefaultListModel<String> allParticipantsListModel; 
-	private static JList allParticpantsList;
+	private static JList allParticipantsList;
 	private DefaultListModel<String> allLocationsListModel; 
-	private static JList allLocatyionsList;
+	private static JList allLocationsList;
 	private DefaultListModel<String> meetingParticipantsListModel; 
 	private static JList meetingParticipantsList;
 	private DefaultListModel<String> meetingLocationsListModel; 
@@ -106,11 +107,11 @@ public class MeetingInitiatorFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		allParticpantsList = new JList();
-		allParticpantsList.setBounds(12, 52, 338, 253);
-		contentPane.add(allParticpantsList);
+		allParticipantsList = new JList();
+		allParticipantsList.setBounds(12, 52, 338, 253);
+		contentPane.add(allParticipantsList);
 		allParticipantsListModel = new DefaultListModel<String>();
-		allParticpantsList.setModel(allParticipantsListModel);
+		allParticipantsList.setModel(allParticipantsListModel);
 		
 		
 		meetingParticipantsList = new JList();
@@ -120,11 +121,11 @@ public class MeetingInitiatorFrame extends JFrame {
 		meetingParticipantsList.setModel(meetingParticipantsListModel);
 		
 		//location lists
-		allLocatyionsList = new JList();
-		allLocatyionsList.setBounds(12, 344, 338, 236);
-		contentPane.add(allLocatyionsList);
+		allLocationsList = new JList();
+		allLocationsList.setBounds(12, 344, 338, 236);
+		contentPane.add(allLocationsList);
 		allLocationsListModel = new DefaultListModel<String>();
-		allLocatyionsList.setModel(allLocationsListModel);
+		allLocationsList.setModel(allLocationsListModel);
 		
 		meetingLocationsList = new JList();
 		meetingLocationsList.setBounds(424, 327, 338, 253);
@@ -148,10 +149,35 @@ public class MeetingInitiatorFrame extends JFrame {
 		meetingDateList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		
 		JButton locationbtn = new JButton("add");
+		locationbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(allLocationsList.isSelectionEmpty())
+					return;
+				int index = allLocationsList.getSelectedIndex();
+				
+				meetingLocationsListModel.addElement(allLocations.get(index).getAddress()+" "+allLocations.get(index).getName());
+				meetingLocations.add(allLocations.get(index));
+				allLocationsListModel.remove(index);
+				allLocations.remove(index);
+			}
+		});
 		locationbtn.setBounds(355, 423, 66, 25);
 		contentPane.add(locationbtn);
 		
 		JButton participantbtn = new JButton("add");
+		participantbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(allParticipantsList.isSelectionEmpty())
+					return;
+				int index = allParticipantsList.getSelectedIndex();
+				
+				meetingParticipantsListModel.addElement(allUsers.get(index).getUserName());
+				Participant Part = new Participant(allUsers.get(index));
+				meetingParticipants.add(Part);
+				allParticipantsListModel.remove(index);
+				allUsers.remove(index);
+			}
+		});
 		participantbtn.setBounds(355, 117, 66, 25);
 		contentPane.add(participantbtn);
 		
@@ -179,7 +205,7 @@ public class MeetingInitiatorFrame extends JFrame {
 					return;
 				Packet P = new Packet(Packet.INITIATE_MEETING);
 				
-				if(meetingLocations.get(1) == null){
+				if(meetingLocations.size() == 1){
 					//participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
 					Meeting m = new Meeting(meetingParticipants, meetingLocations.get(0), descriptiontf.getText(),meetingDates ,owner.getUser() );
 					P.addMeeting(m);
@@ -207,8 +233,32 @@ public class MeetingInitiatorFrame extends JFrame {
 						closeFrame();
 					}
 				}
-				if(meetingLocations.get(1)!=null){
+				if(meetingLocations.size() != 1){
 					Meeting m = new Meeting(meetingParticipants,meetingLocations, descriptiontf.getText(),meetingDates ,owner.getUser() );
+					P.addMeeting(m);
+					P.addUser(owner.getUser());
+					owner.setInfo(P);
+					try {
+						owner.sendPacket();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					//wait for input
+					while(owner.getPacket().getType() != Packet.INITIATE_MEETING_CONFIRM){
+						try {
+							TimeUnit.SECONDS.sleep(1);
+						} catch (InterruptedException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					//owner.recievePacket();
+					P = owner.getPacket();
+					if(Packet.INITIATE_MEETING_CONFIRM  == P.getType()){
+						JOptionPane.showMessageDialog(null, "Meeting made successfully");
+						closeFrame();
+					}
 				}
 				
 			}
@@ -237,6 +287,20 @@ public class MeetingInitiatorFrame extends JFrame {
 		contentPane.add(lblDates);
 		
 		importantbtn = new JButton("important");
+		importantbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(allParticipantsList.isSelectionEmpty())
+					return;
+				int index = allParticipantsList.getSelectedIndex();
+				
+				meetingParticipantsListModel.addElement(allUsers.get(index).getUserName());
+				Participant Part = new Participant(allUsers.get(index));
+				Part.setImportant(true);
+				meetingParticipants.add(Part);
+				allParticipantsListModel.remove(index);
+				allUsers.remove(index);
+			}
+		});
 		importantbtn.setBounds(355, 159, 66, 47);
 		contentPane.add(importantbtn);
 		
@@ -273,18 +337,17 @@ public class MeetingInitiatorFrame extends JFrame {
 			System.out.println("Locations got: " +P.getLocations().size());
 			allLocations = P.getLocations();
 			for(int i = 0; i < allLocations.size(); i++)
-			allLocationsListModel.addElement(allLocations.get(i).getAddress()+" "+allLocations.get(i).getName());
+				allLocationsListModel.addElement(allLocations.get(i).getAddress()+" "+allLocations.get(i).getName());
 		}
-		P = new Packet(Packet.REQUEST_ALL_USERS);
-		P.addUser(owner.getUser());
-		owner.setInfo(P);
+		Packet p = new Packet(Packet.REQUEST_ALL_USERS);
+		p.addUser(owner.getUser());
+		owner.setInfo(p);
 		try {
 			owner.sendPacket();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
 		while(owner.getPacket().getType() != Packet.RESPONSE_ALL_USERS){
 			try {
 				TimeUnit.SECONDS.sleep(1);
@@ -293,12 +356,21 @@ public class MeetingInitiatorFrame extends JFrame {
 				e1.printStackTrace();
 			}
 		}
-		if(P.getType() == Packet.RESPONSE_ALL_USERS){
-			System.out.println("Locations got: " +P.getLocations().size());
-			allUsers = P.getUsers();
-			for(int i = 0; i < allLocations.size(); i++)
-			allParticipantsListModel.addElement(allUsers.get(i).getUserName()+" "+allUsers.get(i).getName());
-		}
+		//owner.recievePacket();
+		p = owner.getPacket();
+		allUsers = p.getUsers();
+		for(int i = 0; i < allUsers.size(); i++){
+			allParticipantsListModel.addElement(allUsers.get(i).getUserName());
+	}
+		backbtn = new JButton("Back");
+		backbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				closeFrame();
+				owner.setVisible(true);
+			}
+		});
+		backbtn.setBounds(818, 691, 97, 25);
+		contentPane.add(backbtn);
 	}
 	public static Date addDays(Date date, int days)
     {

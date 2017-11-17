@@ -21,8 +21,8 @@ public class UserList {
 	final String objectFileName = "users.j";
 	
 	
-	/*
-	// For testing purposes only
+	
+	 //For testing purposes only
 	public static void main(String [] args){
 		UserList u = UserList.getUserList();
 		User m = new User("Test User", "tester", "123456");
@@ -36,7 +36,7 @@ public class UserList {
 		
 		if (u.login(m) != null) System.out.println("I'm in!");
 	}
-	*/
+	
 	
 	/** the list of meetings */
 	private ArrayList<User> users;

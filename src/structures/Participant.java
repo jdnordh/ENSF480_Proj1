@@ -47,4 +47,8 @@ public class Participant extends User implements Serializable{
 		super(N, U);
 		Important = I;
 	}
+	public Participant(User user) {
+		super(user.getName(),user.getUserName(),user.getPassword());
+		Important =false;
+	}
 }

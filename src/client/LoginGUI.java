@@ -153,7 +153,7 @@ public class LoginGUI extends JFrame {
 					gui.setVisible(true);
 				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
 					System.out.println("opening Admin page");
-					AdminGUI gui = new AdminGUI(loginUser, Server.NAME, Server.PORT, input, output);
+					AdminGUI gui = new AdminGUI(loginUser, input, output);
 					gui.setVisible(true);
 					loginFrame.dispose();
 				}else if(temp.getType() == Packet.LOGIN_DENY){
