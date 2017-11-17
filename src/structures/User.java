@@ -82,13 +82,6 @@ public class User implements Serializable{
     	UserName = U;
     	Password = P;
     }
-    /**
-     * Construct a user
-     * @param N Name
-     * @param U Username
-     * @param P Password
-     * @param i isAdmin
-     */
     public User(String N , String U, String P, boolean i){
     	Name = N;
     	UserName = U;

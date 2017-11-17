@@ -131,9 +131,7 @@ public class addUserFrame extends JFrame {
 	}
 	public Packet getinfo() {
 		Packet p = new Packet(Packet.ADD_USER);
-		//User u = new User(usernametf.getText(),nametf.getText(),nametf.getText(),isAdminrdbtn.isSelected());
-		User u = new User(this.nametf.getText(), this.usernametf.getText(), 
-				this.passwordtf.getText(), this.isAdminrdbtn.isSelected());
+		User u = new User(usernametf.getText(),nametf.getText(),passwordtf.getText(),isAdminrdbtn.isSelected());
 		p.addUser(u);
 		return p;
 	}
