@@ -82,6 +82,7 @@ public class ListenerThread extends ShutdownThread{
 					}
 // INITIATE_MEETING
 					else if (p.getType() == Packet.INITIATE_MEETING){
+						System.out.println("before before ml: "+p.getMeetings().get(0).getID());
 						this.initiateMeeting(p);
 					}
 // ADD_USER
@@ -292,7 +293,7 @@ public class ListenerThread extends ShutdownThread{
 	 */
 	private void initiateMeeting(Packet p) {
 		Packet response = new Packet(Packet.INITIATE_MEETING_CONFIRM);
-
+		System.out.println("Meeting ID before ml: "+ p.getMeetings().get(0).getID());
 		MeetingList m = MeetingList.getMeetingList();
 		m.addMeeting(p.getMeetings().get(0));
 		

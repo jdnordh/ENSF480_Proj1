@@ -207,6 +207,7 @@ public class addMeetingDatePrefFrame extends JFrame {
 		}
 		P = owner.getPacket();
 		ArrayList<Meeting> allMeetings = P.getMeetings();
+		System.out.println("Meeting size: "+allMeetings.size());
 		
 		for(int i =0 ; i < allMeetings.size() ; i++){
 			//|| allMeetings.get(i).getmeetingState() == Meeting.waitingForLocationPref

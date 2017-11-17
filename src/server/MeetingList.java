@@ -107,11 +107,18 @@ public class MeetingList {
 	 */
 	public boolean addMeeting(Meeting m){
 		boolean added = true;
-		
+		System.out.println("In add meeeting");
 		//check for duplicate meeting id
+		
 		for (int i = 0; i < meetings.size(); i++){
-			if (meetings.get(i).isEqualTo(m)) added = false;
+			if (meetings.get(i).getID() == m.getID()){ 
+				System.out.println(m.getID());
+				System.out.println(meetings.get(i).getID());
+				added = false;
+			}
 		}
+		
+		System.out.println("added eqauls: "+ added);
 		
 		if (added){
 			meetings.add(m);
@@ -202,7 +209,7 @@ public class MeetingList {
 	public void setChanged(boolean changed) {
 		System.out.println("schedulerGO is " + changed);
 		this.schedulerGo = changed;
-		if (changed) notifyAll();
+		//if (changed) notifyAll();
 	}
 
 	/**
