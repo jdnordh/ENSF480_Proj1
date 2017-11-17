@@ -38,7 +38,7 @@ public class LoginGUI extends JFrame {
 	private static LoginGUI loginFrame;
 	private JPanel loginPanel;
 	private JTextField usernameTF;
-	private JTextField passwordTF;
+	private JPasswordField passwordTF;
 	private Socket aSocket;
 	private ObjectOutputStream output;
 	private ObjectInputStream input;
@@ -109,11 +109,9 @@ public class LoginGUI extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				
 				MessageDigest digest;
-				//TODO try and avoid using getText(), use getPassword() instead which returns a 
-				//char[] instead
-				String password = passwordTF.getText();
+				String password = new String(passwordTF.getPassword());
 				
-				User loginUser = new User(usernameTF.getText(), passwordTF.getText());
+				User loginUser = new User(usernameTF.getText(), password);
 				User user = new User();
 				user.setUserName(usernameTF.getText());
 				
@@ -124,14 +122,12 @@ public class LoginGUI extends JFrame {
 				} catch (NoSuchAlgorithmException e) {}
 				
 				
-				System.out.println("Username: " + loginUser.getUserName() + "\nPassword: " + loginUser.getPassword());
+				System.out.println("Username: " + user.getUserName() + "\nPassword: " + user.getPassword());
 				
 				//create login packet
 				Packet temp = new Packet(Packet.LOGIN);
 				
-				//add user to packet
-				temp.addUser(loginUser);
-				
+				//add user to packet				
 				temp.addUser(user);
 
 				//send packet to server
@@ -161,7 +157,7 @@ public class LoginGUI extends JFrame {
 					//TODO
 					loginFrame.dispose();
 					//AdminGUI();
-					AdminGUI gui = new AdminGUI(loginUser.getUserName(),Server.NAME, Server.PORT);
+					AdminGUI gui = new AdminGUI(loginUser.getUserName(), Server.NAME, Server.PORT);
 					//open admin gui
 					//AdminGUI
 				}else if(temp.getType() == Packet.LOGIN_DENY){
