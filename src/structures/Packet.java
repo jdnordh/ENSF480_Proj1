@@ -189,6 +189,8 @@ public class Packet implements Serializable{
 	public static final int BAD_REQUEST = 90000;
 	
 	/**
+	 * UNUSED  - UNUSED - UNUSED
+	 * 
 	 * This request will get you all of the locations available to have meetings
 	 * Fill out these fields:
 	 * 
@@ -197,6 +199,8 @@ public class Packet implements Serializable{
 	public static final int REQUEST_ALL_LOCATIONS = 40;
 	
 	/**
+	 * UNUSED  - UNUSED - UNUSED
+	 * 
 	 * The servers response to all locations request
 	 * These fields will be populated:
 	 * 
@@ -206,6 +210,8 @@ public class Packet implements Serializable{
 	public static final int RESPONSE_ALL_LOCATIONS = 41;
 	
 	/**
+	 * UNUSED  - UNUSED - UNUSED
+	 * 
 	 * This request is for admin only to add a location
 	 * 
 	 * Fill out these:
@@ -217,6 +223,8 @@ public class Packet implements Serializable{
 	public static final int ADD_LOCATION = 42;
 	
 	/**
+	 * UNUSED  - UNUSED - UNUSED
+	 * 
 	 * This request is for admin only to delete a location
 	 * 
 	 * Fill out these:
@@ -228,6 +236,8 @@ public class Packet implements Serializable{
 	public static final int DELETE_LOCATION = 43;
 	
 	/**
+	 * UNUSED  - UNUSED - UNUSED
+	 * 
 	 * This is the servers response to ADD_LOCATION
 	 * 
 	 * If the added location was a duplicate DENY is sent
@@ -237,6 +247,8 @@ public class Packet implements Serializable{
 	public static final int ADD_LOCATION_DENY = 45;
 	
 	/**
+	 * UNUSED  - UNUSED - UNUSED
+	 * 
 	 * This is the servers response to DELETE_LOCATION
 	 * 
 	 * If the deleted location was not found DENY is sent
