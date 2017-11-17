@@ -89,7 +89,7 @@ public class DeleteUserFrame extends JFrame {
 					e1.printStackTrace();
 				}
 				
-				owner.recievePacket();
+				owner.getThreadPacket(owner.getPacket());
 				p = owner.getPacket();
 				
 				if(p.getType() == Packet.DELETE_USER_CONFIRM){
@@ -123,10 +123,11 @@ public class DeleteUserFrame extends JFrame {
 			e1.printStackTrace();
 		}
 		
-		owner.recievePacket();
+		owner.getThreadPacket(owner.getPacket());
 		p = owner.getPacket();
 		users = p.getUsers();
-		for(int i = 0; i < users.size(); i++)
-			list.add(users.get(i).getUserName()+users.get(i).getName(), null);
+		for(int i = 0; i < users.size(); i++){
+			listModel.addElement(users.get(i).getUserName()+users.get(i).getName());
+	}
 	}
 }
