@@ -178,6 +178,22 @@ public class Meeting implements Serializable{
 	public void setMeetingInitiator(User meetingInitiator) {
 		this.meetingInitiator = meetingInitiator;
 	}
+
+	public Location getLocation() {
+		return Location;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public Date getFinalizedDate() {
+		return finalizedDate;
+	}
+
+	public void setDescription(String d) {
+		description = d;
+	}
 	
 	
 }

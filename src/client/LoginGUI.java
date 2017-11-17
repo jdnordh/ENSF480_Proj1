@@ -141,34 +141,27 @@ public class LoginGUI extends JFrame {
 				try {
 					temp = (Packet) input.readObject();
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				System.out.println("Type: "+ temp.getType());
+				//TODO change this hard coding
+				temp.setType(Packet.LOGIN_CONFIRM_USER);
 				if(temp.getType() == Packet.LOGIN_CONFIRM_USER){
-					//TODO client gui
+					System.out.println("opening user page");
 					loginFrame.dispose();
-					ClientGUI gui = new ClientGUI(loginUser.getUserName(),Server.NAME, Server.PORT);
+					ClientGUI gui = new ClientGUI(loginUser.getUserName(), Server.NAME, Server.PORT);
 					gui.setVisible(true);
-					//ClientGUI
 				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
-					//TODO
 					System.out.println("opening Admin page");
-					//AdminGUI();
-<<<<<<< HEAD
-					AdminGUI gui = new AdminGUI(loginUser.getUserName(), Server.NAME, Server.PORT);
-=======
-					AdminGUI gui = new AdminGUI(loginUser,Server.NAME, Server.PORT);
-					gui.setVisible(true);
+					//TODO uncomment this
+					//AdminGUI gui = new AdminGUI(loginUser,Server.NAME, Server.PORT);
+					//gui.setVisible(true);
 					loginFrame.dispose();
->>>>>>> 3836f4969f01ae79f652afedafb58279b6655f07
 					//open admin gui
 					//AdminGUI
 				}else if(temp.getType() == Packet.LOGIN_DENY){
-					//TODO
 					//open deny 
 					JOptionPane.showMessageDialog(panel, "Incorrect username or password. Please try again.");
 				}else if (temp.getType() == Packet.CLOSE_CONNECTION){

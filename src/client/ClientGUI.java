@@ -43,6 +43,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import server.Server;
+import structures.Location;
 import structures.Meeting;
 import structures.Packet;
 import structures.User;
@@ -69,8 +70,8 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	private JButton removeLocation = new JButton("Remove");
 	
 	//Lits
-	protected JList<Meeting> meetingList;
-	private DefaultListModel<Meeting> meetingModel;
+	protected JList<String> meetingList;
+	private DefaultListModel<String> meetingModel;
 	
 	//Text area
 	protected JTextArea textArea;
@@ -135,16 +136,17 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	public ClientGUI viewMeetingsFrame() {
     	ClientGUI tmp = new ClientGUI();
 		tmp.setTitle("Welcome " + username + "!");
-		tmp.setBounds(100, 100, 400, 400);
+		tmp.setBounds(100, 100, 800, 400);
 		
 		//create the list area
-		meetingModel = new DefaultListModel<Meeting>();
+		meetingModel = new DefaultListModel<String>();
 		
 		//TODO fill the text area
 		Packet p = new Packet(Packet.REQUEST_ALL_MEETINGS);
 		p.addUser(new User(username));
 		try{
 			output.writeObject(p);
+			output.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -154,10 +156,22 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 			e.printStackTrace();
 		}
 		
-		for(int i = 0; i < p.getMeetings().size(); i++)
-			meetingModel.addElement(p.getMeetings().get(i));
-				
-		meetingList = new JList<Meeting>(meetingModel);
+		for(int i = 0; i < p.getMeetings().size(); i++){
+			//TODO REMOVE HARD CODING
+			p.getMeetings().get(i).setmeetingState(4);
+			p.getMeetings().get(i).setDescription("Testing desciption");
+			p.getMeetings().get(i).setfinalizedDate(new Date(2017, 11, 16));
+			p.getMeetings().get(i).setLocation(new Location("UofC", "Calgary", "131 Edgeview Dr"));
+			p.getMeetings().get(i).setMeetingInitiator(new User("BOB SMITH", "123", "123"));
+			if(p.getMeetings().get(i).getmeetingState() == Meeting.Finalized){
+				meetingModel.addElement("Description: " + p.getMeetings().get(i).getDescription() + 
+						"     Date: " + p.getMeetings().get(i).getFinalizedDate().toString() + 
+						"     Location: " + p.getMeetings().get(i).getLocation().toString() + 
+						"     Initiator: " + p.getMeetings().get(i).getMeetingInitiator().getName());
+			}
+		}	
+			
+		meetingList = new JList<String>(meetingModel);
 		meetingList.addListSelectionListener(new ListAction());
 		meetingList.setFont(new Font("Courier New", Font.BOLD, 12));
 		meetingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
@@ -221,8 +235,8 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		tmp.setBounds(100, 100, 400, 400);
 		
 		//create the list area
-		meetingModel = new DefaultListModel<Meeting>();
-		meetingList = new JList<Meeting>(meetingModel);
+		meetingModel = new DefaultListModel<String>();
+		meetingList = new JList<String>(meetingModel);
 		meetingList.addListSelectionListener(new ListAction());
 		meetingList.setFont(new Font("Courier New", Font.BOLD, 12));
 		meetingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
