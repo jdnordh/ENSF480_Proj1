@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import structures.*;
 
@@ -32,35 +33,56 @@ public class ClientTemp {
 			
 			out.writeObject(p);
 			out.flush();
-			p = (Packet) in.readObject();
+			
 			
 			System.out.println("Type: " + p.getType());
 			
-			p = new Packet(Packet.ADD_USER);
-			
-			 String password = "root";
-				MessageDigest digest;
-				
-				User loginUser = new User("Testing User", "user", "", false);
-				try {
-					digest = MessageDigest.getInstance("SHA-256");
-					String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
-					loginUser.setPassword(hashed_password);
-				} catch (NoSuchAlgorithmException e) {}
-				
-				
-				System.out.println("Username: " + loginUser.getUserName() + "\nPassword: " + loginUser.getPassword());
-				//create login packet
-				p = new Packet(Packet.ADD_USER);
-				//add user to packet
-				p.addUser(loginUser);
+//			p = new Packet(Packet.ADD_USER);
+//			
+//			 String password = "root";
+//				MessageDigest digest;
+//				
+//				User loginUser = new User("Testing User", "user", "", false);
+//				try {
+//					digest = MessageDigest.getInstance("SHA-256");
+//					String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
+//					loginUser.setPassword(hashed_password);
+//				} catch (NoSuchAlgorithmException e) {}
+//				
+//				
+//				System.out.println("Username: " + loginUser.getUserName() + "\nPassword: " + loginUser.getPassword());
+//				//create login packet
+//				p = new Packet(Packet.ADD_USER);
+//				//add user to packet
+//				p.addUser(loginUser);
 			
 //			p = new Packet(Packet.ADD_LOCATION);
 //			Location l = new Location("New", "Location", "Test");
 //			p.addLocation(l);
 			
-			//p = new Packet(Packet.ADD_USER);
+			Meeting m = new Meeting();
 			
+			UserList ul = UserList.getUserList();
+			ArrayList<User> u = ul.getUsers();
+			
+			u.remove(u.size() - 1);
+			u.remove(u.size() - 1);
+			u.remove(u.size() - 1);
+			
+			LocationList ll = LocationList.getLocationList();
+			ArrayList<Location> l = ll.getLocations();
+			
+			m.setMeetingInitiator(user);
+			
+			for (int i = 0; i < u.size(); i++){
+				m.addParticipant(u.get(i).getUserName(), u.get(i).getName(), true);
+			}
+			m.setLocation(l.get(0));
+			
+			m.setmeetingState(Meeting.Finalized);
+			
+			p = new Packet(Packet.INITIATE_MEETING);
+			p.addMeeting(m);
 			
 			out.writeObject(p);
 			out.flush();
