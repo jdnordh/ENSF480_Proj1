@@ -2,6 +2,7 @@ package client;
 
 import java.util.*;
 
+import structures.Meeting;
 import structures.Packet;
 import structures.User;
 
@@ -42,6 +43,8 @@ public interface ClientGUIFunctionality {
      */
      void Update();
      public void getThreadPacket(Packet P);
+
+	void removeMeeting(Meeting m);
      
      
 

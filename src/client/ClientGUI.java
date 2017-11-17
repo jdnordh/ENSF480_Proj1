@@ -136,20 +136,34 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		//create the list area
 		meetingModel = new DefaultListModel<Meeting>();
 		
-		//TODO fill the text area 
+		//TODO get meetings from the server
 		getAllMeetings();
-		Meeting m = new Meeting();
-		m.setDescription("Fake description");
-		m.setMeetingInitiator(new User("BOB SMITH", "123", "123"));
-		m.setmeetingState(4);
-		info.getMeetings().add(m);
 		
-		System.out.println(info.getType());
+		//TODO remove hard coding
+		Meeting m1 = new Meeting(), m2 = new Meeting(), m3 = new Meeting();
+		m1.setID(1);
+		m1.setmeetingState(4);
+		m1.setMeetingInitiator(new User("BOB SMITH1", "123", "123"));
+		m1.setDescription("Fake description1");
+		m2.setID(2);
+		m2.setmeetingState(4);
+		m2.setMeetingInitiator(new User("BOB SMITH2", "123", "123"));
+		m2.setDescription("Fake description2");		
+		m3.setID(3);
+		m3.setmeetingState(4);
+		m3.setMeetingInitiator(new User("BOB SMITH3", "123", "123"));
+		m3.setDescription("Fake description3");
+		
+		info.getMeetings().add(m1);
+		info.getMeetings().add(m2);
+		info.getMeetings().add(m3);
+
+		System.out.println("Packet type: " + info.getType());
 		//check packet validity
 		if(info.getType() == Packet.RESPONSE_ALL_MEETINGS) {
-			System.out.println(info.getMeetings().size());
+			System.out.println("Meeting List size: " + info.getMeetings().size());
 			for(int i = 0; i < info.getMeetings().size(); i++){
-				System.out.println(info.getMeetings().get(i).getmeetingState());
+				System.out.println("Meeting state: " + info.getMeetings().get(i).getmeetingState());
 				if(info.getMeetings().get(i).getmeetingState() == Meeting.Finalized)
 					meetingModel.addElement(info.getMeetings().get(i));
 			}	
@@ -234,13 +248,6 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		if(info.getType() == Packet.RESPONSE_ALL_MEETINGS) {
 			for(int i = 0; i < info.getMeetings().size(); i++){
 				//TODO REMOVE HARD CODING
-				/*
-				info.getMeetings().get(i).setmeetingState(2);
-				info.getMeetings().get(i).setDescription("Testing desciption");
-				info.getMeetings().get(i).setfinalizedDate(new Date(2017, 11, 16));
-				info.getMeetings().get(i).setLocation(new Location("UofC", "Calgary", "131 Edgeview Dr"));
-				info.getMeetings().get(i).setMeetingInitiator(new User("BOB SMITH", "123", "123"));
-				*/
 				if(info.getMeetings().get(i).getmeetingState() != Meeting.Finalized){
 					meetingModel.addElement(info.getMeetings().get(i));
 				}
@@ -374,7 +381,24 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 			else if (e.getSource() == removeMeeting) {
 				try {
 					System.out.println("Remove: " + meetingList.getSelectedValue());
-					//TODO remove selected meeting from the list 
+					removeMeeting(meetingList.getSelectedValue());
+					
+					//check packet validity
+					if(info.getType() == Packet.DELETE_MEETING_CONFIRM) {
+						//clear the current list
+						meetingModel.clear();
+						
+						//reload the list after deletion
+						for(int i = 0; i < info.getMeetings().size(); i++){
+							System.out.println("Meeting state: " + info.getMeetings().get(i).getmeetingState());
+							if(info.getMeetings().get(i).getmeetingState() == Meeting.Finalized)
+								meetingModel.addElement(info.getMeetings().get(i));
+						}	
+					}
+					else {
+						JOptionPane.showMessageDialog(null, "Server error. Expected Packet Type: " + Packet.RESPONSE_ALL_MEETINGS + ".  Actual Packet Type: " + info.getType());
+					}
+					
 				} catch (Exception e1){
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
@@ -419,6 +443,18 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		this.recievePacket();		
 	}
 
+	@Override
+	public void removeMeeting(Meeting m) {
+		info = new Packet(Packet.DELETE_MEETING);
+		info.setNumber1(m.getID());
+		try {
+			this.sendPacket();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.recievePacket();	
+	}
+	
 	@Override
 	public void initateMeeting() {
 		// TODO Auto-generated method stub
