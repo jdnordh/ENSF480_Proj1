@@ -89,7 +89,7 @@ public class FindMeetingTimeStrategy1 implements FindMeetingTimeStrategyInterfac
 		//find all important participants
 		for(int i = 0; i< strategyMeeting.size(); i ++){
 			//for every 
-			if(strategyMeeting.get(i).getparticipant().getImportant()  == true){
+			if(strategyMeeting.get(i).getparticipant().isImportant()  == true){
 				importantPeopleTimes.add(strategyMeeting.get(i));
 			}
 		}

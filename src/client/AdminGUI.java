@@ -55,6 +55,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 	private String username;
 	private Packet serverUpdate;
 	private User Us;
+	private ClientThread MyThread;
 	/**
 	 * Launch the application.
 	 */
@@ -79,6 +80,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 		//will add if empty right now it does not act as singleton
 		Us = Un;
 		onlyInstance = this;
+		System.out.println("Creating Opening Page");
 		try {
 			InetAddress a = InetAddress.getByName(serverName);
 			aSocket = new Socket(a , portNum);
@@ -91,7 +93,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+		MyThread = new ClientThread(input,onlyInstance);
 		
 		
 		
@@ -111,7 +113,8 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 				onlyInstance.setVisible(false);
 				//the addUserFrame will create a packet set info in this class then send the pakcet 
 				//from this class and admin will wait for response.
-				try {
+				/*
+				 * try {
 					info = (Packet) input.readObject();
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
@@ -128,8 +131,9 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 					//let admin know of denial
 					JOptionPane.showMessageDialog(null,"User has been not been added something went wrong try again");
 				}
-				
+				*/
 			}
+		
 		});
 		addUserButton.setBounds(161, 32, 97, 25);
 		contentPane.add(addUserButton);
@@ -234,5 +238,10 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 	}
 
 	public User getUser() {return Us;}
+
+	@Override
+	public void getThreadPacket(Packet P) {
+		info = P;
+	}
 	
 }

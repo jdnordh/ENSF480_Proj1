@@ -156,12 +156,15 @@ public class LoginGUI extends JFrame {
 					//TODO client gui
 					loginFrame.dispose();
 					ClientGUI gui = new ClientGUI(loginUser.getUserName(),Server.NAME, Server.PORT);
+					gui.setVisible(true);
 					//ClientGUI
 				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
 					//TODO
-					loginFrame.dispose();
+					System.out.println("opening Admin page");
 					//AdminGUI();
 					AdminGUI gui = new AdminGUI(loginUser,Server.NAME, Server.PORT);
+					gui.setVisible(true);
+					loginFrame.dispose();
 					//open admin gui
 					//AdminGUI
 				}else if(temp.getType() == Packet.LOGIN_DENY){

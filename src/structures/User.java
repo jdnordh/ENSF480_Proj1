@@ -82,6 +82,12 @@ public class User implements Serializable{
     	UserName = U;
     	Password = P;
     }
+    public User(String N , String U, String P, boolean i){
+    	Name = N;
+    	UserName = U;
+    	Password = P;
+    	isAdmin = i;
+    }
 
     /**
      * Copy constructor

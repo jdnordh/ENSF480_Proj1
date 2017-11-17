@@ -454,6 +454,12 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		new ClientGUI("User",Server.NAME, Server.PORT);
 	}
 
+	@Override
+	public void getThreadPacket(Packet P) {
+		// TODO Auto-generated method stub
+		
+	}
+
    
 
 }
