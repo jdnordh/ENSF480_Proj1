@@ -22,7 +22,8 @@ public class FindMeetingTimeStrategy1 implements FindMeetingTimeStrategyInterfac
 		//find if any Meetings need to have date finalized
 		Meeting m = new Meeting();
 		for(int i = 0 ; i< MeetingL.getMeetings().size(); i++){
-			if (MeetingL.getMeetings().get(i).getmeetingState() == Meeting.waitingForFinalized){
+			if(MeetingL.getMeetings().get(i).getParticipants().size() == MeetingL.getMeetings().get(i).getPreferedDates().size()){
+			//if (MeetingL.getMeetings().get(i).getmeetingState() == Meeting.waitingForFinalized)
 				m = MeetingL.getMeetings().get(i);
 				FinalizeTime(m);
 			}
@@ -127,6 +128,27 @@ public class FindMeetingTimeStrategy1 implements FindMeetingTimeStrategyInterfac
 		MeetingL.isChanged();
 		
 	}
+	public static void main(String[] args) {
+		Participant P = new Participant("Jacob", "Jacob",true);
+		Participant P2 = new Participant("Jacob2", "Jacob2",true);
+		ArrayList<Participant> P3 = new ArrayList<Participant>();
+		P3.add(P);
+		P3.add(P2);
+		Location L = new Location("L","l","l");
+		User p4 = new User("Jacob3", "Jacob3","Jacob3");
+		//Date
+		//participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
+		//eeting M = new Meeting(P3,"this",);
+		
+		
+	}
+	public static Date addDays(Date date, int days)
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, days); //minus number would decrement the days
+        return cal.getTime();
+    }
 	
 }
 

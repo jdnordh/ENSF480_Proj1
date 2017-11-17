@@ -13,11 +13,14 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionListener;
 
+import structures.DatePref;
 import structures.Location;
 import structures.Meeting;
 import structures.Packet;
+import structures.Participant;
 
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -89,15 +92,32 @@ public class addMeetingDatePrefFrame extends JFrame {
 		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 		
 		userMeetingList.getSelectionModel().addListSelectionListener(x-> {
+			if(miDatePrefListModel.isEmpty()){
+				
 			Meeting m = (Meeting) userMeetingList.getSelectedValue();
 			desciptiontf.setText(m.getDescription());
 			mitf.setText(m.getMeetingInitiator().toString());
+			ltf.setText(m.getLocation().toString());
 			if(m.getmeetingState() == Meeting.waitingForDates){
 				for(int i =0; i <m.getPreferedDates().size() ; i++){
 					miDatePrefListModel.addElement(format1.format(m.getPreferedDates().get(i)));
 					miDates.add(m.getPreferedDates().get(i));
 				}
 			}
+		}if(!miDatePrefListModel.isEmpty()){
+			miDatePrefListModel.clear();
+			miDates.clear();
+			Meeting m = (Meeting) userMeetingList.getSelectedValue();
+			desciptiontf.setText(m.getDescription());
+			mitf.setText(m.getMeetingInitiator().toString());
+			ltf.setText(m.getLocation().toString());
+			if(m.getmeetingState() == Meeting.waitingForDates){
+				for(int i =0; i <m.getPreferedDates().size() ; i++){
+					miDatePrefListModel.addElement(format1.format(m.getPreferedDates().get(i)));
+					miDates.add(m.getPreferedDates().get(i));
+			}
+			}
+		}
 		});
 		JLabel lblNewLabel = new JLabel("Please pick your dates for your meetings and locations if acceptable");
 		lblNewLabel.setBounds(418, 38, 412, 16);
@@ -138,7 +158,7 @@ public class addMeetingDatePrefFrame extends JFrame {
 				if(miDatePrefList.isSelectionEmpty())
 					return;
 				int index = miDatePrefList.getSelectedIndex();
-				miDatePrefList.remove(index);
+				miDatePrefListModel.remove(index);
 				pDates.add(miDates.get(index));
 				pDatePrefListModel.addElement(format1.format(miDates.get(index)));
 				miDates.remove(index);
@@ -151,7 +171,32 @@ public class addMeetingDatePrefFrame extends JFrame {
 		sumbitbtn = new JButton("submit");
 		sumbitbtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				Packet P = new Packet(Packet.ACCEPT_MEETING);
+				Participant part = new Participant(owner.getUser());
+				DatePref DP = new DatePref(part);
+				for(int i = 0 ; i < pDates.size(); i++)	
+					DP.addDate(pDates.get(i));
+				P.setDates(DP);
+				P.addUser(owner.getUser());
+				owner.setInfo(P);
+				try {
+					owner.sendPacket();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				while(owner.getPacket().getType() != Packet.ACCEPT_OR_DECLINE_RESPONSE){
+					try {
+						System.out.println("waitting paket type : "+ owner.getPacket().getType());
+						TimeUnit.SECONDS.sleep(1);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				P= owner.getPacket();
+				if(P.getType() == Packet.ACCEPT_OR_DECLINE_RESPONSE)
+					JOptionPane.showMessageDialog(null,"Date added");
 				
 			}
 		});
