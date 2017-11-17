@@ -178,6 +178,10 @@ public class ListenerThread extends ShutdownThread{
 		
 		ArrayList<Meeting> m = ml.getMeetings();
 		
+		if (p.getUsers().size() != 1) {
+			queue.push(new Packet(Packet.BAD_REQUEST));
+			return;
+		}
 		for (int i = 0; i < m.size(); i++){
 			if (m.get(i).containsParticipant(p.getUsers().get(0).getUserName())){
 				r.addMeeting(m.get(i));
