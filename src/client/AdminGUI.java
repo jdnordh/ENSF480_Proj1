@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 
 import server.Server;
+import server.ShutdownThread;
 import structures.Meeting;
 import structures.Packet;
 import structures.User;
@@ -93,8 +94,9 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		//
 		MyThread = new ClientThread(input,onlyInstance);
-		
+		MyThread.start();
 		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
