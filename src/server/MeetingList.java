@@ -38,30 +38,30 @@ public class MeetingList {
 	}
 	
 	
-	// For testing purposes only
-	public static void main(String [] args){
-		MeetingList ml = MeetingList.getMeetingList();
-		
-		
-		UserList ul = UserList.getUserList();
-		//participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
-		ArrayList<User> u = ul.getUsers();
-		Location L = new Location("1","2","3");
-		Meeting m = new Meeting();
-		
-		
-		m.setMeetingInitiator(u.get(u.size() - 1));
-		System.out.print("user.size: "+ u.size());
-		for (int i = 0; i < u.size(); i++){
-			m.addParticipant(u.get(i).getUserName(), u.get(i).getName(), true);
-			//System.out.println(u.get(i).getUserName());
-		}
-		
-		m.setmeetingState(Meeting.Finalized);
-		m.setID(9);
-		
-		ml.addMeeting(m);
-	}
+//	// For testing purposes only
+//	public static void main(String [] args){
+//		MeetingList ml = MeetingList.getMeetingList();
+//		
+//		
+//		UserList ul = UserList.getUserList();
+//		//participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
+//		ArrayList<User> u = ul.getUsers();
+//		Location L = new Location("1","2","3");
+//		Meeting m = new Meeting();
+//		
+//		
+//		m.setMeetingInitiator(u.get(u.size() - 1));
+//		System.out.print("user.size: "+ u.size());
+//		for (int i = 0; i < u.size(); i++){
+//			m.addParticipant(u.get(i).getUserName(), u.get(i).getName(), true);
+//			//System.out.println(u.get(i).getUserName());
+//		}
+//		
+//		m.setmeetingState(Meeting.Finalized);
+//		m.setID(9);
+//		
+//		ml.addMeeting(m);
+//	}
 	
 	
 	
@@ -90,7 +90,7 @@ public class MeetingList {
 	 * @param m Meeting to be deleted
 	 * @return True if meeting is deleted, false if not found
 	 */
-	public boolean deleteMeeting(Meeting m, User u){
+	public synchronized boolean deleteMeeting(Meeting m, User u){
 		for (int i = 0; i < meetings.size(); i++){
 			if (meetings.get(i).isEqualTo(m) && meetings.get(i).getMeetingInitiator().isEqualTo(u)){
 				meetings.remove(i);
@@ -105,7 +105,7 @@ public class MeetingList {
 	 * @param m Meeting
 	 * @return True if added, false if duplicate ID
 	 */
-	public boolean addMeeting(Meeting m){
+	public synchronized boolean addMeeting(Meeting m){
 		boolean added = true;
 		//check for duplicate meeting id
 		
@@ -114,6 +114,7 @@ public class MeetingList {
 				System.out.println(m.getID());
 				System.out.println(meetings.get(i).getID());
 				added = false;
+				break;
 			}
 		}
 				
@@ -214,7 +215,7 @@ public class MeetingList {
 	 * @param p Packet that contains the correct info, see Packet constants
 	 * @return True if accomplished
 	 */
-	public boolean declineMeeting(Packet p) {
+	public synchronized boolean declineMeeting(Packet p) {
 		
 		for (int i = 0; i < meetings.size(); i++){
 			Meeting check = meetings.get(i);
@@ -234,7 +235,7 @@ public class MeetingList {
 	 * @param p Packet with correct info
 	 * @return True if accepted
 	 */
-	public boolean acceptMeeting(Packet p) {
+	public synchronized boolean acceptMeeting(Packet p) {
 		
 		for (int i = 0; i < meetings.size(); i++){
 			Meeting check = meetings.get(i);

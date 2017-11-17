@@ -91,7 +91,7 @@ public class UserList {
 	 * @param m User to be deleted
 	 * @return True if user is deleted, false if not found
 	 */
-	public boolean deleteUser(User m){
+	public synchronized boolean deleteUser(User m){
 		for (int i = 0; i < users.size(); i++){
 			if (users.get(i).isEqualTo(m)){
 				users.remove(i);
@@ -106,7 +106,7 @@ public class UserList {
 	 * @param u User
 	 * @return True if added, false if duplicate username
 	 */
-	public boolean addUser(User u){
+	public synchronized boolean addUser(User u){
 		boolean added = true;
 		//check for duplicate username
 		for (int i = 0; i < users.size(); i++){
