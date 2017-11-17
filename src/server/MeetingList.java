@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.NoSuchElementException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -38,30 +39,43 @@ public class MeetingList {
 	}
 	
 	
-//	// For testing purposes only
-//	public static void main(String [] args){
-//		MeetingList ml = MeetingList.getMeetingList();
-//		
-//		
-//		UserList ul = UserList.getUserList();
-//		//participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
-//		ArrayList<User> u = ul.getUsers();
-//		Location L = new Location("1","2","3");
-//		Meeting m = new Meeting();
-//		
-//		
-//		m.setMeetingInitiator(u.get(u.size() - 1));
-//		System.out.print("user.size: "+ u.size());
-//		for (int i = 0; i < u.size(); i++){
-//			m.addParticipant(u.get(i).getUserName(), u.get(i).getName(), true);
-//			//System.out.println(u.get(i).getUserName());
-//		}
-//		
-//		m.setmeetingState(Meeting.Finalized);
-//		m.setID(9);
-//		
-//		ml.addMeeting(m);
-//	}
+	// For testing purposes only
+	public static void main(String [] args){
+		MeetingList ml = MeetingList.getMeetingList();
+		
+		
+		UserList ul = UserList.getUserList();
+		//participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
+		ArrayList<User> u = ul.getUsers();
+		Meeting m = new Meeting();
+		
+		
+		m.setMeetingInitiator(u.get(u.size() - 1));
+		System.out.print("user.size: "+ u.size());
+		
+		//ArrayList<Participant> p = new ArrayList<Participant>();
+		
+		for (int i = 0; i < u.size(); i++){
+			m.addParticipant(u.get(i).getUserName(), u.get(i).getName(), true);
+			
+			//System.out.println(u.get(i).getUserName());
+		}
+		
+		Date d = new Date();
+		d.setTime(12);
+		
+		for (int i = 0; i < u.size(); i++){
+			DatePref date = new DatePref(new Participant(u.get(i).getUserName(), u.get(i).getName(), true));
+			date.addDate(d);
+			
+			m.acceptMeeting(date);
+		}
+		
+		m.setmeetingState(Meeting.waitingForFinalized);
+		m.setID(19);
+		
+		ml.addMeeting(m);
+	}
 	
 	
 	
