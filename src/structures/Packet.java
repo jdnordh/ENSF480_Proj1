@@ -288,13 +288,6 @@ public class Packet implements Serializable{
 	 */
 	public static final int NOTIFY_NO_MEETING_TIME = 502;
 	
-	
-	//TODO what are these?
-	public static final int USERMEETINGS = 222;
-
-//TODO
-	public static final int USERMEETINGS_RESPONSE = 223;
-	
     /**
      * Default constructor
      */
