@@ -417,6 +417,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	@Override
 	public void getAllMeetings() {
 		info = new Packet(Packet.REQUEST_ALL_MEETINGS);
+		info.addUser(user);
 		try {
 			this.sendPacket();
 		} catch (IOException e) {
