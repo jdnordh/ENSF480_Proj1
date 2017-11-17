@@ -26,6 +26,12 @@ import javax.swing.JLabel;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * 
+ * 
+ * @author Jacob Turnbull
+ *
+ */
 public class DeleteUserFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -92,8 +98,9 @@ public class DeleteUserFrame extends JFrame {
 				}
 				
 				//owner.getThreadPacket(owner.getPacket());
-				while(owner.getPacket().getType() != Packet.DELETE_USER_CONFIRM|| owner.getPacket().getType() !=Packet.DELETE_LOCATION_DENY){
+				while(owner.getPacket().getType() != Packet.DELETE_USER_CONFIRM && owner.getPacket().getType() !=Packet.DELETE_LOCATION_DENY){
 					try {
+						System.out.println("waitting paket type : "+ owner.getPacket().getType());
 						TimeUnit.SECONDS.sleep(1);
 					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block

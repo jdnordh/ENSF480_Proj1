@@ -22,6 +22,8 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 /**
  * 
  * 
@@ -41,18 +43,13 @@ public class addMeetingDatePrefFrame extends JFrame {
 	private static JList pDatePrefList;
 	private DefaultListModel<String> miDatePrefListModel; 
 	private static JList miDatePrefList;
-	private DefaultListModel<String> pLocationPrefListModel; 
-	private static JList pLocationPrefList;
-	private DefaultListModel<String> miLocationPrefListModel; 
-	private static JList miLocationPrefList;
+	 
 	private DefaultListModel<Meeting> userMeetingListModel;
 	private static JList userMeetingList;
 	
 	private ArrayList<Meeting> Meetings;
 	private ArrayList<Date> miDates;
-	private ArrayList<Location> miLocationPrefs;
 	private ArrayList<Date> pDates;
-	private ArrayList<Location> pLocationPrefs;
 
 	/**
 	 * Create the frame.
@@ -61,8 +58,6 @@ public class addMeetingDatePrefFrame extends JFrame {
 		Meetings = new ArrayList<Meeting>();
 		miDates = new ArrayList<Date>();
 		pDates = new ArrayList<Date>();
-		miLocationPrefs = new ArrayList<Location>();
-		pLocationPrefs = new ArrayList<Location>();
 		
 		owner = o;
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -72,20 +67,38 @@ public class addMeetingDatePrefFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		miLocationPrefList = new JList();
-		miLocationPrefList.setBounds(338, 195, 222, 163);
-		contentPane.add(miLocationPrefList);
-		miLocationPrefListModel= new DefaultListModel<String>();
-		miLocationPrefList.setModel(miLocationPrefListModel);
-		
-		JButton locationbtn = new JButton("add");
-		locationbtn.setBounds(571, 242, 97, 25);
-		contentPane.add(locationbtn);
-		
 		pDatePrefList = new JList();
-		pDatePrefList.setBounds(680, 385, 222, 197);
+		pDatePrefList.setBounds(680, 205, 222, 197);
 		contentPane.add(pDatePrefList);
+		pDatePrefListModel = new DefaultListModel<String>();
+		pDatePrefList.setModel(pDatePrefListModel);
 		
+		miDatePrefList = new JList();
+		miDatePrefList.setBounds(340, 205, 222, 211);
+		contentPane.add(miDatePrefList);
+		miDatePrefListModel = new DefaultListModel<String>();
+		miDatePrefList.setModel(miDatePrefListModel);
+		
+		
+		userMeetingList = new JList();
+		userMeetingList.setBounds(12, 13, 308, 569);
+		contentPane.add(userMeetingList);
+		userMeetingListModel = new DefaultListModel<Meeting>();
+		userMeetingList.setModel(userMeetingListModel);
+		
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		
+		userMeetingList.getSelectionModel().addListSelectionListener(x-> {
+			Meeting m = (Meeting) userMeetingList.getSelectedValue();
+			desciptiontf.setText(m.getDescription());
+			mitf.setText(m.getMeetingInitiator().toString());
+			if(m.getmeetingState() == Meeting.waitingForDates){
+				for(int i =0; i <m.getPreferedDates().size() ; i++){
+					miDatePrefListModel.addElement(format1.format(m.getPreferedDates().get(i)));
+					miDates.add(m.getPreferedDates().get(i));
+				}
+			}
+		});
 		JLabel lblNewLabel = new JLabel("Please pick your dates for your meetings and locations if acceptable");
 		lblNewLabel.setBounds(418, 38, 412, 16);
 		contentPane.add(lblNewLabel);
@@ -117,46 +130,47 @@ public class addMeetingDatePrefFrame extends JFrame {
 		ltf.setBounds(437, 156, 465, 22);
 		contentPane.add(ltf);
 		
-		miDatePrefList = new JList();
-		miDatePrefList.setBounds(338, 371, 222, 211);
-		contentPane.add(miDatePrefList);
-		miDatePrefListModel = new DefaultListModel<String>();
-		miDatePrefList.setModel(miDatePrefListModel);
 		
-		pLocationPrefList = new JList();
-		pLocationPrefList.setBounds(680, 195, 222, 163);
-		contentPane.add(pLocationPrefList);
 		
 		JButton dateprefbtn = new JButton("add");
-		dateprefbtn.setBounds(571, 460, 97, 25);
+		dateprefbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(miDatePrefList.isSelectionEmpty())
+					return;
+				int index = miDatePrefList.getSelectedIndex();
+				miDatePrefList.remove(index);
+				pDates.add(miDates.get(index));
+				pDatePrefListModel.addElement(format1.format(miDates.get(index)));
+				miDates.remove(index);
+				
+			}
+		});
+		dateprefbtn.setBounds(574, 287, 97, 25);
 		contentPane.add(dateprefbtn);
 		
 		sumbitbtn = new JButton("submit");
-		sumbitbtn.setBounds(571, 519, 97, 25);
+		sumbitbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				
+			}
+		});
+		sumbitbtn.setBounds(574, 484, 97, 25);
 		contentPane.add(sumbitbtn);
 		
 		JButton backbtn = new JButton("back");
+		backbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				closeFrame();
+			}
+
+			
+		});
 		backbtn.setBounds(571, 557, 97, 25);
 		contentPane.add(backbtn);
 		
-		userMeetingList = new JList();
-		userMeetingList.setBounds(12, 13, 308, 569);
-		contentPane.add(userMeetingList);
-		userMeetingListModel = new DefaultListModel<Meeting>();
-		userMeetingList.setModel(userMeetingListModel);
 		
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-		
-		userMeetingList.getSelectionModel().addListSelectionListener(x-> {
-			Meeting m = (Meeting) userMeetingList.getSelectedValue();
-			desciptiontf.setText(m.getDescription());
-			mitf.setText(m.getMeetingInitiator().toString());
-			if(m.getmeetingState() == Meeting.waitingForDates){
-				for(int i =0; i <m.getPreferedDates().size() ; i++){
-					miDatePrefListModel.addElement(format1.format(m.getPreferedDates().get(i)));
-					miDates.add(m.getPreferedDates().get(i));
-				}
-			}
+			/*
 			if(m.getmeetingState() == Meeting.waitingForLocationPref){
 				int newsize = 0;
 				for(int j = 0 ; j<m.getLocations().size(); j++){
@@ -169,11 +183,10 @@ public class addMeetingDatePrefFrame extends JFrame {
 				for(int i =0; i <newsize ; i++){
 					miLocationPrefListModel.addElement(m.getLocations().toString());
 					miLocationPrefs.add(m.getLocations().get(i));
-				}
+				}s
 			}
+			*/
 			
-			
-		});
 		
 		Packet P = new Packet(Packet.REQUEST_ALL_MEETINGS);
 		P.addUser(owner.getUser());
@@ -196,7 +209,8 @@ public class addMeetingDatePrefFrame extends JFrame {
 		ArrayList<Meeting> allMeetings = P.getMeetings();
 		
 		for(int i =0 ; i < allMeetings.size() ; i++){
-			if(allMeetings.get(i).getmeetingState() ==Meeting.waitingForDates|| allMeetings.get(i).getmeetingState() == Meeting.waitingForLocationPref){
+			//|| allMeetings.get(i).getmeetingState() == Meeting.waitingForLocationPref
+			if(allMeetings.get(i).getmeetingState() ==Meeting.waitingForDates){
 				userMeetingListModel.addElement(allMeetings.get(i));
 				Meetings.add(allMeetings.get(i));
 			}
@@ -204,5 +218,9 @@ public class addMeetingDatePrefFrame extends JFrame {
 		
 		
 		
+	}
+	private void closeFrame() {
+		owner.setVisible(true);
+		this.dispose();	
 	}
 }

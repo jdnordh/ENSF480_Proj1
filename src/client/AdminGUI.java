@@ -44,7 +44,14 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
+/**
+ * 
+ * 
+ * @author Jacob Turnbull
+ *
+ */
 public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 
 	private JPanel contentPane;
@@ -108,7 +115,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 			}
 		
 		});
-		addUserButton.setBounds(161, 32, 97, 25);
+		addUserButton.setBounds(12, 104, 147, 25);
 		contentPane.add(addUserButton);
 		
 		JButton deletuserbtn = new JButton("deleteUser");
@@ -119,7 +126,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 				onlyInstance.setVisible(false);
 			}
 		});
-		deletuserbtn.setBounds(161, 85, 97, 25);
+		deletuserbtn.setBounds(12, 142, 147, 25);
 		contentPane.add(deletuserbtn);
 		
 		JButton editlocationbtn = new JButton("editLocation");
@@ -131,7 +138,7 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 				
 			}
 		});
-		editlocationbtn.setBounds(161, 123, 97, 25);
+		editlocationbtn.setBounds(12, 177, 147, 25);
 		contentPane.add(editlocationbtn);
 		
 		JButton createmeetingbtn = new JButton("createMeeting");
@@ -143,8 +150,20 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 				
 			}
 		});
-		createmeetingbtn.setBounds(161, 177, 97, 25);
+		createmeetingbtn.setBounds(12, 215, 147, 25);
 		contentPane.add(createmeetingbtn);
+		
+		JButton aMDPFbtn = new JButton("MeetingDatePrefs");
+		aMDPFbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				addMeetingDatePrefFrame aMDPF = new addMeetingDatePrefFrame(onlyInstance);
+				aMDPF.setVisible(true);
+				onlyInstance.setVisible(false);
+				
+			}
+		});
+		aMDPFbtn.setBounds(12, 69, 147, 25);
+		contentPane.add(aMDPFbtn);
 		
 	}
 

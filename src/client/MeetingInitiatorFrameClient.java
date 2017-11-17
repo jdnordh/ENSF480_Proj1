@@ -25,6 +25,14 @@ import structures.Packet;
 import structures.Participant;
 import structures.User;
 
+/**
+ * 
+ * 
+ * @author Jacob Turnbull
+ *
+ */
+
+
 public class MeetingInitiatorFrameClient extends JFrame{
 	private JPanel contentPane;
 	private JTextField descriptiontf;
@@ -228,6 +236,7 @@ public class MeetingInitiatorFrameClient extends JFrame{
 						closeFrame();
 					}
 				}
+				/*
 				if(meetingLocations.size() != 1){
 					Meeting m = new Meeting(meetingParticipants,meetingLocations, descriptiontf.getText(),meetingDates ,owner.getUser() );
 					P.addMeeting(m);
@@ -254,8 +263,9 @@ public class MeetingInitiatorFrameClient extends JFrame{
 						JOptionPane.showMessageDialog(null, "Meeting made successfully");
 						closeFrame();
 					}
+					
 				}
-				
+				*/
 			}
 		});
 		createMeetingbtn.setBounds(774, 327, 201, 253);
