@@ -10,7 +10,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.*;
 
-import structures.User;
+import structures.*;
 
 /**
  * 
@@ -121,15 +121,18 @@ public class Server extends Thread{
 		Server server = new Server(Server.NAME, Server.PORT, strat);
 		
 		server.start();
-		System.out.println("Type \"quit\" or \"stop\" to stop");
-		System.out.println("Type \"info\" to get current server info");
-		System.out.println("Type \"users\" to get current users info");
+		System.err.println("Type \"quit\" or \"stop\" to stop");
+		System.err.println("Type \"info\" to get current server info");
+		System.err.println("Type \"users\" to get current users info");
+		System.err.println("Type \"meetings\" to get current meetings info");
 		Scanner in = new Scanner(System.in);
 		String read = "";
 		while ( !read.equalsIgnoreCase("quit") && !read.equalsIgnoreCase("stop")){
 			read = in.next();
 			if (read.equalsIgnoreCase("info")) server.info();
 			else if (read.equalsIgnoreCase("users")) server.printUsers();
+			else if (read.equalsIgnoreCase("meetings")) server.printMeetings();
+			else if (read.equalsIgnoreCase("locations")) server.printLocations();
 		}
 		in.close();
 		
@@ -137,10 +140,25 @@ public class Server extends Thread{
 		server.shutdown();
     }
 
+	/**
+	 * print all locations
+	 */
+	private void printLocations() {
+		LocationList ll = LocationList.getLocationList();
+		ArrayList<Location> u = ll.getLocations();
+		System.err.println("\nUsers:");
+		System.err.println("Name				Address						City		");
+		for (int i = 0; i < u.size(); i++){
+			System.err.println(u.get(i).getName() + "\t\t" + u.get(i).getAddress() + 
+					"\t\t" + u.get(i).getCity());
+		}
+	}
 
-/**
- * Print the users out
- */
+
+	
+	/**
+	 * Print the users out
+	 */
 	private void printUsers() {
 		UserList ul = UserList.getUserList();
 		ArrayList<User> u = ul.getUsers();
@@ -152,6 +170,20 @@ public class Server extends Thread{
 		}
 	}
 
+	/**
+	 * Print Meetings out
+	 */
+	private void printMeetings() {
+		MeetingList ml = MeetingList.getMeetingList();
+		ArrayList<Meeting> u = ml.getMeetings();
+		
+		System.err.println("\nUsers:");
+		System.err.println("Meetings");
+		for (int i = 0; i < u.size(); i++){
+			System.err.println(u.get(i).toString());
+		}
+	}
+	
 	private void info() {
 		try {
 			System.err.println(server.toString());
