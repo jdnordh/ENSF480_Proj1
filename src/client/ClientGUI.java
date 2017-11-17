@@ -138,25 +138,9 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		
 		//TODO fill the text area 
 		getAllMeetings();
-
-		meetingList = new JList<String>(meetingModel);
-		meetingList.addListSelectionListener(new ListAction());
-		meetingList.setFont(new Font("Courier New", Font.BOLD, 12));
-		meetingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		meetingList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-		meetingList.setVisibleRowCount(-1);
 		
-		JScrollPane textAreaScrollPane = new JScrollPane();
-		textArea = new JTextArea();
-		textAreaScrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-		textArea.setFont(new Font("Courier New", Font.BOLD, 12));
-		textArea.setEditable(false);
-		textAreaScrollPane = new JScrollPane(meetingList);
-		textAreaScrollPane.setPreferredSize(new Dimension(190, 400));
-		
-
-		
-		if(info.getType() == Packet.RESPONSE_ALL_MEETINGS){
+		//check packet validity
+		if(info.getType() == Packet.RESPONSE_ALL_MEETINGS) {
 			for(int i = 0; i < info.getMeetings().size(); i++){
 				//TODO REMOVE HARD CODING
 				/*
@@ -174,10 +158,24 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 				}
 			}	
 		}
-		else{
+		else {
 			JOptionPane.showMessageDialog(null, "Server error. Expected Packet Type: " + Packet.RESPONSE_ALL_MEETINGS + ".  Actual Packet Type: " + info.getType());
 		}
-	
+
+		meetingList = new JList<String>(meetingModel);
+		meetingList.addListSelectionListener(new ListAction());
+		meetingList.setFont(new Font("Courier New", Font.BOLD, 12));
+		meetingList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+		meetingList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+		meetingList.setVisibleRowCount(-1);
+		
+		JScrollPane textAreaScrollPane = new JScrollPane();
+		textArea = new JTextArea();
+		textAreaScrollPane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		textArea.setFont(new Font("Courier New", Font.BOLD, 12));
+		textArea.setEditable(false);
+		textAreaScrollPane = new JScrollPane(meetingList);
+		textAreaScrollPane.setPreferredSize(new Dimension(190, 400));
 		
 		//create the label
 		JLabel label = new JLabel("Scheduled meetings:");
@@ -215,7 +213,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	public ClientGUI viewPendingMeetingsFrame() {
     	ClientGUI tmp = new ClientGUI();
 		tmp.setTitle("Welcome " + user.getUserName() + "!");
-		tmp.setBounds(100, 100, 400, 400);
+		tmp.setBounds(100, 100, 800, 400);
 		
 		//create the list area
 		meetingModel = new DefaultListModel<String>();
@@ -234,6 +232,31 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		textAreaScrollPane.setPreferredSize(new Dimension(190, 400));
 		
 		//TODO fill the text area
+		getAllMeetings();
+		
+		//check packet validity
+		if(info.getType() == Packet.RESPONSE_ALL_MEETINGS) {
+			for(int i = 0; i < info.getMeetings().size(); i++){
+				//TODO REMOVE HARD CODING
+				/*
+				info.getMeetings().get(i).setmeetingState(2);
+				info.getMeetings().get(i).setDescription("Testing desciption");
+				info.getMeetings().get(i).setfinalizedDate(new Date(2017, 11, 16));
+				info.getMeetings().get(i).setLocation(new Location("UofC", "Calgary", "131 Edgeview Dr"));
+				info.getMeetings().get(i).setMeetingInitiator(new User("BOB SMITH", "123", "123"));
+				*/
+				if(info.getMeetings().get(i).getmeetingState() != Meeting.Finalized && info.getMeetings().get(i).getmeetingState() != Meeting.MEETINGCANCELED){
+					meetingModel.addElement("Description: " + info.getMeetings().get(i).getDescription() + 
+							"     Date: " + info.getMeetings().get(i).getFinalizedDate().toString() + 
+							"     Location: " + info.getMeetings().get(i).getLocation().toString() + 
+							"     Initiator: " + info.getMeetings().get(i).getMeetingInitiator().getName());
+				}
+			}	
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Server error. Expected Packet Type: " + Packet.RESPONSE_ALL_MEETINGS + ".  Actual Packet Type: " + info.getType());
+		}
+
 		
 		//create the label
 		JLabel label = new JLabel("Pending meetings:");
@@ -357,7 +380,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 			}
 			else if (e.getSource() == removeMeeting) {
 				try {
-					System.out.println("removeMeeting pressed");
+					System.out.println("Remove: " + meetingList.getSelectedValue());
 					//TODO remove selected meeting from the list 
 				} catch (Exception e1){
 					e1.printStackTrace();
@@ -381,9 +404,9 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		@SuppressWarnings("unchecked")
 		@Override
 		public void valueChanged(ListSelectionEvent e) {
-			Object o = ((JList<Meeting>)e.getSource()).getSelectedValue();
-			if (o instanceof Meeting){
-				Meeting m = (Meeting) o;
+			Object o = ((JList<String>)e.getSource()).getSelectedValue();
+			if (o instanceof String){
+				String s = (String) o;
 
 			}
 		}
