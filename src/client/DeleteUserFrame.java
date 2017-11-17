@@ -92,7 +92,15 @@ public class DeleteUserFrame extends JFrame {
 				}
 				
 				//owner.getThreadPacket(owner.getPacket());
-				owner.recievePacket();
+				while(owner.getPacket().getType() != Packet.DELETE_USER_CONFIRM|| owner.getPacket().getType() !=Packet.DELETE_LOCATION_DENY){
+					try {
+						TimeUnit.SECONDS.sleep(1);
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
+				//owner.recievePacket();
 				p = owner.getPacket();
 				
 				if(p.getType() == Packet.DELETE_USER_CONFIRM){

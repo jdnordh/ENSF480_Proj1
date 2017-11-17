@@ -217,6 +217,14 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 	@Override
 	public void getThreadPacket(Packet P) {
 		info = P;
+		if(P.getType() == Packet.NEW_MEETING){
+			JOptionPane.showMessageDialog(null,"You have a new Meeting please view");
+		}
+		if(P.getType() == Packet.NEW_MEETING_DROP_REQUEST){
+			JOptionPane.showMessageDialog(null,"You have been Droped from a meeting");
+		}
+		//Packet. your meeting failed
+		//if(P.getType() == Packet.n)
 	}
 	
 }

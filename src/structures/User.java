@@ -119,4 +119,8 @@ public class User implements Serializable{
 	public boolean isAdmin() {
 		return isAdmin;
 	}
+	public String toString(){
+		String s = UserName + " " + Name;
+		return s;
+	}
 }

@@ -268,6 +268,12 @@ public class Packet implements Serializable{
 	 * The client can either be told to refresh the meetings list, or do it automatically
 	 */
 	public static final int NEW_MEETING_DROP_REQUEST = 501;
+
+
+	public static final int USERMEETINGS = 222;
+
+
+	public static final int USERMEETINGS_RESPONSE = 223;
 	
     /**
      * Default constructor

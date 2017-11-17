@@ -1,6 +1,7 @@
 package structures;
 
 
+import java.awt.Component;
 import java.io.Serializable;
 import java.util.*;
 
@@ -194,6 +195,12 @@ public class Meeting implements Serializable{
 	public void setDescription(String d) {
 		description = d;
 	}
+	public String toString(){
+		String s = ID+meetingInitiator.getUserName();
+		return s;
+	}
+
+	public ArrayList<Date> getPreferedDates() {return preferedDates;}
 	
 	
 }
