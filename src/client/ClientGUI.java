@@ -396,7 +396,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 						}	
 					}
 					else {
-						JOptionPane.showMessageDialog(null, "Server error. Expected Packet Type: " + Packet.RESPONSE_ALL_MEETINGS + ".  Actual Packet Type: " + info.getType());
+						JOptionPane.showMessageDialog(null, "Server error. Expected Packet Type: " + Packet.DELETE_MEETING_CONFIRM + ".  Actual Packet Type: " + info.getType());
 					}
 					
 				} catch (Exception e1){
