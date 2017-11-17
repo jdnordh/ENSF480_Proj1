@@ -36,7 +36,7 @@ public class Meeting implements Serializable{
     	Participants = p;
     	meetingState =2;
     	preferedDateParticipant = new ArrayList<DatePref>();
-    	meetingInitiator = U;
+    	setMeetingInitiator(U);
     }
     //without location
     public Meeting(ArrayList<Participant> p,ArrayList<Location> Ls ,String D , ArrayList<Date> meetingIniatorPref, User U) {
@@ -48,7 +48,7 @@ public class Meeting implements Serializable{
     	Participants = p;
     	meetingState = 1;
     	preferedDateParticipant = new ArrayList<DatePref>();
-    	meetingInitiator = U;
+    	setMeetingInitiator(U);
     }
    
     /**
@@ -170,6 +170,14 @@ public class Meeting implements Serializable{
 	}
 	public void setmeetingState(int x) {meetingState = x;}
 	public void setLocation(Location l) {Location = l;	}
+
+	public User getMeetingInitiator() {
+		return meetingInitiator;
+	}
+
+	public void setMeetingInitiator(User meetingInitiator) {
+		this.meetingInitiator = meetingInitiator;
+	}
 	
 	
 }

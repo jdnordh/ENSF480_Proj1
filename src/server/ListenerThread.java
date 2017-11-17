@@ -112,6 +112,10 @@ public class ListenerThread extends ShutdownThread{
 					else if (p.getType() == Packet.ADD_LOCATION && user.isAdmin()){
 						this.addLocation(p);;
 					}
+// DELETE_MEETING
+					else if (p.getType() == Packet.DELETE_MEETING){
+						this.deleteMeeting(p);;
+					}
 // DELETE_LOCATION
 					else if (p.getType() == Packet.DELETE_LOCATION && user.isAdmin()){
 						this.deleteLocation(p);;
@@ -146,6 +150,26 @@ public class ListenerThread extends ShutdownThread{
 		notifier.interrupt();
 		System.out.println("ListenerThread " + this.getId() + " stopping");
 	}
+
+	private void deleteMeeting(Packet p) {
+		Packet r = null;
+		MeetingList ml = MeetingList.getMeetingList();
+		
+		// Meeting to delete
+		Meeting toDelete = new Meeting();
+		toDelete.setID(p.getNumber1());
+		
+		boolean deleted = ml.deleteMeeting(toDelete, this.user);
+		
+		if (deleted){
+			r = new Packet(Packet.DELETE_MEETING_CONFIRM);
+		}
+		else {
+			r = new Packet(Packet.DELETE_MEETING_DENY);
+		}
+		queue.push(r);
+	}
+
 
 	private void requestAllMeetings(Packet p) {
 		Packet r = new Packet(Packet.RESPONSE_ALL_MEETINGS);
@@ -237,7 +261,6 @@ public class ListenerThread extends ShutdownThread{
 	 * @param p Packet
 	 */
 	private void addUser(Packet p) {
-		//System.out.println("Sdding User");
 		UserList ul = UserList.getUserList();
 		boolean added = ul.addUser(p.getUsers().get(0));
 		

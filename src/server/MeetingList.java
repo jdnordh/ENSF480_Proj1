@@ -73,9 +73,9 @@ public class MeetingList {
 	 * @param m Meeting to be deleted
 	 * @return True if meeting is deleted, false if not found
 	 */
-	public boolean deleteMeeting(Meeting m){
+	public boolean deleteMeeting(Meeting m, User u){
 		for (int i = 0; i < meetings.size(); i++){
-			if (meetings.get(i).isEqualTo(m)){
+			if (meetings.get(i).isEqualTo(m) && meetings.get(i).getMeetingInitiator().isEqualTo(u)){
 				meetings.remove(i);
 				return true;
 			}
