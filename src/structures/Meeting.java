@@ -201,6 +201,16 @@ public class Meeting implements Serializable{
 		String s = ID+meetingInitiator.getUserName();
 		return s;
 	}
+	
+	public String allUsers(){
+		String r = "";
+		
+		for (int i = 0; i < this.Participants.size(); i++){
+			r += this.Participants.get(i).getUserName() + "\n";
+		}
+		
+		return r;
+	}
 
 	public ArrayList<Date> getPreferedDates() {return preferedDates;}
 	

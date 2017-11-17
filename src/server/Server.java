@@ -163,7 +163,8 @@ public class Server extends Thread{
 		System.err.println("\nMeetings:");
 		System.err.println("Meetings");
 		for (int i = 0; i < u.size(); i++){
-			System.err.println(u.get(i).toString());
+			System.err.println("ID: " + u.get(i).getID());
+			System.err.println("Users:\n" + u.get(i).allUsers());
 		}
 	}
 	
