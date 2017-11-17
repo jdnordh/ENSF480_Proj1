@@ -124,6 +124,7 @@ public class Server extends Thread{
 		System.err.println("Type \"quit\" or \"stop\" to stop");
 		System.err.println("Type \"info\" to get current server info");
 		System.err.println("Type \"users\" to get current users info");
+		System.err.println("Type \"locations\" to get current locations info");
 		System.err.println("Type \"meetings\" to get current meetings info");
 		Scanner in = new Scanner(System.in);
 		String read = "";
