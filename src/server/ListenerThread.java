@@ -31,14 +31,14 @@ public class ListenerThread extends ShutdownThread{
 	/**
 	 * This thread notifies the client of new meetings that involve them
 	 */
-	private NotifyThread notifier;
+	//private NotifyThread notifier;
 	
 	public ListenerThread(ObjectInputStream s, Queue<Packet> q, IOThread mas) {
 		master = mas;
 		in = s;
 		queue = q;
 		user = null;
-		notifier = new NotifyThread(queue);
+		//notifier = new NotifyThread(queue);
 		
 	}
 
@@ -48,7 +48,7 @@ public class ListenerThread extends ShutdownThread{
 		
 		System.out.println("ListenerThread " + this.getId() + " starting");
 		
-		notifier.start();
+		//notifier.start();
 		while (running){
 			try {
 				//System.out.println("ListenerThread " + this.getId() + " waiting for object");
@@ -148,8 +148,8 @@ public class ListenerThread extends ShutdownThread{
 				e.printStackTrace();
 			}
 		}
-		notifier.shutdown();
-		notifier.interrupt();
+		//notifier.shutdown();
+		//notifier.interrupt();
 		System.out.println("ListenerThread " + this.getId() + " stopping");
 	}
 
