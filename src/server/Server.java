@@ -147,8 +147,8 @@ public class Server extends Thread{
 	private void printLocations() {
 		LocationList ll = LocationList.getLocationList();
 		ArrayList<Location> u = ll.getLocations();
-		System.err.println("\nUsers:");
-		System.err.println("Name				Address						City		");
+		System.err.println("\nLocations:");
+		System.err.println("Name			Address			City		");
 		for (int i = 0; i < u.size(); i++){
 			System.err.println(u.get(i).getName() + "\t\t" + u.get(i).getAddress() + 
 					"\t\t" + u.get(i).getCity());
@@ -178,7 +178,7 @@ public class Server extends Thread{
 		MeetingList ml = MeetingList.getMeetingList();
 		ArrayList<Meeting> u = ml.getMeetings();
 		
-		System.err.println("\nUsers:");
+		System.err.println("\nMeetings:");
 		System.err.println("Meetings");
 		for (int i = 0; i < u.size(); i++){
 			System.err.println(u.get(i).toString());
