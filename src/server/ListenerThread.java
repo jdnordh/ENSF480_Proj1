@@ -62,7 +62,6 @@ public class ListenerThread extends ShutdownThread{
 				System.out.println("ListenerThread " + this.getId() + " recieved packet type " + p.getType());
 				
 				// classify the packet
-				user = p.getUsers().get(0);
 // CLOSE
 				if (p.getType() == Packet.CLOSE_CONNECTION){
 					running = false;
@@ -120,7 +119,8 @@ public class ListenerThread extends ShutdownThread{
 					else if (p.getType() == Packet.DELETE_LOCATION && user.isAdmin()){
 						this.deleteLocation(p);;
 					}else {
-						this.sendBadRequest("User not null, but unknown request");
+						if (!user.isAdmin()) this.sendBadRequest("User not admin");
+						else this.sendBadRequest("User not null, but unknown request");
 					}
 				}else {
 					this.sendBadRequest("Final else");

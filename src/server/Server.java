@@ -10,6 +10,8 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.*;
 
+import structures.User;
+
 /**
  * 
  */
@@ -121,12 +123,13 @@ public class Server extends Thread{
 		server.start();
 		System.out.println("Type \"quit\" or \"stop\" to stop");
 		System.out.println("Type \"info\" to get current server info");
-		
+		System.out.println("Type \"users\" to get current users info");
 		Scanner in = new Scanner(System.in);
 		String read = "";
 		while ( !read.equalsIgnoreCase("quit") && !read.equalsIgnoreCase("stop")){
 			read = in.next();
 			if (read.equalsIgnoreCase("info")) server.info();
+			else if (read.equalsIgnoreCase("users")) server.printUsers();
 		}
 		in.close();
 		
@@ -135,6 +138,19 @@ public class Server extends Thread{
     }
 
 
+/**
+ * Print the users out
+ */
+	private void printUsers() {
+		UserList ul = UserList.getUserList();
+		ArrayList<User> u = ul.getUsers();
+		System.err.println("\nUsers:");
+		System.err.println("Name		Username	Password				Admin");
+		for (int i = 0; i < u.size(); i++){
+			System.err.println(u.get(i).getName() + "\t" + u.get(i).getUserName() + 
+					"\t" + u.get(i).getPassword() + "\t\t\t" + u.get(i).isAdmin());
+		}
+	}
 
 	private void info() {
 		try {

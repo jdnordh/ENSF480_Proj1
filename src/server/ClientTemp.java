@@ -36,29 +36,30 @@ public class ClientTemp {
 			
 			System.out.println("Type: " + p.getType());
 			
-//			 String password = "root";
-//				MessageDigest digest;
-//				
-//				User loginUser = new User("Test User", "User", "");
-//				loginUser.setAdmin(true);
-//				try {
-//					digest = MessageDigest.getInstance("SHA-256");
-//					String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
-//					loginUser.setPassword(hashed_password);
-//				} catch (NoSuchAlgorithmException e) {}
-//				
-//				
-//				System.out.println("Username: " + loginUser.getUserName() + "\nPassword: " + loginUser.getPassword());
-//				//create login packet
-//				p = new Packet(Packet.ADD_USER);
-//				//add user to packet
-//				p.addUser(loginUser);
+			p = new Packet(Packet.ADD_USER);
+			
+			 String password = "root";
+				MessageDigest digest;
+				
+				User loginUser = new User("Testing User", "user", "", false);
+				try {
+					digest = MessageDigest.getInstance("SHA-256");
+					String hashed_password = new String(digest.digest(password.getBytes(StandardCharsets.UTF_8)));
+					loginUser.setPassword(hashed_password);
+				} catch (NoSuchAlgorithmException e) {}
+				
+				
+				System.out.println("Username: " + loginUser.getUserName() + "\nPassword: " + loginUser.getPassword());
+				//create login packet
+				p = new Packet(Packet.ADD_USER);
+				//add user to packet
+				p.addUser(loginUser);
 			
 //			p = new Packet(Packet.ADD_LOCATION);
 //			Location l = new Location("New", "Location", "Test");
 //			p.addLocation(l);
 			
-			p.setType(Packet.REQUEST_ALL_USERS);
+			//p = new Packet(Packet.ADD_USER);
 			
 			
 			out.writeObject(p);
