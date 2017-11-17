@@ -21,7 +21,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.awt.event.ActionEvent;
-
+/**
+ * 
+ * 
+ * @author Jacob Turnbull
+ *
+ */
 public class addUserFrame extends JFrame {
 
 	private JPanel contentPane;

@@ -28,7 +28,12 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.event.ActionEvent;
-
+/**
+ * 
+ * 
+ * @author Jacob Turnbull
+ *
+ */
 public class MeetingInitiatorFrame extends JFrame {
 
 	private JPanel contentPane;
