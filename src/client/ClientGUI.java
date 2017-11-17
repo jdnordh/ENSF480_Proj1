@@ -93,7 +93,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
      * @param output1 
      * @param input1 
      */
-    public ClientGUI(User  u, String serverName , int portNum, ObjectInputStream input1, ObjectOutputStream output1) {
+    public ClientGUI(User  u, ObjectInputStream input1, ObjectOutputStream output1) {
     	clientFrame = this;
     	user = u;
     	input = input1;
@@ -137,20 +137,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		meetingModel = new DefaultListModel<String>();
 		
 		//TODO fill the text area 
-		Packet p = new Packet(Packet.REQUEST_ALL_MEETINGS);
-		p.addUser(user);
-		try{
-			output.writeObject(p);
-			output.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		try{
-			p = (Packet)input.readObject();
-		} catch (IOException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-		
+		getAllMeetings();
 
 		meetingList = new JList<String>(meetingModel);
 		meetingList.addListSelectionListener(new ListAction());
@@ -169,24 +156,26 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		
 
 		
-		if(p.getType() == Packet.RESPONSE_ALL_MEETINGS){
-			for(int i = 0; i < p.getMeetings().size(); i++){
+		if(info.getType() == Packet.RESPONSE_ALL_MEETINGS){
+			for(int i = 0; i < info.getMeetings().size(); i++){
 				//TODO REMOVE HARD CODING
-				p.getMeetings().get(i).setmeetingState(4);
-				p.getMeetings().get(i).setDescription("Testing desciption");
-				p.getMeetings().get(i).setfinalizedDate(new Date(2017, 11, 16));
-				p.getMeetings().get(i).setLocation(new Location("UofC", "Calgary", "131 Edgeview Dr"));
-				p.getMeetings().get(i).setMeetingInitiator(new User("BOB SMITH", "123", "123"));
-				if(p.getMeetings().get(i).getmeetingState() == Meeting.Finalized){
-					meetingModel.addElement("Description: " + p.getMeetings().get(i).getDescription() + 
-							"     Date: " + p.getMeetings().get(i).getFinalizedDate().toString() + 
-							"     Location: " + p.getMeetings().get(i).getLocation().toString() + 
-							"     Initiator: " + p.getMeetings().get(i).getMeetingInitiator().getName());
+				/*
+				info.getMeetings().get(i).setmeetingState(4);
+				info.getMeetings().get(i).setDescription("Testing desciption");
+				info.getMeetings().get(i).setfinalizedDate(new Date(2017, 11, 16));
+				info.getMeetings().get(i).setLocation(new Location("UofC", "Calgary", "131 Edgeview Dr"));
+				info.getMeetings().get(i).setMeetingInitiator(new User("BOB SMITH", "123", "123"));
+				*/
+				if(info.getMeetings().get(i).getmeetingState() == Meeting.Finalized){
+					meetingModel.addElement("Description: " + info.getMeetings().get(i).getDescription() + 
+							"     Date: " + info.getMeetings().get(i).getFinalizedDate().toString() + 
+							"     Location: " + info.getMeetings().get(i).getLocation().toString() + 
+							"     Initiator: " + info.getMeetings().get(i).getMeetingInitiator().getName());
 				}
 			}	
 		}
 		else{
-			JOptionPane.showMessageDialog(null, "Server error. Expected Packet Type: " + Packet.RESPONSE_ALL_MEETINGS + ".  Actual Packet Type: " + p.getType());
+			JOptionPane.showMessageDialog(null, "Server error. Expected Packet Type: " + Packet.RESPONSE_ALL_MEETINGS + ".  Actual Packet Type: " + info.getType());
 		}
 	
 		
@@ -379,7 +368,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 				try {
 					System.out.println("return to main menu pressed");
 					clientFrame.dispose();
-					clientFrame = new ClientGUI(user, Server.NAME, Server.PORT, input, output);
+					clientFrame = new ClientGUI(user, input, output);
 				} catch (Exception e1){
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
@@ -404,8 +393,13 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 
 	@Override
 	public void getAllMeetings() {
-		// TODO Auto-generated method stub
-		
+		info = new Packet(Packet.REQUEST_ALL_MEETINGS);
+		try {
+			this.sendPacket();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.recievePacket();		
 	}
 
 	@Override
@@ -450,10 +444,8 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		try {
 			info = (Packet) input.readObject();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
