@@ -72,7 +72,7 @@ public class Meeting implements Serializable{
      * 
      */
     private static int IDcounter = 0;
-    private static int ID;
+    private int ID;
 
     /**
      * 

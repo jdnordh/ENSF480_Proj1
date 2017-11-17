@@ -210,14 +210,17 @@ public class MeetingInitiatorFrame extends JFrame {
 					return;
 				Packet P = new Packet(Packet.INITIATE_MEETING);
 				
-				if(meetingLocations.size() == 1){
+				//if(meetingLocations.size() == 0){
 					//participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
 					Meeting m = new Meeting(meetingParticipants, meetingLocations.get(0), descriptiontf.getText(),meetingDates ,owner.getUser() );
 					P.addMeeting(m);
 					P.addUser(owner.getUser());
 					owner.setInfo(P);
+					System.out.println("m.id: "+m.getID());
+					System.out.println("P.m.id: "+owner.getPacket().getMeetings().get(0).getID());
 					try {
 						owner.sendPacket();
+						System.out.println(owner.getPacket().getMeetings().get(0).getID());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -230,7 +233,7 @@ public class MeetingInitiatorFrame extends JFrame {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-					}
+					
 					//owner.recievePacket();
 					P = owner.getPacket();
 					if(Packet.INITIATE_MEETING_CONFIRM  == P.getType()){
@@ -238,6 +241,7 @@ public class MeetingInitiatorFrame extends JFrame {
 						closeFrame();
 					}
 				}
+			/*
 				if(meetingLocations.size() != 1){
 					Meeting m = new Meeting(meetingParticipants,meetingLocations, descriptiontf.getText(),meetingDates ,owner.getUser() );
 					P.addMeeting(m);
@@ -265,6 +269,7 @@ public class MeetingInitiatorFrame extends JFrame {
 						closeFrame();
 					}
 				}
+				*/
 				
 			}
 		});
