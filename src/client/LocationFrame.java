@@ -33,6 +33,7 @@ public class LocationFrame extends JFrame {
 	private DefaultListModel<String> listModel; 
 	private static JList list;
 	private ArrayList<Location> Locations;
+	private JButton backbtn;
 	/**
 	 * Launch the application.
 	 */
@@ -118,6 +119,7 @@ public class LocationFrame extends JFrame {
 				}
 				//owner.recievePacket();
 				P = owner.getPacket();
+				JOptionPane.showMessageDialog(null, "Location added successfully");
 			}
 		});
 		addLocationbtn.setBounds(6, 136, 195, 25);
@@ -183,6 +185,17 @@ public class LocationFrame extends JFrame {
 		removebtn.setBounds(457, 213, 195, 25);
 		contentPane.add(removebtn);
 		
+		backbtn =new JButton("Back");
+		backbtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				closeFrame();
+			}
+
+			
+		});
+		backbtn.setBounds(523, 289, 97, 25);
+		contentPane.add(backbtn);
+		
 		Packet P = new Packet(Packet.REQUEST_ALL_LOCATIONS);
 		P.addUser(owner.getUser());
 		owner.setInfo(P);
@@ -210,6 +223,10 @@ public class LocationFrame extends JFrame {
 				listModel.addElement(Locations.get(i).getAddress()+ Locations.get(i).getCity()+ Locations.get(i).getName());
 		}
 		}
+	private void closeFrame() {
+		owner.setVisible(true);
+		this.dispose();
+	}
 		
 }
 

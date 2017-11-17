@@ -143,8 +143,8 @@ public class ListenerThread extends ShutdownThread{
 				sendBadRequest("Class or IO exception");
 				//e.printStackTrace();
 			}catch (Exception e){
-				sendBadRequest("General Exception: " + e.getMessage());
-				//e.printStackTrace();
+				sendBadRequest("General Exception");
+				e.printStackTrace();
 			}
 		}
 		notifier.shutdown();
