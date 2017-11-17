@@ -111,7 +111,6 @@ public class LoginGUI extends JFrame {
 				MessageDigest digest;
 				String password = new String(passwordTF.getPassword());
 				
-				User loginUser = new User(usernameTF.getText(), password);
 				User user = new User();
 				user.setUserName(usernameTF.getText());
 				
@@ -149,12 +148,12 @@ public class LoginGUI extends JFrame {
 				if(temp.getType() == Packet.LOGIN_CONFIRM_USER){
 					System.out.println("opening user page");
 					loginFrame.dispose();
-					ClientGUI gui = new ClientGUI(loginUser.getUserName(), Server.NAME, Server.PORT, input, output);
+					ClientGUI gui = new ClientGUI(user, Server.NAME, Server.PORT, input, output);
 					gui.setVisible(true);
 				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
 					System.out.println("opening Admin page");
-					AdminGUI gui = new AdminGUI(loginUser, Server.NAME, Server.PORT, input, output);
-					gui.setVisible(true);
+					//AdminGUI gui = new AdminGUI(loginUser, Server.NAME, Server.PORT, input, output);
+					//gui.setVisible(true);
 					loginFrame.dispose();
 				}else if(temp.getType() == Packet.LOGIN_DENY){
 					//open deny 

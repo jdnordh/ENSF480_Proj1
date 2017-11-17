@@ -52,8 +52,6 @@ import structures.User;
  * 
  */
 public class ClientGUI extends JFrame implements ClientGUIFunctionality {
-
-	private String username;
 	
 	//Windows
 	private static ClientGUI clientFrame;
@@ -86,23 +84,22 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	
 	//Packet
 	private Packet info;
+	
+	//User
+	private User user;
+	
     /**
      * Default constructor
+     * @param output1 
+     * @param input1 
      */
-    public ClientGUI(String un, String serverName , int portNum) {
+    public ClientGUI(User  u, String serverName , int portNum, ObjectInputStream input1, ObjectOutputStream output1) {
     	clientFrame = this;
-    	username = un;
-    	try {
-			InetAddress a = InetAddress.getByName(serverName);
-			aSocket = new Socket(a , portNum);
-			output = new ObjectOutputStream(aSocket.getOutputStream());
-			input = new ObjectInputStream(aSocket.getInputStream());
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		this.setTitle("Welcome " + username + "!");
+    	user = u;
+    	input = input1;
+    	output = output1;
+
+		this.setTitle("Welcome " + user.getUserName() + "!");
 		this.setBounds(100, 100, 300, 200);
 		this.setLayout(new GridLayout(4, 1));
 		
@@ -133,7 +130,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 
 	public ClientGUI viewMeetingsFrame() {
     	ClientGUI tmp = new ClientGUI();
-		tmp.setTitle("Welcome " + username + "!");
+		tmp.setTitle("Welcome " + user.getUserName() + "!");
 		tmp.setBounds(100, 100, 800, 400);
 		
 		//create the list area
@@ -141,7 +138,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		
 		//TODO fill the text area 
 		Packet p = new Packet(Packet.REQUEST_ALL_MEETINGS);
-		p.addUser(new User(username));
+		p.addUser(user);
 		try{
 			output.writeObject(p);
 			output.flush();
@@ -154,21 +151,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 			e.printStackTrace();
 		}
 		
-		for(int i = 0; i < p.getMeetings().size(); i++){
-			//TODO REMOVE HARD CODING
-			p.getMeetings().get(i).setmeetingState(4);
-			p.getMeetings().get(i).setDescription("Testing desciption");
-			p.getMeetings().get(i).setfinalizedDate(new Date(2017, 11, 16));
-			p.getMeetings().get(i).setLocation(new Location("UofC", "Calgary", "131 Edgeview Dr"));
-			p.getMeetings().get(i).setMeetingInitiator(new User("BOB SMITH", "123", "123"));
-			if(p.getMeetings().get(i).getmeetingState() == Meeting.Finalized){
-				meetingModel.addElement("Description: " + p.getMeetings().get(i).getDescription() + 
-						"     Date: " + p.getMeetings().get(i).getFinalizedDate().toString() + 
-						"     Location: " + p.getMeetings().get(i).getLocation().toString() + 
-						"     Initiator: " + p.getMeetings().get(i).getMeetingInitiator().getName());
-			}
-		}	
-			
+
 		meetingList = new JList<String>(meetingModel);
 		meetingList.addListSelectionListener(new ListAction());
 		meetingList.setFont(new Font("Courier New", Font.BOLD, 12));
@@ -187,7 +170,20 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 
 		
 		if(p.getType() == Packet.RESPONSE_ALL_MEETINGS){
-			//TODO load meetings into the list
+			for(int i = 0; i < p.getMeetings().size(); i++){
+				//TODO REMOVE HARD CODING
+				p.getMeetings().get(i).setmeetingState(4);
+				p.getMeetings().get(i).setDescription("Testing desciption");
+				p.getMeetings().get(i).setfinalizedDate(new Date(2017, 11, 16));
+				p.getMeetings().get(i).setLocation(new Location("UofC", "Calgary", "131 Edgeview Dr"));
+				p.getMeetings().get(i).setMeetingInitiator(new User("BOB SMITH", "123", "123"));
+				if(p.getMeetings().get(i).getmeetingState() == Meeting.Finalized){
+					meetingModel.addElement("Description: " + p.getMeetings().get(i).getDescription() + 
+							"     Date: " + p.getMeetings().get(i).getFinalizedDate().toString() + 
+							"     Location: " + p.getMeetings().get(i).getLocation().toString() + 
+							"     Initiator: " + p.getMeetings().get(i).getMeetingInitiator().getName());
+				}
+			}	
 		}
 		else{
 			JOptionPane.showMessageDialog(null, "Server error. Expected Packet Type: " + Packet.RESPONSE_ALL_MEETINGS + ".  Actual Packet Type: " + p.getType());
@@ -229,7 +225,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	
 	public ClientGUI viewPendingMeetingsFrame() {
     	ClientGUI tmp = new ClientGUI();
-		tmp.setTitle("Welcome " + username + "!");
+		tmp.setTitle("Welcome " + user.getUserName() + "!");
 		tmp.setBounds(100, 100, 400, 400);
 		
 		//create the list area
@@ -285,7 +281,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	
 	public ClientGUI editLocationPrefsFrame() {
     	ClientGUI tmp = new ClientGUI();
-		tmp.setTitle("Welcome " + username + "!");
+		tmp.setTitle("Welcome " + user.getUserName() + "!");
 		tmp.setBounds(100, 100, 400, 150);
 		
 		//create the text field
@@ -383,7 +379,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 				try {
 					System.out.println("return to main menu pressed");
 					clientFrame.dispose();
-					clientFrame = new ClientGUI(username,Server.NAME, Server.PORT);
+					clientFrame = new ClientGUI(user, Server.NAME, Server.PORT, input, output);
 				} catch (Exception e1){
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(null, "Error: " + e1.getMessage());
@@ -460,10 +456,6 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	public static void main(String[] args) {
-		new ClientGUI("user", Server.NAME, Server.PORT);
 	}
 
 	@Override
