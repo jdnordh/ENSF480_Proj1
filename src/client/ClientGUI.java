@@ -69,7 +69,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	private JButton addLocation = new JButton("Add");
 	private JButton removeLocation = new JButton("Remove");
 	
-	//Lits
+	//Lists
 	protected JList<String> meetingList;
 	private DefaultListModel<String> meetingModel;
 	
@@ -129,9 +129,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		this.setVisible(true);
 	}
     
-    public ClientGUI() {
-		// TODO Auto-generated constructor stub
-	}
+    public ClientGUI() {}
 
 	public ClientGUI viewMeetingsFrame() {
     	ClientGUI tmp = new ClientGUI();
@@ -141,7 +139,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 		//create the list area
 		meetingModel = new DefaultListModel<String>();
 		
-		//TODO fill the text area
+		//TODO fill the text area 
 		Packet p = new Packet(Packet.REQUEST_ALL_MEETINGS);
 		p.addUser(new User(username));
 		try{
@@ -465,7 +463,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	}
 	
 	public static void main(String[] args) {
-		new ClientGUI("User",Server.NAME, Server.PORT);
+		new ClientGUI("user", Server.NAME, Server.PORT);
 	}
 
 	@Override

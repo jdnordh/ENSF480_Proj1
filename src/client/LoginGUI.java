@@ -146,21 +146,16 @@ public class LoginGUI extends JFrame {
 					e.printStackTrace();
 				}
 				System.out.println("Type: "+ temp.getType());
-				//TODO change this hard coding
-				temp.setType(Packet.LOGIN_CONFIRM_USER);
 				if(temp.getType() == Packet.LOGIN_CONFIRM_USER){
 					System.out.println("opening user page");
 					loginFrame.dispose();
-					ClientGUI gui = new ClientGUI(loginUser.getUserName(), Server.NAME, Server.PORT);
+					ClientGUI gui = new ClientGUI(loginUser.getUserName(), Server.NAME, Server.PORT, input, output);
 					gui.setVisible(true);
 				}else if(temp.getType() == Packet.LOGIN_CONFIRM_ADMIN){
 					System.out.println("opening Admin page");
-					//TODO uncomment this
-					//AdminGUI gui = new AdminGUI(loginUser,Server.NAME, Server.PORT);
-					//gui.setVisible(true);
+					AdminGUI gui = new AdminGUI(loginUser, Server.NAME, Server.PORT, input, output);
+					gui.setVisible(true);
 					loginFrame.dispose();
-					//open admin gui
-					//AdminGUI
 				}else if(temp.getType() == Packet.LOGIN_DENY){
 					//open deny 
 					JOptionPane.showMessageDialog(panel, "Incorrect username or password. Please try again.");
