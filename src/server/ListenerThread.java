@@ -85,7 +85,7 @@ public class ListenerThread extends ShutdownThread{
 						this.initiateMeeting(p);
 					}
 // ADD_USER
-					else if (p.getType() == Packet.ADD_USER){
+					else if (p.getType() == Packet.ADD_USER && user.isAdmin()){
 						this.addUser(p);
 					}
 // DELETE_USER
@@ -237,7 +237,7 @@ public class ListenerThread extends ShutdownThread{
 	 * @param p Packet
 	 */
 	private void addUser(Packet p) {
-		System.out.println("adding User");
+		//System.out.println("Sdding User");
 		UserList ul = UserList.getUserList();
 		boolean added = ul.addUser(p.getUsers().get(0));
 		
