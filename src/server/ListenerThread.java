@@ -336,7 +336,7 @@ public class ListenerThread extends ShutdownThread{
 				response = new Packet(Packet.LOGIN_CONFIRM_USER);
 			}
 			response.addUser(log);
-			notifier.setUser(log);
+			//notifier.setUser(log);
 		}
 		queue.push(response);
 	}
