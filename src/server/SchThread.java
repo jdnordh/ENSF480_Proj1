@@ -25,7 +25,7 @@ public class SchThread extends ShutdownThread{
 		while (running) {
 			try {
 				//System.out.println("SchedulerThread " + this.getId() + " is waiting ");
-				//synchronized(ml){
+				synchronized(ml){
 					//while (!ml.isChanged()) ml.wait();
 					sleep(1000);
 					//System.out.println("SchedulerThread " + this.getId() + " is in action ");
@@ -33,9 +33,9 @@ public class SchThread extends ShutdownThread{
 					//TODO fix the call
 					
 					//ml.setChanged(false);
-					//strategy.FindMeetingTimes();
+					strategy.FindMeetingTimes();
 					
-				//}
+				}
 			} catch (InterruptedException e){
 				
 			} catch (Exception e){
