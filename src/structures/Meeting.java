@@ -29,7 +29,10 @@ public class Meeting implements Serializable{
     
     //participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
     public Meeting(ArrayList<Participant> p ,Location L, String D , ArrayList<Date> meetingIniatorPref, User U) {
-    	ID = IDcounter++;
+    	Random rand = new Random();
+    	
+    	ID = rand.nextInt(100000000)+1;
+    	System.out.println(ID);
     	preferedDates = meetingIniatorPref;
     	Location = L;
     	description = D;
@@ -41,7 +44,8 @@ public class Meeting implements Serializable{
     }
     //without location
     public Meeting(ArrayList<Participant> p,ArrayList<Location> Ls ,String D , ArrayList<Date> meetingIniatorPref, User U) {
-    	ID = IDcounter++;
+    	Random rand = new Random();
+    	ID = rand.nextInt(100000000)+1;
     	preferedDates = meetingIniatorPref;
     	description = D;
     	meetingState = 0;
@@ -72,8 +76,8 @@ public class Meeting implements Serializable{
      * 
      */
     private static int IDcounter = 0;
-    private int ID;
-
+    private  int ID;
+   
     /**
      * 
      */

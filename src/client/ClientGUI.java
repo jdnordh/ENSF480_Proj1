@@ -56,7 +56,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
 	//Windows
 	private static ClientGUI clientFrame;
 	private static ClientGUI viewMeetingsFrame;
-	
+	private ClientGUI mainFrame;
 	//Buttons
 	private JButton viewMeetings = new JButton("View Meetings");
 	private JButton initiateMeeting= new JButton("Initiate meeting");
@@ -98,6 +98,7 @@ public class ClientGUI extends JFrame implements ClientGUIFunctionality {
     	user = u;
     	input = input1;
     	output = output1;
+    	mainFrame =this;
 
 		this.setTitle("Welcome " + user.getUserName() + "!");
 		this.setBounds(100, 100, 300, 200);

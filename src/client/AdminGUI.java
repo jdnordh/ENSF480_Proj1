@@ -213,6 +213,8 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 		info = x;
 	}
 	public void sendPacket() throws IOException{
+		System.out.println("Admin sending: "+info.getType());
+		System.out.println("");
 		output.writeObject(info);
 	}
 	
@@ -235,15 +237,23 @@ public class AdminGUI extends JFrame implements ClientGUIFunctionality {
 
 	@Override
 	public void getThreadPacket(Packet P) {
+		
 		info = P;
-		if(P.getType() == Packet.NEW_MEETING){
+		if(P.getType() == Packet.NOTIFY_NEW_MEETING){
 			JOptionPane.showMessageDialog(null,"You have a new Meeting please view");
 		}
-		if(P.getType() == Packet.NEW_MEETING_DROP_REQUEST){
+		if(P.getType() == Packet.NOTIFY_MEETING_DROP_REQUEST){
 			JOptionPane.showMessageDialog(null,"You have been Droped from a meeting");
 		}
 		//Packet. your meeting failed
+		 
 		//if(P.getType() == Packet.n)
+	}
+
+	@Override
+	public void removeMeeting(Meeting m) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
