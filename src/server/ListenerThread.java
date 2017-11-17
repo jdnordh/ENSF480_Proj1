@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.io.EOFException;
 
 import structures.*;
@@ -175,7 +176,13 @@ public class ListenerThread extends ShutdownThread{
 		Packet r = new Packet(Packet.RESPONSE_ALL_MEETINGS);
 		MeetingList ml = MeetingList.getMeetingList();
 		
-		r.setMeetings(ml.getMeetings());
+		ArrayList<Meeting> m = ml.getMeetings();
+		
+		for (int i = 0; i < m.size(); i++){
+			if (m.get(i).containsParticipant(p.getUsers().get(0).getUserName())){
+				r.addMeeting(m.get(i));
+			}
+		}
 		queue.push(r);
 	}
 
