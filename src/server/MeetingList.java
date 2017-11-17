@@ -41,15 +41,20 @@ public class MeetingList {
 	// For testing purposes only
 	public static void main(String [] args){
 		MeetingList ml = MeetingList.getMeetingList();
-		Meeting m = new Meeting();
+		
 		
 		UserList ul = UserList.getUserList();
+		//participants,Location, Description, MeetingIniatorPrefDates , MeetingIniator
 		ArrayList<User> u = ul.getUsers();
+		Location L = new Location("1","2","3");
+		Meeting m = new Meeting();
+		
 		
 		m.setMeetingInitiator(u.get(u.size() - 1));
-		
+		System.out.print("user.size: "+ u.size());
 		for (int i = 0; i < u.size(); i++){
 			m.addParticipant(u.get(i).getUserName(), u.get(i).getName(), true);
+			//System.out.println(u.get(i).getUserName());
 		}
 		
 		m.setmeetingState(Meeting.Finalized);
